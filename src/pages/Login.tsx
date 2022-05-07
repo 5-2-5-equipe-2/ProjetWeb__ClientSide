@@ -1,6 +1,6 @@
 import * as React from "react";
 import {useForm} from "react-hook-form";
-import {Alert, Button, createTheme, Grid, TextField, ThemeProvider} from "@mui/material";
+import {Button, Grid, TextField} from "@mui/material";
 import "../media/css/Login.css";
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -29,7 +29,7 @@ export default function LoginForm() {
     });
     const {mutate,} = useMutation(login, {
         onSuccess: data => {
-            data = data.data;
+            // data = data.data;
             alert("Login Successful");
         },
         onError: (error: AxiosError) => {

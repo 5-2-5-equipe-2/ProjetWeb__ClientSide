@@ -1,11 +1,11 @@
 import * as React from "react";
 import {useForm} from "react-hook-form";
-import {Alert, Button, createTheme, Grid, TextField, ThemeProvider} from "@mui/material";
+import {Button, Grid, TextField,} from "@mui/material";
 import "../media/css/Login.css";
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import {useMutation} from "react-query";
-import {createUser, login} from "../api/user/user";
+import {createUser,} from "../api/user/user";
 import {AxiosError} from "axios";
 
 
@@ -46,7 +46,7 @@ export default function SignUpForm() {
     });
     const {mutate,} = useMutation(createUser, {
         onSuccess: data => {
-            data = data.data;
+            // data = data.data;
             alert("SignUp Successful");
         },
         onError: (error: AxiosError) => {
