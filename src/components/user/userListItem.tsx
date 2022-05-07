@@ -1,49 +1,54 @@
 import UserInterface from "../../api/user/userInterface";
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+import { ButtonBase} from "@mui/material";
 
-import React from 'react';
-import {Card} from "react-bootstrap";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../media/css/userListItem.css';
 
 interface UserListItemProps {
     user: UserInterface;
-    selectedUser: UserInterface | undefined;
-    setSelectedUser: React.Dispatch<React.SetStateAction<UserInterface | undefined>>;
+    selectedUser: number | undefined;
+    setSelectedUser: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
 
-const UserListItem = ({user, selectedUser, setSelectedUser}: UserListItemProps) => {
+export default function UserListItem({user, selectedUser, setSelectedUser}: UserListItemProps) {
     const handleClick = () => {
-        setSelectedUser(user);
+        setSelectedUser(user.id);
     };
-    const isSelected = selectedUser && selectedUser.id === user.id;
-    // return (
-    //     <Card role={"button"} aria-pressed={'false'} color={'grey'} onClick={handleClick} className={isSelected ? 'selected' : ''}>
-    //         <Card.Body>
-    //             <Card.Title>{user.username}</Card.Title>
-    //             <Card.Text>{user.email}</Card.Text>
-    //         </Card.Body>
-    //     </Card>
-    // );
+    const styles = {
+        width: "100%", opacity: 0.75, transition: "opacity 0.5s"
+    };
+    if (selectedUser && selectedUser === user.id) {
+        styles.opacity = 1;
+    }
     return (
-        <Card style={{width: '30rem'}} role={"button"} aria-pressed={'false'} color={'grey'} onClick={handleClick}
-              className={isSelected ? 'CustomSelected mb-1' : 'mb-1'}>
-            <div className="row g-0">
-                <div className="col-md-4">
-                    <img
-                        src="https://s2.qwant.com/thumbr/0x380/f/0/cfad668057d86db15d1d4694dcbf54204360433eee33986147295c7f768556/stephen-meyers-rLBewYnoi6I-unsplash.jpg?u=http%3A%2F%2Fagingoutsidethelines.com%2Fwp-content%2Fuploads%2F2019%2F07%2Fstephen-meyers-rLBewYnoi6I-unsplash.jpg&q=0&b=1&p=0&a=0"
-                        className="img-fluid rounded-start" alt="..."/>
-                </div>
-                <div className="col-md-8">
-                    <div className="card-body">
-                        <h5 className="card-title">{user.username}</h5>
-                        {/*<p className="card-text">This is a wider card with supporting text below as a natural lead-in to*/}
-                        {/*    additional content. This content is a little bit longer.</p>*/}
-                        {/*<p className="card-text"><small className="text-muted">Last Message: ...</small></p>*/}
-                    </div>
-                </div>
-            </div>
-        </Card>
-    )
-};
+        <ButtonBase sx={styles} onClick={handleClick}>
 
-export default UserListItem;
+            <Card sx={{display: 'flex', width: "100%"}}>
+
+                <CardMedia
+                    component="img"
+                    sx={{width: 151}}
+                    image="https://s2.qwant.com/thumbr/0x380/f/0/cfad668057d86db15d1d4694dcbf54204360433eee33986147295c7f768556/stephen-meyers-rLBewYnoi6I-unsplash.jpg?u=http%3A%2F%2Fagingoutsidethelines.com%2Fwp-content%2Fuploads%2F2019%2F07%2Fstephen-meyers-rLBewYnoi6I-unsplash.jpg&q=0&b=1&p=0&a=0"
+                    alt="profile picture"
+                />
+                <Box sx={{display: 'flex', flexDirection: 'column'}}>
+                    <CardContent sx={{flex: '1 0 auto'}}>
+                        <Typography component="div" variant="h5">
+                            {user.username}
+                        </Typography>
+                        {/*<Typography variant="subtitle1" color="text.secondary" component="div">*/}
+                        {/*    Last Message: ...*/}
+                        {/*</Typography>*/}
+                    </CardContent>
+                </Box>
+
+            </Card>
+        </ButtonBase>
+
+    );
+}
+

@@ -5,21 +5,38 @@ import "../media/css/Login.css";
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import {useMutation} from "react-query";
-import {login} from "../api/user/user";
+import {createUser, login} from "../api/user/user";
 import {AxiosError} from "axios";
 
 
 const validationSchema = Yup.object().shape({
     username: Yup.string()
-        .required('Username is required'),
+        .required("Username is Required.")
+        .min(1, "Username is Too Short."),
+    firstName: Yup.string()
+        .min(1, "First Name is Too Short."),
+    lastName: Yup.string()
+        .min(1, "Last Name is Too Short."),
 
+    email: Yup.string().email().required("Email is Required."),
     password: Yup.string()
-        .required('Password is required'),
+        .required("No password provided.")
+        .min(8, "Password is too short - should be 8 chars minimum.")
+        .matches(/(?=.*[0-9])/, "Password must contain a number."),
+    confirmPassword: Yup.string()
+        .oneOf([Yup.ref('password'), null], 'Passwords must match.')
+        .required("Confirm Password is Required.")
+        .min(8, "Confirm Password is Too Short."),
+    phoneNumber: Yup.string()
+        .min(10, "Phone Number is Too Short."),
+    address: Yup.string()
+        .min(1, "Address is Too Short."),
+
 
 });
 
 
-export default function LoginForm() {
+export default function SignUpForm() {
     const {
         register,
         handleSubmit,
@@ -27,10 +44,10 @@ export default function LoginForm() {
     } = useForm({
         resolver: yupResolver(validationSchema)
     });
-    const {mutate,} = useMutation(login, {
+    const {mutate,} = useMutation(createUser, {
         onSuccess: data => {
             data = data.data;
-            alert("Login Successful");
+            alert("SignUp Successful");
         },
         onError: (error: AxiosError) => {
 
@@ -52,13 +69,18 @@ export default function LoginForm() {
     React.useEffect(() => {
         register("username", {required: true});
         register("password", {required: true});
+        register("confirmPassword", {required: true});
+        register("email", {required: true});
+        register("firstName", {required: true});
+        register("lastName", {required: true});
+        register("phoneNumber", {required: true});
 
     }, [register]);
 
     return (
 
         <Grid item xs={2}>
-            <h1>Login</h1>
+            <h1>Sign Up</h1>
             <form className="form">
                 <section>
                     <label>Username</label>
@@ -86,7 +108,30 @@ export default function LoginForm() {
                     />
 
                 </section>
-
+                <section>
+                    <label>Confirm Password</label>
+                    <TextField fullWidth
+                               {...register("confirmPassword", {
+                                       required: true,
+                                   }
+                               )}
+                               type="password"
+                               error={!!errors.confirmPassword}
+                               helperText={errors?.confirmPassword?.message}
+                    />
+                </section>
+                <section>
+                    <label>Email</label>
+                    <TextField fullWidth
+                               {...register("email", {
+                                       required: true,
+                                   }
+                               )}
+                               type={'email'}
+                               error={!!errors.email}
+                               helperText={errors?.email?.message}
+                    />
+                </section>
                 <Button id="button" variant="contained" color="primary" onClick={handleSubmit(onSubmit)}>Submit</Button>
             </form>
         </Grid>
