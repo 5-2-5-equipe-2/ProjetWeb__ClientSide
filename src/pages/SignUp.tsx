@@ -21,7 +21,7 @@ const validationSchema = Yup.object().shape({
     email: Yup.string().email().required("Email is Required."),
     password: Yup.string()
         .required("No password provided.")
-        .min(8, "Password is too short - should be 8 chars minimum.")
+        .min(8, "Password should be 8 chars minimum.")
         .matches(/(?=.*[0-9])/, "Password must contain a number."),
     confirmPassword: Yup.string()
         .oneOf([Yup.ref('password'), null], 'Passwords must match.')
@@ -45,7 +45,7 @@ export default function SignUpForm() {
         resolver: yupResolver(validationSchema)
     });
     const {mutate,} = useMutation(createUser, {
-        onSuccess: data => {
+        onSuccess: () => {
             // data = data.data;
             alert("SignUp Successful");
         },
@@ -74,6 +74,18 @@ export default function SignUpForm() {
         register("firstName", {required: true});
         register("lastName", {required: true});
         register("phoneNumber", {required: true});
+        const listener = (event: { code: string; preventDefault: () => void; }) => {
+            if (event.code === "Enter" || event.code === "NumpadEnter") {
+                event.preventDefault();
+                // click the form submit button
+                document.getElementById("button")?.click();
+
+            }
+        };
+        document.addEventListener("keydown", listener);
+        return () => {
+            document.removeEventListener("keydown", listener);
+        };
 
     }, [register]);
 
