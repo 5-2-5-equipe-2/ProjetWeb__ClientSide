@@ -7,7 +7,6 @@ import UserList from "./components/user/UserList";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 
-// import UserList from "./components/user/UserList";
 const theme = createTheme({
     palette: {
         mode: 'dark',
@@ -32,7 +31,6 @@ function App() {
                             <Route path="/about"/>
                             <Route path="/contact"/>
                             <Route path="/userList" element={<UserList/>}/>
-
                             <Route path="/login" element={<Login/>}/>
                             <Route path="/signup" element={<SignUp/>}/>
                             <Route path="*" element={<Login/>}/>

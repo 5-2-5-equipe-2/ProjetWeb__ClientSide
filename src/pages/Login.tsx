@@ -28,7 +28,7 @@ export default function LoginForm() {
         resolver: yupResolver(validationSchema)
     });
     const {mutate,} = useMutation(login, {
-        onSuccess: data => {
+        onSuccess: () => {
             // data = data.data;
             alert("Login Successful");
         },
@@ -52,6 +52,18 @@ export default function LoginForm() {
     React.useEffect(() => {
         register("username", {required: true});
         register("password", {required: true});
+        const listener = (event: { code: string; preventDefault: () => void; }) => {
+            if (event.code === "Enter" || event.code === "NumpadEnter") {
+                event.preventDefault();
+                // click the form submit button
+                document.getElementById("button")?.click();
+
+            }
+        };
+        document.addEventListener("keydown", listener);
+        return () => {
+            document.removeEventListener("keydown", listener);
+        };
 
     }, [register]);
 
