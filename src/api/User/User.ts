@@ -1,9 +1,9 @@
 import api from "../base";
-import UserInterface from "./userInterface";
+import UserInterface from "./UserInterface";
 import {AxiosResponse} from "axios";
 
 
-export const getUsers = () => api.get("/user/list");
+export const getUsers = () => api.get<UserInterface[]>("/user/list");
 export const getUserById = (id: number) => api.get(`/user/?id=${id}`);
 export const createUser = (user: UserInterface) => api.post("/user/create", user);
 export const updateUser = (user: UserInterface) => api.put(`/user/update/?id=${user.id}`, user);

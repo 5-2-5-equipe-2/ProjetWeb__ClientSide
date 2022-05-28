@@ -1,4 +1,4 @@
-import UserInterface from "../../api/user/userInterface";
+import UserInterface from "../../api/User/UserInterface";
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -14,7 +14,7 @@ interface UserListItemProps {
     setSelectedUser: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
 
-export default function UserListItem({user, selectedUser, setSelectedUser}: UserListItemProps) {
+export default function ChatRoomListItem({user, selectedUser, setSelectedUser}: UserListItemProps) {
     const handleClick = () => {
         setSelectedUser(user.id);
     };

@@ -11,6 +11,8 @@ import Tooltip from '@mui/material/Tooltip';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
+import {Button} from "@mui/material";
+import {Link} from "react-router-dom";
 
 export default function AccountMenu() {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -24,9 +26,9 @@ export default function AccountMenu() {
     return (
         <React.Fragment>
             <Box sx={{display: 'flex', alignItems: 'center', textAlign: 'center'}}>
-                <Typography sx={{minWidth: 100}}>Contact</Typography>
-                <Typography sx={{minWidth: 100}}>Profile</Typography>
-                <Tooltip title="Account settings">
+                <Button sx={{minWidth: 100}} color={"secondary"} component={Link} to="/Login">Login</Button>
+                <Button sx={{minWidth: 100}} component={Link} to="/signup">Sign Up</Button>
+                <Tooltip title="Account settings" style={{marginLeft: "auto"}}>
                     <IconButton
                         onClick={handleClick}
                         size="small"
@@ -35,7 +37,7 @@ export default function AccountMenu() {
                         aria-haspopup="true"
                         aria-expanded={open ? 'true' : undefined}
                     >
-                        <Avatar sx={{width: 32, height: 32}}>M</Avatar>
+                        <Avatar sx={{width: 32, height: 32}}/>
                     </IconButton>
                 </Tooltip>
             </Box>
