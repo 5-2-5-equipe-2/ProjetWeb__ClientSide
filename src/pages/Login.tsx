@@ -1,14 +1,14 @@
 import * as React from "react";
 import {useForm} from "react-hook-form";
-import {Button, Grid, TextField} from "@mui/material";
+import {Button, FormGroup, FormLabel, Grid, TextField} from "@mui/material";
 import "../media/css/Login.css";
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import {useMutation} from "react-query";
-import {login} from "../api/User/User";
+import {getUserByUsername, login} from "../api/User/User";
 import {AxiosError} from "axios";
-import {useNavigate, useParams} from "react-router-dom";
-import {getChatRoomById} from "../api/ChatRoom/ChatRoom";
+import {useNavigate} from "react-router-dom";
+import UserInterface from "../api/User/UserInterface";
 
 
 const validationSchema = Yup.object().shape({
@@ -21,7 +21,7 @@ const validationSchema = Yup.object().shape({
 });
 
 
-export default function LoginForm() {
+export default function LoginForm({setLoggedInUser}: { setLoggedInUser: (user: UserInterface) => void }) {
     const {
         register,
         handleSubmit,
@@ -32,10 +32,17 @@ export default function LoginForm() {
     // Get redirect data from query params
     let params = new URLSearchParams(window.location.search)
     let navigate = useNavigate();
+    const {mutate: getUser,} = useMutation(getUserByUsername, {
+        onSuccess: (data) => {
+            console.log(data);
+        }
+    });
     const {mutate: loginUser,} = useMutation(login, {
-        onSuccess: () => {
-            // data = data.data;
+        onSuccess: (data, variables, context) => {
+            // console.log(variables);
             alert("Login Successful");
+            // setUser(userData);
+            getUser(variables.username);
             // redirect to from page or home page with react router
             navigate(params.get('from') || '/');
         },
@@ -77,9 +84,9 @@ export default function LoginForm() {
 
         <Grid item xs={2}>
             <h1>Login</h1>
-            <form className="form">
+            <FormGroup className="form">
                 <section>
-                    <label>Username</label>
+                    <FormLabel>Username</FormLabel>
 
                     <TextField fullWidth
                                {...register("username", {
@@ -94,7 +101,7 @@ export default function LoginForm() {
                 </section>
 
                 <section>
-                    <label>Password</label>
+                    <FormLabel>Password</FormLabel>
                     <TextField fullWidth
                                {...register("password", {
                                    required: true,
@@ -108,7 +115,7 @@ export default function LoginForm() {
                 </section>
 
                 <Button id="button" variant="contained" color="primary" onClick={handleSubmit(onSubmit)}>Submit</Button>
-            </form>
+            </FormGroup>
         </Grid>
 
 

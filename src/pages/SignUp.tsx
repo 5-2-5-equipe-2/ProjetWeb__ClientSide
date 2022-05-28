@@ -1,6 +1,6 @@
 import * as React from "react";
 import {useForm} from "react-hook-form";
-import {Button, Grid, TextField,} from "@mui/material";
+import {Button, FormGroup, FormLabel, Grid, TextField,} from "@mui/material";
 import "../media/css/Login.css";
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -93,9 +93,9 @@ export default function SignUpForm() {
 
         <Grid item xs={2}>
             <h1>Sign Up</h1>
-            <form className="form">
+            <FormGroup className="form" >
                 <section>
-                    <label>Username</label>
+                    <FormLabel>Username</FormLabel>
 
                     <TextField fullWidth
                                {...register("username", {
@@ -110,7 +110,7 @@ export default function SignUpForm() {
                 </section>
 
                 <section>
-                    <label>Password</label>
+                    <FormLabel>Password</FormLabel>
                     <TextField fullWidth
                                {...register("password", {
                                    required: true,
@@ -123,7 +123,7 @@ export default function SignUpForm() {
 
                 </section>
                 <section>
-                    <label>Confirm Password</label>
+                    <FormLabel>Confirm Password</FormLabel>
                     <TextField fullWidth
                                {...register("confirmPassword", {
                                        required: true,
@@ -136,7 +136,7 @@ export default function SignUpForm() {
                     />
                 </section>
                 <section>
-                    <label>Email</label>
+                    <FormLabel>Email</FormLabel>
                     <TextField fullWidth
                                {...register("email", {
                                        required: true,
@@ -149,7 +149,7 @@ export default function SignUpForm() {
                     />
                 </section>
                 <Button id="button" variant="contained" color="primary" onClick={handleSubmit(onSubmit)}>Submit</Button>
-            </form>
+            </FormGroup>
         </Grid>
 
 
