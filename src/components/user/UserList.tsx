@@ -16,6 +16,7 @@ const UserList = () => {
     return (
         <Box sx={{width: "100%"}}>
             {isLoading &&
+
                 <CircularProgress/>
             }
             <List
