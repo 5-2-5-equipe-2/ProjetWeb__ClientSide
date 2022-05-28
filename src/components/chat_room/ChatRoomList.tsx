@@ -2,12 +2,12 @@ import React, {useState} from 'react';
 import {useQuery} from "react-query";
 import {getUsers} from "../../api/User/User";
 import UserInterface from '../../api/User/UserInterface';
-import UserListItem from "./UserListItem";
+import ChatRoomListItem from "./ChatRoomListItem";
 import {Box, CircularProgress, List} from "@mui/material";
 
 
-const UserList = () => {
-    let {data, isLoading,} = useQuery('users', getUsers, {
+const ChatRoomList = () => {
+    let {data, isLoading,} = useQuery('ChatRoom', getUsers, {
         refetchInterval: 1000,
     });
     console.log(data);
@@ -16,7 +16,6 @@ const UserList = () => {
     return (
         <Box sx={{width: "100%"}}>
             {isLoading &&
-
                 <CircularProgress/>
             }
             <List
@@ -33,10 +32,10 @@ const UserList = () => {
 
             >
                 {users?.map(user => (
-                    <UserListItem user={user}
-                                  key={user.id}
-                                  selectedUser={selectedUserId}
-                                  setSelectedUser={setSelectedUserId}
+                    <ChatRoomListItem user={user}
+                                      key={user.id}
+                                      selectedUser={selectedUserId}
+                                      setSelectedUser={setSelectedUserId}
                     />
                 ))}
             </List>
@@ -46,4 +45,4 @@ const UserList = () => {
     );
 };
 
-export default UserList;
+export default ChatRoomList;

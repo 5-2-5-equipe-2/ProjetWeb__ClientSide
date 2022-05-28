@@ -5,7 +5,7 @@ import "../media/css/Login.css";
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import {useMutation} from "react-query";
-import {createUser,} from "../api/user/user";
+import {createUser,} from "../api/User/User";
 import {AxiosError} from "axios";
 
 
@@ -102,6 +102,7 @@ export default function SignUpForm() {
                                    required: true,
                                })}
                                error={!!errors.username}
+                               autoComplete="username"
                                helperText={errors.username && errors.username.message}
                     />
 
@@ -115,6 +116,7 @@ export default function SignUpForm() {
                                    required: true,
                                })}
                                type="password"
+                               autoComplete="password"
                                error={!!errors.password}
                                helperText={errors?.password?.message}
                     />
@@ -128,6 +130,7 @@ export default function SignUpForm() {
                                    }
                                )}
                                type="password"
+                               autoComplete="confirmPassword"
                                error={!!errors.confirmPassword}
                                helperText={errors?.confirmPassword?.message}
                     />
@@ -141,6 +144,7 @@ export default function SignUpForm() {
                                )}
                                type={'email'}
                                error={!!errors.email}
+                               autoComplete={'email'}
                                helperText={errors?.email?.message}
                     />
                 </section>

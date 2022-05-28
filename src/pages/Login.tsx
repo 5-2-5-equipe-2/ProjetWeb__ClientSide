@@ -5,8 +5,10 @@ import "../media/css/Login.css";
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import {useMutation} from "react-query";
-import {login} from "../api/user/user";
+import {login} from "../api/User/User";
 import {AxiosError} from "axios";
+import {useNavigate, useParams} from "react-router-dom";
+import {getChatRoomById} from "../api/ChatRoom/ChatRoom";
 
 
 const validationSchema = Yup.object().shape({
@@ -27,13 +29,17 @@ export default function LoginForm() {
     } = useForm({
         resolver: yupResolver(validationSchema)
     });
-    const {mutate,} = useMutation(login, {
+    // Get redirect data from query params
+    let params = new URLSearchParams(window.location.search)
+    let navigate = useNavigate();
+    const {mutate: loginUser,} = useMutation(login, {
         onSuccess: () => {
             // data = data.data;
             alert("Login Successful");
+            // redirect to from page or home page with react router
+            navigate(params.get('from') || '/');
         },
         onError: (error: AxiosError) => {
-
             if (error.response) {
                 const {data} = error.response;
                 // @ts-ignore
@@ -45,7 +51,7 @@ export default function LoginForm() {
     });
 
     const onSubmit = (data: any) => {
-        mutate(data);
+        loginUser(data);
 
     }
 
@@ -80,6 +86,7 @@ export default function LoginForm() {
                                    required: true,
                                })}
                                error={!!errors.username}
+                               autoComplete="username"
                                helperText={errors.username && errors.username.message}
                     />
 
@@ -93,6 +100,7 @@ export default function LoginForm() {
                                    required: true,
                                })}
                                type="password"
+                               autoComplete="password"
                                error={!!errors.password}
                                helperText={errors?.password?.message}
                     />
