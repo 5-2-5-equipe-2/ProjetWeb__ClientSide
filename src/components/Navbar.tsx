@@ -10,8 +10,10 @@ import Tooltip from '@mui/material/Tooltip';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
-import {Button, createTheme, FormControlLabel, FormGroup, Switch, Theme} from "@mui/material";
+import {Button, createTheme, FormControlLabel, FormGroup, Switch, Theme, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
+import {useContext} from "react";
+import {loggedInUserContext} from "../App";
 
 export default function AccountMenu({
                                         currentTheme,
@@ -19,6 +21,8 @@ export default function AccountMenu({
                                     }: { currentTheme: Theme, setCurrentTheme: (theme: Theme) => void }) {
     const isDarkTheme = currentTheme.palette.mode === 'dark';
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const userData = useContext(loggedInUserContext);
+    const isLoggedIn = userData.loggedInUser.id !== -1;
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -50,7 +54,13 @@ export default function AccountMenu({
                 </FormGroup>
                 <Button sx={{minWidth: 100}} color={"secondary"} component={Link} to="/Login">Login</Button>
                 <Button sx={{minWidth: 100}} component={Link} to="/signup">Sign Up</Button>
-                <Tooltip title="Account settings" style={{marginLeft: "auto"}}>
+
+                {isLoggedIn &&
+                    <Typography color="primary" style={{marginLeft: "auto"}}>
+                        Logged in as, {userData.loggedInUser.username}
+                    </Typography>}
+
+                <Tooltip title="Account Menu" style={{marginLeft: "auto"}}>
                     <IconButton
                         onClick={handleClick}
                         size="small"
@@ -117,7 +127,7 @@ export default function AccountMenu({
                     </ListItemIcon>
                     Settings
                 </MenuItem>
-                <MenuItem>
+                <MenuItem  component={Link} to={'/logout'}>
                     <ListItemIcon>
                         <Logout fontSize="small"/>
                     </ListItemIcon>

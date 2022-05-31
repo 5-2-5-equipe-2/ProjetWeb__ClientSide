@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, {useState} from 'react';
 import './media/css/App.css';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import AccountMenu from "./components/Navbar";
@@ -7,6 +7,10 @@ import UserList from "./components/user/UserList";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import UserInterface from "./api/User/UserInterface";
+import {useQuery} from "react-query";
+import {getCurrentlyLoggedInUser} from "./api/User/User";
+import Logout from "./pages/Logout";
+import MessageBubble from "./components/MessageBubble";
 
 const theme = createTheme({
     palette: {
@@ -17,13 +21,13 @@ const theme = createTheme({
 let nullUser: UserInterface = {
     id: -1,
     username: "",
-    firstname: "",
+    first_name: "",
     surname: "",
     email: "",
-    isActive: false,
-    profilePicture: "",
-    dateJoined: new Date(),
-    lastLogin: new Date(),
+    is_active: false,
+    profile_picture: "",
+    date_joined: new Date(),
+    last_login: new Date(),
 }
 
 let themeContext = React.createContext({
@@ -34,13 +38,27 @@ let themeContext = React.createContext({
 let loggedInUserContext = React.createContext({
     loggedInUser: nullUser,
     setLoggedInUser: (user: UserInterface) => {
-    }
+    },
 });
 
 
 function App() {
     const [loggedInUser, setLoggedInUser] = useState(nullUser);
     const [currentTheme, setCurrentTheme] = useState(theme);
+    let {data, isError, refetch} = useQuery("user", getCurrentlyLoggedInUser, {
+        refetchInterval: 1000,
+        retry: false,
+        enabled: true,
+    });
+
+    // update loggedInUser if data changes
+    React.useEffect(() => {
+        if (!isError && data) {
+            setLoggedInUser(data.data);
+        }
+    }, [isError, data]);
+
+
     return (
         <Router>
             <loggedInUserContext.Provider value={{loggedInUser, setLoggedInUser}}>
@@ -75,6 +93,9 @@ function App() {
                                             <Route path="/userList" element={<UserList/>}/>
                                             <Route path="/login" element={<Login setLoggedInUser={setLoggedInUser}/>}/>
                                             <Route path="/signup" element={<SignUp/>}/>
+                                            <Route path="/logout"
+                                                   element={<Logout setLoggedInUser={setLoggedInUser}/>}/>
+                                            <Route path="/messagetest" element={<MessageBubble messageId={1}/>}/>
                                             <Route path="*" element={<Login setLoggedInUser={setLoggedInUser}/>}/>
                                         </Routes>
                                     </Grid>
@@ -91,4 +112,5 @@ function App() {
     );
 }
 
+export {App, themeContext, loggedInUserContext, nullUser};
 export default App;

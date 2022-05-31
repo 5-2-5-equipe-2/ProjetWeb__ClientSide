@@ -1,6 +1,6 @@
 import * as React from "react";
 import {useForm} from "react-hook-form";
-import {Button, FormGroup, FormLabel, Grid, TextField} from "@mui/material";
+import {Button, Divider, FormGroup, FormLabel, Grid, TextField} from "@mui/material";
 import "../media/css/Login.css";
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -9,6 +9,7 @@ import {getUserByUsername, login} from "../api/User/User";
 import {AxiosError} from "axios";
 import {useNavigate} from "react-router-dom";
 import UserInterface from "../api/User/UserInterface";
+import ParticlesBg from "particles-bg";
 
 
 const validationSchema = Yup.object().shape({
@@ -34,7 +35,8 @@ export default function LoginForm({setLoggedInUser}: { setLoggedInUser: (user: U
     let navigate = useNavigate();
     const {mutate: getUser,} = useMutation(getUserByUsername, {
         onSuccess: (data) => {
-            console.log(data);
+            console.log(data.data);
+            setLoggedInUser(data.data);
         }
     });
     const {mutate: loginUser,} = useMutation(login, {
@@ -84,38 +86,42 @@ export default function LoginForm({setLoggedInUser}: { setLoggedInUser: (user: U
 
         <Grid item xs={2}>
             <h1>Login</h1>
-            <FormGroup className="form">
-                <section>
-                    <FormLabel>Username</FormLabel>
+            <form>
+                <FormGroup>
+                    <Grid container
+                          direction="column"
+                          justifyContent="center"
+                          alignItems="center"
+                          spacing={4}>
+                        <Grid item>
+                            <FormLabel>Username</FormLabel>
+                            <TextField fullWidth
+                                       {...register("username", {
+                                           required: true,
+                                       })}
+                                       error={!!errors.username}
+                                       autoComplete="username"
+                                       helperText={errors.username && errors.username.message}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <FormLabel>Password</FormLabel>
+                            <TextField fullWidth
+                                       {...register("password", {
+                                           required: true,
+                                       })}
+                                       type="password"
+                                       autoComplete="password"
+                                       error={!!errors.password}
+                                       helperText={errors?.password?.message}
+                            />
 
-                    <TextField fullWidth
-                               {...register("username", {
-                                   required: true,
-                               })}
-                               error={!!errors.username}
-                               autoComplete="username"
-                               helperText={errors.username && errors.username.message}
-                    />
-
-
-                </section>
-
-                <section>
-                    <FormLabel>Password</FormLabel>
-                    <TextField fullWidth
-                               {...register("password", {
-                                   required: true,
-                               })}
-                               type="password"
-                               autoComplete="password"
-                               error={!!errors.password}
-                               helperText={errors?.password?.message}
-                    />
-
-                </section>
-
-                <Button id="button" variant="contained" color="primary" onClick={handleSubmit(onSubmit)}>Submit</Button>
-            </FormGroup>
+                        </Grid>
+                    </Grid>
+                    <Button id="button" variant="contained" color="primary"
+                            onClick={handleSubmit(onSubmit)}>Submit</Button>
+                </FormGroup>
+            </form>
         </Grid>
 
 

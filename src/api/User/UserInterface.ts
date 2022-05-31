@@ -1,13 +1,13 @@
 interface UserInterface {
     id: number;
     username: string;
-    firstname: string;
+    first_name: string;
     surname: string;
     email: string;
-    dateJoined: Date;
-    lastLogin: Date;
-    isActive: boolean;
-    profilePicture: string;
+    date_joined: Date;
+    last_login: Date;
+    is_active: boolean;
+    profile_picture: string;
 }
 
 export default UserInterface;
