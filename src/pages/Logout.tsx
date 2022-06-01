@@ -2,7 +2,7 @@ import UserInterface from "../api/User/UserInterface";
 import {nullUser} from "../App";
 import {useMutation} from "react-query";
 import {logout} from "../api/User/User";
-import {Box, CircularProgress} from "@mui/material";
+import {Box, CircularProgress, Grid} from "@mui/material";
 import {useEffect, useState} from "react";
 
 export default function Logout({setLoggedInUser}: { setLoggedInUser: (user: UserInterface) => void }) {
@@ -29,6 +29,7 @@ export default function Logout({setLoggedInUser}: { setLoggedInUser: (user: User
         logoutMutate();
     }, [logoutMutate]);
     return (
+        
         <Box sx={{width: "100%"}}>
             {(!userLoggedOut) &&
                 <CircularProgress/>
@@ -44,10 +45,28 @@ export default function Logout({setLoggedInUser}: { setLoggedInUser: (user: User
                     justifyContent: "center"
                 }}>
                     <h1>
-                        You have been logged out.
+                        You have been logged out
+                        
                     </h1>
+                    <Grid container spacing={2}>
+  <Grid item xs={8}>
+    <div>xs=8</div>
+  </Grid>
+  <Grid item xs={4}>
+    <div>xs=4</div>
+  </Grid>
+  <Grid item xs={4}>
+    <div>xs=4</div>
+  </Grid>
+  <Grid item xs={8}>
+    <div>xs=8</div>
+  </Grid>
+</Grid>
+                
                 </Box>}
+                
         </Box>
+        
 
     );
 
