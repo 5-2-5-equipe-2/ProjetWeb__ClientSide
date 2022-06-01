@@ -28,7 +28,7 @@ export interface LoginParams {
 }
 
 export const login = ({username, password}: LoginParams) => {
-    const apiRequest: Promise<AxiosResponse<any>> = api.post(`/user/login/`, {
+    return api.post(`/user/login/`, {
         username,
         password
     }, {
@@ -36,9 +36,6 @@ export const login = ({username, password}: LoginParams) => {
             'Content-Type': 'application/json'
         }
     })
-    console.log(apiRequest);
-
-    return apiRequest
 }
 
 export const logout = () => api.post(`/user/logout`);

@@ -13,10 +13,10 @@ const validationSchema = Yup.object().shape({
     username: Yup.string()
         .required("Username is Required.")
         .min(1, "Username is Too Short."),
-    firstName: Yup.string()
-        .min(1, "First Name is Too Short."),
-    lastName: Yup.string()
-        .min(1, "Last Name is Too Short."),
+    // firstName: Yup.string()
+    //     .min(1, "First Name is Too Short."),
+    // lastName: Yup.string()
+    //     .min(1, "Last Name is Too Short."),
 
     email: Yup.string().email().required("Email is Required."),
     password: Yup.string()
@@ -27,10 +27,10 @@ const validationSchema = Yup.object().shape({
         .oneOf([Yup.ref('password'), null], 'Passwords must match.')
         .required("Confirm Password is Required.")
         .min(8, "Confirm Password is Too Short."),
-    phoneNumber: Yup.string()
-        .min(10, "Phone Number is Too Short."),
-    address: Yup.string()
-        .min(1, "Address is Too Short."),
+    // phoneNumber: Yup.string()
+    //     .min(10, "Phone Number is Too Short."),
+    // address: Yup.string()
+    //     .min(1, "Address is Too Short."),
 
 
 });
@@ -71,9 +71,9 @@ export default function SignUpForm() {
         register("password", {required: true});
         register("confirmPassword", {required: true});
         register("email", {required: true});
-        register("firstName", {required: true});
-        register("lastName", {required: true});
-        register("phoneNumber", {required: true});
+        // register("firstName", {required: true});
+        // register("lastName", {required: true});
+        // register("phoneNumber", {required: true});
         const listener = (event: { code: string; preventDefault: () => void; }) => {
             if (event.code === "Enter" || event.code === "NumpadEnter") {
                 event.preventDefault();
