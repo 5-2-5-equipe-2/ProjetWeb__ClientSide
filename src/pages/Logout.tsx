@@ -4,8 +4,19 @@ import {useMutation} from "react-query";
 import {logout} from "../api/User/User";
 import {Box, CircularProgress} from "@mui/material";
 import {useEffect, useState} from "react";
+import image from "./light.png";
+import image2 from "./dark.png";
+import {useContext} from "react";
+import {themeContext} from "../App";
 
 export default function Logout({setLoggedInUser}: { setLoggedInUser: (user: UserInterface) => void }) {
+    const theme = useContext(themeContext).currentTheme;
+    if (theme.palette.mode === "dark") {
+        var im=image2;
+    }
+    else {
+        var im=image;
+    }
     // logout page
     setLoggedInUser(nullUser);
     const [userLoggedOut, setUserLoggedOut] = useState(false);
@@ -44,11 +55,10 @@ export default function Logout({setLoggedInUser}: { setLoggedInUser: (user: User
                     justifyContent: "center"
                 }}>
                     <h1>
-                        You have been logged out.
+                    <img src={im}/>
                     </h1>
                 </Box>}
+                
         </Box>
-
     );
-
 }
