@@ -8,6 +8,7 @@ import image from "./light.png";
 import image2 from "./dark.png";
 import {useContext} from "react";
 import {themeContext} from "../App";
+import "../media/css/Logout.css";
 
 export default function Logout({setLoggedInUser}: { setLoggedInUser: (user: UserInterface) => void }) {
     const theme = useContext(themeContext).currentTheme;
@@ -52,10 +53,10 @@ export default function Logout({setLoggedInUser}: { setLoggedInUser: (user: User
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    justifyContent: "center"
+                    justifyContent: "center",
                 }}>
                     <h1>
-                    <img src={im}/>
+                    <img src={im} alt="You've been logged out"/>
                     </h1>
                 </Box>}
                 

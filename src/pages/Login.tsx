@@ -21,8 +21,10 @@ import {useNavigate} from "react-router-dom";
 import UserInterface from "../api/User/UserInterface";
 import ParticlesBg from "particles-bg";
 
+    
 
 const validationSchema = Yup.object().shape({
+    
     username: Yup.string()
         .required('Username is required'),
 
@@ -33,6 +35,7 @@ const validationSchema = Yup.object().shape({
 
 
 export default function LoginForm({setLoggedInUser}: { setLoggedInUser: (user: UserInterface) => void }) {
+
     const {
         register,
         handleSubmit,
@@ -110,8 +113,17 @@ export default function LoginForm({setLoggedInUser}: { setLoggedInUser: (user: U
 
     return (
 
-        <Grid item xs={2}>
-            <Dialog
+        <Grid item sx={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            border: "2px solid purple",
+            padding: "2 %"
+        }} >
+            <Dialog 
                 open={dialogOpen}
                 onClose={handleDialogClose}
                 aria-labelledby="alert-dialog-title"
