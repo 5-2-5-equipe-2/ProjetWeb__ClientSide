@@ -12,6 +12,7 @@ import {getCurrentlyLoggedInUser} from "./api/User/User";
 import Logout from "./pages/Logout";
 import MessageBubble from "./components/MessageBubble";
 import ChatRoomList from "./components/chat_room/ChatRoomList";
+import ModifyUser from "./pages/ModifyUser";
 
 const theme = createTheme({
     palette: {
@@ -25,10 +26,12 @@ let nullUser: UserInterface = {
     first_name: "",
     surname: "",
     email: "",
-    is_active: false,
     profile_picture: "",
     date_joined: new Date(),
     last_login: new Date(),
+    is_superuser: false,
+    next_time_pixel: new Date(),
+    pixel_placed: 0
 }
 
 let themeContext = React.createContext({
@@ -98,6 +101,7 @@ function App() {
                                                    element={<Logout setLoggedInUser={setLoggedInUser}/>}/>
                                             <Route path="/messagetest" element={<MessageBubble messageId={1}/>}/>
                                             <Route path="/chat" element={<ChatRoomList/>}/>
+                                            <Route path="/modifyuser" element={<ModifyUser/>}/>
                                             <Route path="*" element={<Login setLoggedInUser={setLoggedInUser}/>}/>
                                         </Routes>
                                     </Grid>

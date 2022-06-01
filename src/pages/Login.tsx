@@ -1,6 +1,16 @@
 import * as React from "react";
 import {useForm} from "react-hook-form";
-import {Button, Divider, FormGroup, FormLabel, Grid, TextField} from "@mui/material";
+import {
+    Button, Dialog, DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Divider,
+    FormGroup,
+    FormLabel,
+    Grid,
+    TextField
+} from "@mui/material";
 import "../media/css/Login.css";
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -39,21 +49,29 @@ export default function LoginForm({setLoggedInUser}: { setLoggedInUser: (user: U
             setLoggedInUser(data.data);
         }
     });
+    const [dialogOpen, setDialogOpen] = React.useState(false);
+    const [dialogMessage, setDialogMessage] = React.useState("");
+    const [dialogTitle, setDialogTitle] = React.useState("");
     const {mutate: loginUser,} = useMutation(login, {
         onSuccess: (data, variables, context) => {
             // console.log(variables);
-            alert("Login Successful");
+
+            setDialogTitle("Success");
+            setDialogMessage("User Logged in Successfully");
+            handleDialogClickOpen();
             // setUser(userData);
             getUser(variables.username);
             // redirect to from page or home page with react router
             navigate(params.get('from') || '/');
         },
         onError: (error: AxiosError) => {
-            if (error.response) {
-                const {data} = error.response;
+            if (error.response && error.response.data) {
+                setDialogTitle("Error");
+                handleDialogClickOpen();
                 // @ts-ignore
-                const {error: error1} = data;
-                alert(error1);
+                setDialogMessage(error.response.data.error);
+            } else {
+                alert("An error occurred");
             }
 
         }
@@ -63,6 +81,14 @@ export default function LoginForm({setLoggedInUser}: { setLoggedInUser: (user: U
         loginUser(data);
 
     }
+    const handleDialogClickOpen = () => {
+        setDialogOpen(true);
+    };
+
+    const handleDialogClose = () => {
+        setDialogOpen(false);
+    };
+
 
     React.useEffect(() => {
         register("username", {required: true});
@@ -85,6 +111,24 @@ export default function LoginForm({setLoggedInUser}: { setLoggedInUser: (user: U
     return (
 
         <Grid item xs={2}>
+            <Dialog
+                open={dialogOpen}
+                onClose={handleDialogClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle>{dialogTitle}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        {dialogMessage}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDialogClose} autoFocus>
+                        close
+                    </Button>
+                </DialogActions>
+            </Dialog>
             <h1>Login</h1>
             <form>
                 <FormGroup>

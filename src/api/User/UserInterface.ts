@@ -6,8 +6,10 @@ interface UserInterface {
     email: string;
     date_joined: Date;
     last_login: Date;
-    is_active: boolean;
+    is_superuser: boolean;
     profile_picture: string;
+    pixel_placed: number;
+    next_time_pixel: Date;
 }
 
 export default UserInterface;

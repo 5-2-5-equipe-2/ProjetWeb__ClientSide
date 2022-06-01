@@ -1,6 +1,16 @@
 import * as React from "react";
 import {useForm} from "react-hook-form";
-import {Button, FormGroup, FormLabel, Grid, TextField,} from "@mui/material";
+import {
+    Button,
+    Dialog, DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    FormGroup,
+    FormLabel,
+    Grid,
+    TextField,
+} from "@mui/material";
 import "../media/css/Login.css";
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -27,12 +37,6 @@ const validationSchema = Yup.object().shape({
         .oneOf([Yup.ref('password'), null], 'Passwords must match.')
         .required("Confirm Password is Required.")
         .min(8, "Confirm Password is Too Short."),
-    // phoneNumber: Yup.string()
-    //     .min(10, "Phone Number is Too Short."),
-    // address: Yup.string()
-    //     .min(1, "Address is Too Short."),
-
-
 });
 
 
@@ -44,18 +48,25 @@ export default function SignUpForm() {
     } = useForm({
         resolver: yupResolver(validationSchema)
     });
+    const [dialogOpen, setDialogOpen] = React.useState(false);
+    const [dialogMessage, setDialogMessage] = React.useState("");
+    const [dialogTitle, setDialogTitle] = React.useState("");
     const {mutate,} = useMutation(createUser, {
         onSuccess: () => {
-            // data = data.data;
-            alert("SignUp Successful");
+            setDialogTitle("Success");
+            setDialogMessage("User Created Successfully");
+            handleDialogClickOpen();
+            console.log("User Created Successfully");
         },
         onError: (error: AxiosError) => {
 
-            if (error.response) {
-                const {data} = error.response;
+            if (error.response && error.response.data) {
+                setDialogTitle("Error");
+                handleDialogClickOpen();
                 // @ts-ignore
-                const {error: error1} = data;
-                alert(error1);
+                setDialogMessage(error.response.data.error);
+            } else {
+                alert("An error occurred");
             }
 
         }
@@ -66,14 +77,20 @@ export default function SignUpForm() {
 
     }
 
+
+    const handleDialogClickOpen = () => {
+        setDialogOpen(true);
+    };
+
+    const handleDialogClose = () => {
+        setDialogOpen(false);
+    };
+
     React.useEffect(() => {
         register("username", {required: true});
         register("password", {required: true});
         register("confirmPassword", {required: true});
         register("email", {required: true});
-        // register("firstName", {required: true});
-        // register("lastName", {required: true});
-        // register("phoneNumber", {required: true});
         const listener = (event: { code: string; preventDefault: () => void; }) => {
             if (event.code === "Enter" || event.code === "NumpadEnter") {
                 event.preventDefault();
@@ -90,68 +107,89 @@ export default function SignUpForm() {
     }, [register]);
 
     return (
-
         <Grid item xs={2}>
+            <Dialog
+                open={dialogOpen}
+                onClose={handleDialogClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle>{dialogTitle}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        {dialogMessage}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDialogClose} autoFocus>
+                        close
+                    </Button>
+                </DialogActions>
+            </Dialog>
             <h1>Sign Up</h1>
-            <FormGroup className="form" >
-                <section>
-                    <FormLabel>Username</FormLabel>
+            <form encType="multipart/form-data">
 
-                    <TextField fullWidth
-                               {...register("username", {
-                                   required: true,
-                               })}
-                               error={!!errors.username}
-                               autoComplete="username"
-                               helperText={errors.username && errors.username.message}
-                    />
+                <FormGroup className="form">
+                    <section>
+                        <FormLabel>Username</FormLabel>
 
-
-                </section>
-
-                <section>
-                    <FormLabel>Password</FormLabel>
-                    <TextField fullWidth
-                               {...register("password", {
-                                   required: true,
-                               })}
-                               type="password"
-                               autoComplete="password"
-                               error={!!errors.password}
-                               helperText={errors?.password?.message}
-                    />
-
-                </section>
-                <section>
-                    <FormLabel>Confirm Password</FormLabel>
-                    <TextField fullWidth
-                               {...register("confirmPassword", {
+                        <TextField fullWidth
+                                   {...register("username", {
                                        required: true,
-                                   }
-                               )}
-                               type="password"
-                               autoComplete="confirmPassword"
-                               error={!!errors.confirmPassword}
-                               helperText={errors?.confirmPassword?.message}
-                    />
-                </section>
-                <section>
-                    <FormLabel>Email</FormLabel>
-                    <TextField fullWidth
-                               {...register("email", {
+                                   })}
+                                   error={!!errors.username}
+                                   autoComplete="username"
+                                   helperText={errors.username && errors.username.message}
+                        />
+
+
+                    </section>
+
+                    <section>
+                        <FormLabel>Password</FormLabel>
+                        <TextField fullWidth
+                                   {...register("password", {
                                        required: true,
-                                   }
-                               )}
-                               type={'email'}
-                               error={!!errors.email}
-                               autoComplete={'email'}
-                               helperText={errors?.email?.message}
-                    />
-                </section>
-                <Button id="button" variant="contained" color="primary" onClick={handleSubmit(onSubmit)}>Submit</Button>
-            </FormGroup>
+                                   })}
+                                   type="password"
+                                   autoComplete="password"
+                                   error={!!errors.password}
+                                   helperText={errors?.password?.message}
+                        />
+
+                    </section>
+                    <section>
+                        <FormLabel>Confirm Password</FormLabel>
+                        <TextField fullWidth
+                                   {...register("confirmPassword", {
+                                           required: true,
+                                       }
+                                   )}
+                                   type="password"
+                                   autoComplete="confirmPassword"
+                                   error={!!errors.confirmPassword}
+                                   helperText={errors?.confirmPassword?.message}
+                        />
+                    </section>
+                    <section>
+                        <FormLabel>Email</FormLabel>
+                        <TextField fullWidth
+                                   {...register("email", {
+                                           required: true,
+                                       }
+                                   )}
+                                   type={'email'}
+                                   error={!!errors.email}
+                                   autoComplete={'email'}
+                                   helperText={errors?.email?.message}
+                        />
+                    </section>
+                    <Button id="button" variant="contained" color="primary"
+                            onClick={handleSubmit(onSubmit)}>Submit</Button>
+                </FormGroup>
+            </form>
+
         </Grid>
-
 
     );
 }
