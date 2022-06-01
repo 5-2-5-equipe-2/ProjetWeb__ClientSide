@@ -11,6 +11,7 @@ import {useQuery} from "react-query";
 import {getCurrentlyLoggedInUser} from "./api/User/User";
 import Logout from "./pages/Logout";
 import MessageBubble from "./components/MessageBubble";
+import ChatRoomList from "./components/chat_room/ChatRoomList";
 
 const theme = createTheme({
     palette: {
@@ -96,6 +97,7 @@ function App() {
                                             <Route path="/logout"
                                                    element={<Logout setLoggedInUser={setLoggedInUser}/>}/>
                                             <Route path="/messagetest" element={<MessageBubble messageId={1}/>}/>
+                                            <Route path="/chat" element={<ChatRoomList/>}/>
                                             <Route path="*" element={<Login setLoggedInUser={setLoggedInUser}/>}/>
                                         </Routes>
                                     </Grid>

@@ -1,18 +1,26 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {useQuery} from "react-query";
-import {getUsers} from "../../api/User/User";
+import {getChatRooms, getUsers} from "../../api/User/User";
 import UserInterface from '../../api/User/UserInterface';
 import ChatRoomListItem from "./ChatRoomListItem";
 import {Box, CircularProgress, List} from "@mui/material";
+import {getChatRoomByUserId} from "../../api/ChatRoom/ChatRoom";
+import {getMessage} from "../../api/Message/Message";
+import {loggedInUserContext} from "../../App";
+import ChatRoomInterface from "../../api/ChatRoom/ChatRoomInterface";
 
 
 const ChatRoomList = () => {
-    let {data, isLoading,} = useQuery('ChatRoom', getUsers, {
+
+    let loggedInUser = useContext(loggedInUserContext)['loggedInUser'];
+
+    let {data, isLoading,} = useQuery(["chatRoomList", loggedInUser.id], () => getChatRooms(loggedInUser.id),
+        {
         refetchInterval: 1000,
     });
-    console.log(data);
-    let users = data?.data as UserInterface[] | undefined;
-    const [selectedUserId, setSelectedUserId] = useState(users?.[0].id);
+    // console.log(data);
+    let chatRooms = data?.data as ChatRoomInterface[] | undefined;
+    const [selectedChatRoomId, setSelectedChatRoomId] = useState(chatRooms?.[0].id);
     return (
         <Box sx={{width: "100%"}}>
             {isLoading &&
@@ -31,11 +39,11 @@ const ChatRoomList = () => {
                 }}
 
             >
-                {users?.map(user => (
-                    <ChatRoomListItem user={user}
-                                      key={user.id}
-                                      selectedUser={selectedUserId}
-                                      setSelectedUser={setSelectedUserId}
+                {chatRooms?.map(chatRoom => (
+                    <ChatRoomListItem chatRoom={chatRoom}
+                                      key={chatRoom.id}
+                                      selectedChatRoom={selectedChatRoomId}
+                                      setSelectedChatRoom={setSelectedChatRoomId}
                     />
                 ))}
             </List>

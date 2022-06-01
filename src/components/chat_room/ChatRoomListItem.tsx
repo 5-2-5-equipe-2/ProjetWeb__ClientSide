@@ -6,22 +6,23 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { ButtonBase} from "@mui/material";
+import ChatRoomInterface from "../../api/ChatRoom/ChatRoomInterface";
 
 
-interface UserListItemProps {
-    user: UserInterface;
-    selectedUser: number | undefined;
-    setSelectedUser: React.Dispatch<React.SetStateAction<number | undefined>>;
+interface ChatRoomListItemProps {
+    chatRoom: ChatRoomInterface;
+    selectedChatRoom: number | undefined;
+    setSelectedChatRoom: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
 
-export default function ChatRoomListItem({user, selectedUser, setSelectedUser}: UserListItemProps) {
+export default function ChatRoomListItem({chatRoom, selectedChatRoom, setSelectedChatRoom}: ChatRoomListItemProps) {
     const handleClick = () => {
-        setSelectedUser(user.id);
+        setSelectedChatRoom(chatRoom.id);
     };
     const styles = {
         width: "100%", opacity: 0.75, transition: "opacity 0.5s"
     };
-    if (selectedUser && selectedUser === user.id) {
+    if (selectedChatRoom && selectedChatRoom === chatRoom.id) {
         styles.opacity = 1;
     }
     return (
@@ -38,11 +39,11 @@ export default function ChatRoomListItem({user, selectedUser, setSelectedUser}: 
                 <Box sx={{display: 'flex', flexDirection: 'column'}}>
                     <CardContent sx={{flex: '1 0 auto'}}>
                         <Typography component="div" variant="h5">
-                            {user.username}
+                            {chatRoom.name}
                         </Typography>
-                        {/*<Typography variant="subtitle1" color="text.secondary" component="div">*/}
-                        {/*    Last Message: ...*/}
-                        {/*</Typography>*/}
+                        <Typography variant="subtitle1" color="text.secondary" component="div">
+                            Last Message: ...
+                        </Typography>
                     </CardContent>
                 </Box>
 

@@ -39,3 +39,5 @@ export const login = ({username, password}: LoginParams) => {
 }
 
 export const logout = () => api.post(`/user/logout`);
+
+export const getChatRooms = (id: Number) => api.get(`/user/getChatRooms?id=${id}`);
