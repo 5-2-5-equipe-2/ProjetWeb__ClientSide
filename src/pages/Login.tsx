@@ -5,7 +5,6 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
-    Divider,
     FormGroup,
     FormLabel,
     Grid,
@@ -18,8 +17,8 @@ import {useMutation} from "react-query";
 import {getUserByUsername, login} from "../api/User/User";
 import {AxiosError} from "axios";
 import {useNavigate} from "react-router-dom";
-import UserInterface from "../api/User/UserInterface";
-import ParticlesBg from "particles-bg";
+import {loggedInUserContext} from "../App";
+import {useContext} from "react";
 
 
 const validationSchema = Yup.object().shape({
@@ -32,7 +31,7 @@ const validationSchema = Yup.object().shape({
 });
 
 
-export default function LoginForm({setLoggedInUser}: { setLoggedInUser: (user: UserInterface) => void }) {
+export default function LoginForm() {
     const {
         register,
         handleSubmit,
@@ -40,6 +39,8 @@ export default function LoginForm({setLoggedInUser}: { setLoggedInUser: (user: U
     } = useForm({
         resolver: yupResolver(validationSchema)
     });
+    const setLoggedInUser = useContext(loggedInUserContext).setLoggedInUser;
+
     // Get redirect data from query params
     let params = new URLSearchParams(window.location.search)
     let navigate = useNavigate();
@@ -53,7 +54,7 @@ export default function LoginForm({setLoggedInUser}: { setLoggedInUser: (user: U
     const [dialogMessage, setDialogMessage] = React.useState("");
     const [dialogTitle, setDialogTitle] = React.useState("");
     const {mutate: loginUser,} = useMutation(login, {
-        onSuccess: (data, variables, context) => {
+        onSuccess: (data, variables, ) => {
             // console.log(variables);
 
             setDialogTitle("Success");

@@ -1,14 +1,15 @@
-import UserInterface from "../api/User/UserInterface";
-import {nullUser} from "../App";
+import {loggedInUserContext, nullUser} from "../App";
 import {useMutation} from "react-query";
 import {logout} from "../api/User/User";
 import {Box, CircularProgress} from "@mui/material";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 
-export default function Logout({setLoggedInUser}: { setLoggedInUser: (user: UserInterface) => void }) {
+export default function Logout() {
     // logout page
+    const setLoggedInUser = useContext(loggedInUserContext).setLoggedInUser;
     setLoggedInUser(nullUser);
     const [userLoggedOut, setUserLoggedOut] = useState(false);
+
     const {mutate: logoutMutate} = useMutation(logout, {
         onSuccess: () => {
             setUserLoggedOut(true);

@@ -10,9 +10,10 @@ import UserInterface from "./api/User/UserInterface";
 import {useQuery} from "react-query";
 import {getCurrentlyLoggedInUser} from "./api/User/User";
 import Logout from "./pages/Logout";
-import MessageBubble from "./components/MessageBubble";
-import ChatRoomList from "./components/chat_room/ChatRoomList";
 import ModifyUser from "./pages/ModifyUser";
+import Chat from "./pages/Chat";
+import ChatRoomMessageBox from "./components/chat_room/ChatRoomMessageBox";
+import "./global.css";
 
 const theme = createTheme({
     palette: {
@@ -37,11 +38,13 @@ let nullUser: UserInterface = {
 let themeContext = React.createContext({
     currentTheme: theme,
     setCurrentTheme: (theme: Theme) => {
+        console.log(theme);
     }
 });
 let loggedInUserContext = React.createContext({
     loggedInUser: nullUser,
     setLoggedInUser: (user: UserInterface) => {
+        console.log(user)
     },
 });
 
@@ -49,7 +52,7 @@ let loggedInUserContext = React.createContext({
 function App() {
     const [loggedInUser, setLoggedInUser] = useState(nullUser);
     const [currentTheme, setCurrentTheme] = useState(theme);
-    let {data, isError, refetch} = useQuery("user", getCurrentlyLoggedInUser, {
+    let {data, isError} = useQuery("user", getCurrentlyLoggedInUser, {
         refetchInterval: 1000,
         retry: false,
         enabled: true,
@@ -73,36 +76,39 @@ function App() {
                                   spacing={0}
                                   direction="row"
                                   alignItems="center"
-                                  justifyContent="center"
+                                  justifyContent="space-evenly"
                                   style={{
-                                      height: '100vh',
-                                      width: '100wh'
+                                        width: "100%",
+                                        height: "100%",
+                                      // padding:"10px",
+                                      //   border: "4px solid"
                                   }}
                             >
                                 <Grid item md={8} xs={9}>
                                     <AccountMenu currentTheme={currentTheme} setCurrentTheme={setCurrentTheme}/>
                                 </Grid>
-                                <Grid item md={8}>
+                                <Grid item md={12}>
                                     <Grid
                                         container
                                         spacing={0}
                                         direction="column"
-                                        alignItems="center"
-                                        justifyContent="center"
-                                        style={{minHeight: '80vh'}}
+                                        alignItems="space-between"
+                                        justifyContent="space-evenly"
+                                        style={{width: "100%", height: "100%"}}
                                     >
                                         <Routes>
                                             <Route path="/about"/>
                                             <Route path="/contact"/>
                                             <Route path="/userList" element={<UserList/>}/>
-                                            <Route path="/login" element={<Login setLoggedInUser={setLoggedInUser}/>}/>
+                                            <Route path="/login" element={<Login/>}/>
                                             <Route path="/signup" element={<SignUp/>}/>
                                             <Route path="/logout"
-                                                   element={<Logout setLoggedInUser={setLoggedInUser}/>}/>
-                                            <Route path="/messagetest" element={<MessageBubble messageId={1}/>}/>
-                                            <Route path="/chat" element={<ChatRoomList/>}/>
+                                                   element={<Logout/>}/>
+                                            {/*<Route path="/messagetest" element={<MessageBubble messageId={2}/>}/>*/}
+                                            <Route path="/chat" element={<Chat/>}/>
+                                            <Route path="/chatroomlist" element={<ChatRoomMessageBox/>}/>
                                             <Route path="/modifyuser" element={<ModifyUser/>}/>
-                                            <Route path="*" element={<Login setLoggedInUser={setLoggedInUser}/>}/>
+                                            <Route path="*" element={<Login/>}/>
                                         </Routes>
                                     </Grid>
                                 </Grid>

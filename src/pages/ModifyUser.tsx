@@ -68,7 +68,7 @@ export default function ModifyUser() {
             // alert(error.response.e.message);
         }
     });
-    let loggedInUser = useContext(loggedInUserContext)['loggedInUser'];
+    let loggedInUser = useContext(loggedInUserContext).loggedInUser;
     const onSubmit = (data: any) => {
         console.log(data);
         mutate(data);

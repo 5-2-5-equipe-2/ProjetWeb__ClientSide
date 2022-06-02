@@ -1,4 +1,3 @@
-import UserInterface from "../../api/User/UserInterface";
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -12,7 +11,7 @@ import ChatRoomInterface from "../../api/ChatRoom/ChatRoomInterface";
 interface ChatRoomListItemProps {
     chatRoom: ChatRoomInterface;
     selectedChatRoom: number | undefined;
-    setSelectedChatRoom: React.Dispatch<React.SetStateAction<number | undefined>>;
+    setSelectedChatRoom: (chatRoomId: number) => void;
 }
 
 export default function ChatRoomListItem({chatRoom, selectedChatRoom, setSelectedChatRoom}: ChatRoomListItemProps) {

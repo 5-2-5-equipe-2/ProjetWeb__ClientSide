@@ -4,7 +4,7 @@ import {AxiosResponse} from "axios";
 
 
 export const getUsers = () => api.get("/user/list");
-export const getUserById = (id: number) => api.get<UserInterface>(`/user/?id=${id}`);
+export const getUserById = (id: number) => api.get<UserInterface>(`/user/get?id=${id}`);
 export const createUser = (user: UserInterface) => api.post("/user/createUser", user);
 export const updateUser = (user: UserInterface) => api.put(`/user/update/?id=${user.id}`, user);
 export const deleteUser = (id: number) => api.delete(`/user/delete/?id=${id}`);
