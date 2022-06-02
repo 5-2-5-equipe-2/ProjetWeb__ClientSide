@@ -115,13 +115,12 @@ export default function LoginForm() {
 
         <Grid item sx={{
             width: "100%",
-            height: "100%",
+            height: "70vh",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            border: "2px solid purple",
-            padding: "2 %"
+
         }} >
             <Dialog 
                 open={dialogOpen}

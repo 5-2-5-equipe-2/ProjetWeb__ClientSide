@@ -111,7 +111,6 @@ function App() {
                                             <Route path="/modifyuser" element={<ModifyUser/>}/>
                                             <Route path="*" element={<Login/>}/>
                                             <Route path="/testgame" element={<TestGame/>}/>
-                                            <Route path="*" element={<Login setLoggedInUser={setLoggedInUser}/>}/>
                                         </Routes>
                                     </Grid>
                                 </Grid>

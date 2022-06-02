@@ -14,7 +14,7 @@ import {Button, createTheme, FormControlLabel, FormGroup, Switch, Theme, Typogra
 import {Link} from "react-router-dom";
 import {useContext} from "react";
 import {loggedInUserContext} from "../App";
-import "../media/css/navbar.css";
+// import "../media/css/navbar.css";
 
 export default function AccountMenu({
                                         currentTheme,
