@@ -20,8 +20,10 @@ import {useNavigate} from "react-router-dom";
 import {loggedInUserContext} from "../App";
 import {useContext} from "react";
 
+    
 
 const validationSchema = Yup.object().shape({
+    
     username: Yup.string()
         .required('Username is required'),
 
@@ -111,8 +113,17 @@ export default function LoginForm() {
 
     return (
 
-        <Grid item xs={2}>
-            <Dialog
+        <Grid item sx={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            border: "2px solid purple",
+            padding: "2 %"
+        }} >
+            <Dialog 
                 open={dialogOpen}
                 onClose={handleDialogClose}
                 aria-labelledby="alert-dialog-title"

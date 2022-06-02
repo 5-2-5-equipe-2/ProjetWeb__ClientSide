@@ -3,23 +3,40 @@ import {useMutation} from "react-query";
 import {logout} from "../api/User/User";
 import {Box, CircularProgress} from "@mui/material";
 import {useContext, useEffect, useState} from "react";
+import UserInterface from "../api/User/UserInterface";
+import { nullUser } from "../App";
+import { useMutation } from "react-query";
+import { logout } from "../api/User/User";
+import { Box, CircularProgress, Grid } from "@mui/material";
+import { useEffect, useState } from "react";
+import image from "./light.png";
+import image2 from "./dark.png";
+import { useContext } from "react";
+import { themeContext } from "../App";
 
 export default function Logout() {
+    const theme = useContext(themeContext).currentTheme;
+    if (theme.palette.mode === "dark") {
+        var im = image2;
+    }
+    else {
+        var im = image;
+    }
     // logout page
     const setLoggedInUser = useContext(loggedInUserContext).setLoggedInUser;
     setLoggedInUser(nullUser);
     const [userLoggedOut, setUserLoggedOut] = useState(false);
 
-    const {mutate: logoutMutate} = useMutation(logout, {
+    const { mutate: logoutMutate } = useMutation(logout, {
         onSuccess: () => {
             setUserLoggedOut(true);
         },
         onError: (error: any) => {
             if (error.response) {
-                const {data} = error.response;
+                const { data } = error.response;
                 // @ts-ignore
-                const {error: error1} = data;
-                if (error1==="User not logged in") {
+                const { error: error1 } = data;
+                if (error1 === "User not logged in") {
                     setUserLoggedOut(true);
                 }
             }
@@ -30,9 +47,10 @@ export default function Logout() {
         logoutMutate();
     }, [logoutMutate]);
     return (
-        <Box sx={{width: "100%"}}>
+
+        <Box sx={{ width: "100%" }}>
             {(!userLoggedOut) &&
-                <CircularProgress/>
+                <CircularProgress />
             }
             {userLoggedOut &&
                 // display logout to user
@@ -42,14 +60,28 @@ export default function Logout() {
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    justifyContent: "center"
+                    justifyContent: "center",
                 }}>
                     <h1>
-                        You have been logged out.
+                    <img src={im} alt="You've been logged out"/>
                     </h1>
+                    <Grid container spacing={2}>
+                        <Grid item xs={8}>
+                            <div>xs=8</div>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <div>xs=4</div>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <div>xs=4</div>
+                        </Grid>
+                        <Grid item xs={8}>
+                            <div>xs=8</div>
+                        </Grid>
+                    </Grid>
+
                 </Box>}
+
         </Box>
-
     );
-
 }
