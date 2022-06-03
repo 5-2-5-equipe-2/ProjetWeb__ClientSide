@@ -24,6 +24,7 @@
     "gsap": "^3.10.4",
     "particles-bg": "^2.5.5",
     "react": "^18.0.0",
+    "react-dinosaur-game": "^1.0.0",
     "react-dom": "^18.0.0",
     "react-hook-form": "^7.30.0",
     "react-list-select": "^0.4.1",

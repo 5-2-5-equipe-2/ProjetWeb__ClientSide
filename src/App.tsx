@@ -14,6 +14,7 @@ import MessageBubble from "./components/MessageBubble";
 import ChatRoomList from "./components/chat_room/ChatRoomList";
 import ModifyUser from "./pages/ModifyUser";
 import TestGame from "./pages/TestGame";
+import Game from "./api/Game/DinosaurGame";
 
 const theme = createTheme({
     palette: {
@@ -105,6 +106,7 @@ function App() {
                                             <Route path="/modifyuser" element={<ModifyUser/>}/>
                                             <Route path="/testgame" element={<TestGame/>}/>
                                             <Route path="*" element={<Login setLoggedInUser={setLoggedInUser}/>}/>
+                                            <Route path="/Game" element={<Game/>}/>
                                         </Routes>
                                     </Grid>
                                 </Grid>
