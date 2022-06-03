@@ -54,7 +54,7 @@ function App() {
     const [loggedInUser, setLoggedInUser] = useState(nullUser);
     const [currentTheme, setCurrentTheme] = useState(theme);
     let {data, isError} = useQuery("user", getCurrentlyLoggedInUser, {
-        refetchInterval: 1000,
+        // refetchInterval: 1000,
         retry: false,
         enabled: true,
     });
@@ -72,7 +72,7 @@ function App() {
             <loggedInUserContext.Provider value={{loggedInUser, setLoggedInUser}}>
                 <themeContext.Provider value={{currentTheme, setCurrentTheme}}>
                     <ThemeProvider theme={currentTheme}>
-                        <Paper style={{width: "100wh", height: "100vh"}}>
+                        <Paper style={{width: "100wh", height: "100vh"}} elevation={10}>
                             <Grid container
                                   spacing={0}
                                   direction="row"
@@ -107,7 +107,7 @@ function App() {
                                                    element={<Logout/>}/>
                                             {/*<Route path="/messagetest" element={<MessageBubble messageId={2}/>}/>*/}
                                             <Route path="/chat" element={<Chat/>}/>
-                                            <Route path="/chatroomlist" element={<ChatRoomMessageBox/>}/>
+                                            {/*<Route path="/chatroomlist" element={<ChatRoomMessageBox/>}/>*/}
                                             <Route path="/modifyuser" element={<ModifyUser/>}/>
                                             <Route path="*" element={<Login/>}/>
                                             <Route path="/testgame" element={<TestGame/>}/>

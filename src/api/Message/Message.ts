@@ -7,7 +7,19 @@ export const getMessage = (messageId: Number) => {
 };
 
 export const modifyMessage = (message: MessageInterface) => {
-    return api.put<MessageInterface>(`/message/update`, message);
+    return api.put<MessageInterface>(`/message/modifyMessage`, message);
+}
+
+export interface CreateMessageInterface {
+    content: string;
+    chatRoomId: number;
+    userId: number;
+}
+
+
+export const createMessage = (message: CreateMessageInterface) => {
+    message.content = message.content.replace(/\n/g, "\n\n");
+    return api.post<CreateMessageInterface>(`/message/createMessage`, message);
 }
 
 export const nullMessage: MessageInterface = {

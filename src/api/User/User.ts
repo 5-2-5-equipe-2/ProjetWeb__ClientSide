@@ -1,6 +1,7 @@
 import api from "../base";
 import UserInterface from "./UserInterface";
 import {AxiosResponse} from "axios";
+import ChatRoomInterface from "../ChatRoom/ChatRoomInterface";
 
 
 export const getUsers = () => api.get("/user/list");
@@ -40,4 +41,4 @@ export const login = ({username, password}: LoginParams) => {
 
 export const logout = () => api.post(`/user/logout`);
 
-export const getChatRooms = (id: Number) => api.get(`/user/getChatRooms?id=${id}`);
+export const getChatRooms = (id: Number) => api.get<ChatRoomInterface[]>(`/user/getChatRooms?id=${id}`);
