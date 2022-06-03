@@ -1,7 +1,7 @@
 import * as React from "react";
 import {useForm} from "react-hook-form";
 import {Avatar, Button, FormGroup, FormLabel, Grid, TextField,} from "@mui/material";
-import "../media/css/Login.css";
+// import "../media/css/Login.css";
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import {useMutation} from "react-query";
@@ -68,7 +68,7 @@ export default function ModifyUser() {
             // alert(error.response.e.message);
         }
     });
-    let loggedInUser = useContext(loggedInUserContext)['loggedInUser'];
+    let loggedInUser = useContext(loggedInUserContext).loggedInUser;
     const onSubmit = (data: any) => {
         console.log(data);
         mutate(data);
@@ -96,127 +96,137 @@ export default function ModifyUser() {
         };
 
     }, [register]);
-    return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <Grid container spacing={3}>
-                <Grid item xs={6}>
-                    <FormGroup>
-                        <FormLabel>Username</FormLabel>
-                        <TextField fullWidth
-                                   {...register("username", {
-                                       required: true,
-                                   })}
-                                   error={!!errors.username}
-                                   autoComplete="username"
-                                   helperText={errors.username && errors.username.message}
-                        />
-                    </FormGroup>
-                </Grid>
-                <Grid item xs={6}>
-                    <FormGroup>
-                        <FormLabel>First Name</FormLabel>
-                        <TextField fullWidth
-                                   {...register("username", {
-                                       required: true,
-                                   })}
-                                   error={!!errors.username}
-                                   autoComplete="username"
-                                   helperText={errors.username && errors.username.message}
-                        />
-                    </FormGroup>
-                </Grid>
-                <Grid item xs={6}>
-                    <FormGroup>
-                        <FormLabel>Last Name</FormLabel>
-                        <TextField fullWidth
-                                   {...register("lastName", {
-                                           required: true,
-                                       }
-                                   )}
-                                   type={'lastName'}
-                                   error={!!errors.surname}
-                                   autoComplete={'lastName'}
-                                   helperText={errors?.surname?.message}
-                        />
-                    </FormGroup>
-                </Grid>
-                <Grid item xs={6}>
-                    <FormGroup>
-                        <FormLabel>Email</FormLabel>
-                        <TextField fullWidth
-                                   {...register("email", {
-                                           required: true,
-                                       }
-                                   )}
-                                   type={'email'}
-                                   error={!!errors.email}
-                                   autoComplete={'email'}
-                                   helperText={errors?.email?.message}
-                        />
-                    </FormGroup>
-                </Grid>
-                <Grid item xs={6}>
-                    <FormGroup>
-                        <FormLabel>Password</FormLabel>
-                        <TextField fullWidth
-                                   {...register("password", {
-                                       required: true,
-                                   })}
-                                   type="password"
-                                   autoComplete="password"
-                                   error={!!errors.password}
-                                   helperText={errors?.password?.message}
-                        />
+    return (<Grid container
+                  direction="column"
+                  justifyContent="center"
+                  alignItems="center"
+                  spacing={2}
+        >
+            <form onSubmit={handleSubmit(onSubmit)} style={{
+                height: "100%",
+                width: "30vw",
 
-                    </FormGroup>
-                </Grid>
-                <Grid item xs={6}>
-                    <FormGroup>
-                        <FormLabel>Profile Picture</FormLabel>
-                        <TextField fullWidth
-                                   {...register("image", {
+            }}>
+                <Grid container spacing={3}>
+                    <Grid item xs={6}>
+                        <FormGroup>
+                            <FormLabel>Username</FormLabel>
+                            <TextField fullWidth
+                                       {...register("username", {
                                            required: true,
+                                       })}
+                                       error={!!errors.username}
+                                       autoComplete="username"
+                                       helperText={errors.username && errors.username.message}
+                            />
+                        </FormGroup>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <FormGroup>
+                            <FormLabel>First Name</FormLabel>
+                            <TextField fullWidth
+                                       {...register("username", {
+                                           required: true,
+                                       })}
+                                       error={!!errors.username}
+                                       autoComplete="username"
+                                       helperText={errors.username && errors.username.message}
+                            />
+                        </FormGroup>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <FormGroup>
+                            <FormLabel>Last Name</FormLabel>
+                            <TextField fullWidth
+                                       {...register("lastName", {
+                                               required: true,
+                                           }
+                                       )}
+                                       type={'lastName'}
+                                       error={!!errors.surname}
+                                       autoComplete={'lastName'}
+                                       helperText={errors?.surname?.message}
+                            />
+                        </FormGroup>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <FormGroup>
+                            <FormLabel>Email</FormLabel>
+                            <TextField fullWidth
+                                       {...register("email", {
+                                               required: true,
+                                           }
+                                       )}
+                                       type={'email'}
+                                       error={!!errors.email}
+                                       autoComplete={'email'}
+                                       helperText={errors?.email?.message}
+                            />
+                        </FormGroup>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <FormGroup>
+                            <FormLabel>Password</FormLabel>
+                            <TextField fullWidth
+                                       {...register("password", {
+                                           required: true,
+                                       })}
+                                       type="password"
+                                       autoComplete="password"
+                                       error={!!errors.password}
+                                       helperText={errors?.password?.message}
+                            />
 
-                                       }
-                                   )}
-                                   type={'file'}
-                                   error={!!errors.image}
-                                   autoComplete={'image'}
-                                   helperText={errors?.image?.message}
-                        />
-                    </FormGroup>
-                </Grid>
-                <Grid item xs={6}>
-                    <FormGroup>
-                        <FormLabel>Confirm Password</FormLabel>
-                        <TextField fullWidth
-                                   {...register("confirmPassword", {
-                                           required: true,
-                                       }
-                                   )}
-                                   type="password"
-                                   autoComplete="confirmPassword"
-                                   error={!!errors.confirmPassword}
-                                   helperText={errors?.confirmPassword?.message}
-                        />
-                    </FormGroup>
-                </Grid>
-                <Grid item xs={6}>
-                    <Grid container
-                          direction="column"
-                          justifyContent="center"
-                          alignItems="center"
-                    >
-                        <Avatar src={loggedInUser.profile_picture}/>
+                        </FormGroup>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <FormGroup>
+                            <FormLabel>Profile Picture</FormLabel>
+                            <TextField fullWidth
+                                       {...register("image", {
+                                               required: true,
+
+                                           }
+                                       )}
+                                       type={'file'}
+                                       error={!!errors.image}
+                                       autoComplete={'image'}
+                                       helperText={errors?.image?.message}
+                            />
+                        </FormGroup>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <FormGroup>
+                            <FormLabel>Confirm Password</FormLabel>
+                            <TextField fullWidth
+                                       {...register("confirmPassword", {
+                                               required: true,
+                                           }
+                                       )}
+                                       type="password"
+                                       autoComplete="confirmPassword"
+                                       error={!!errors.confirmPassword}
+                                       helperText={errors?.confirmPassword?.message}
+                            />
+                        </FormGroup>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Grid container
+                              direction="column"
+                              justifyContent="center"
+                              alignItems="center"
+                        >
+                            <Avatar src={loggedInUser.profile_picture}/>
+                        </Grid>
+                    </Grid>
+                    <Grid item xs={12}>
+
+                        <Button id="button" variant="contained" color="primary"
+                                onClick={handleSubmit(onSubmit)}>Submit</Button>
                     </Grid>
                 </Grid>
-                <Grid item xs={12}>
-
-                    <Button id="button" variant="contained" color="primary"
-                            onClick={handleSubmit(onSubmit)}>Submit</Button>
-                </Grid>
-            </Grid>
-        </form>
+            </form>
+        </Grid>
     );
 
 

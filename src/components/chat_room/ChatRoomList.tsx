@@ -1,31 +1,40 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {useQuery} from "react-query";
-import {getChatRooms, getUsers} from "../../api/User/User";
-import UserInterface from '../../api/User/UserInterface';
+import {getChatRooms} from "../../api/User/User";
 import ChatRoomListItem from "./ChatRoomListItem";
-import {Box, CircularProgress, List} from "@mui/material";
-import {getChatRoomByUserId} from "../../api/ChatRoom/ChatRoom";
-import {getMessage} from "../../api/Message/Message";
+import {Box, CircularProgress, List, Paper} from "@mui/material";
 import {loggedInUserContext} from "../../App";
 import ChatRoomInterface from "../../api/ChatRoom/ChatRoomInterface";
+import {selectedChatRoomContext} from "../../pages/Chat";
 
 
 const ChatRoomList = () => {
 
     let loggedInUser = useContext(loggedInUserContext)['loggedInUser'];
 
-    let {data, isLoading,} = useQuery(["chatRoomList", loggedInUser.id], () => getChatRooms(loggedInUser.id),
+    let {data: chatRooms, isLoading,} = useQuery(["chatRoomList", loggedInUser.id], () => getChatRooms(loggedInUser.id),
         {
-        refetchInterval: 1000,
-    });
+            // refetchInterval: 1000,
+        });
     // console.log(data);
-    let chatRooms = data?.data as ChatRoomInterface[] | undefined;
-    const [selectedChatRoomId, setSelectedChatRoomId] = useState(chatRooms?.[0].id);
+    const selectedChatRoomId = useContext(selectedChatRoomContext).selectedChatRoom;
+    const setSelectedChatRoomId = useContext(selectedChatRoomContext).setSelectedChatRoom;
+    useEffect(() => {
+        if (chatRooms && chatRooms.data.length > 0) {
+            if (selectedChatRoomId === -1) {
+                setSelectedChatRoomId(chatRooms.data[0].id);
+            }
+        }
+    }, [chatRooms, selectedChatRoomId, setSelectedChatRoomId]);
+
+
     return (
-        <Box sx={{width: "100%"}}>
+
+        <Paper style={{height: "100%", overflow: 'auto', width: "100%"}}>
             {isLoading &&
                 <CircularProgress/>
             }
+
             <List
                 component="nav"
                 aria-label="User List"
@@ -34,12 +43,12 @@ const ChatRoomList = () => {
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    width: '100%',
-                    height: '100%',
+                    // width: '100%',
+                    // height: '100%',
                 }}
 
             >
-                {chatRooms?.map(chatRoom => (
+                {chatRooms?.data?.map(chatRoom => (
                     <ChatRoomListItem chatRoom={chatRoom}
                                       key={chatRoom.id}
                                       selectedChatRoom={selectedChatRoomId}
@@ -47,7 +56,7 @@ const ChatRoomList = () => {
                     />
                 ))}
             </List>
-        </Box>
+        </Paper>
 
 
     );

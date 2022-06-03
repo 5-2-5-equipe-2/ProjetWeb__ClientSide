@@ -93,25 +93,3 @@ section > label {
     border: 1px solid rgb(79, 98, 148);
     box-shadow: 0 0 4px rgb(79, 98, 148);
 }
-
-#root > div > div > div.MuiGrid-root.MuiGrid-item.MuiGrid-grid-md-8.css-am41oj-MuiGrid-root > div{
-    border-radius: 4px;
-    padding: 20px;
-    margin-top: 20px;
-    box-shadow: 0 0 4px rgb(79, 98, 148);
-}
-
-#root > div > div > div.MuiGrid-root.MuiGrid-item.MuiGrid-grid-md-8.css-am41oj-MuiGrid-root > div > div{
-    border-radius: 4px;
-    padding: 20px;
-    margin-top: 20px;
-    box-shadow: 0 0 4px rgb(79, 98, 148);
-}
-
-
-Grid {
-    display: grid;
-    border: rgb(79, 98, 148) 10px solid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 20px;
-}

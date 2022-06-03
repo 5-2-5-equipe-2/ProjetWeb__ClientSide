@@ -1,7 +1,5 @@
 import api from "../base";
-import ChatRoomInterface from "./ChatRoomInterface";
-import {AxiosResponse} from "axios";
-import UserInterface from "../User/UserInterface";
+import MessageInterface from "../Message/MessageInterface";
 
 
 export const getChatRooms = () => api.get("/chatroom/list");
@@ -12,4 +10,4 @@ export const getChatRoomById = (id: number) => api.get(`/chatroom/get?id=${id}`)
 // export const getChatRoomByName = (name: string) => api.get(`/chat_room/getByName/?name=${name}`);
 export const getChatRoomByUserId = (userId: number) => api.get(`/chat_room/getByUserId/?userId=${userId}`);
 // export const getChatRoomByUserIdAndName = (userId: number, name: string) => api.get(`/chat_room/getByUserIdAndName/?userId=${userId}&name=${name}`);
-export const getChatRoomMessages = (chatRoomId: number) => api.get(`/chatroom/getMessages/?id=${chatRoomId}`);
+export const getChatRoomMessages = (chatRoomId: number) => api.get<MessageInterface[]>(`/chatroom/getMessages?&chatRoomId=${chatRoomId}&limit=100`);

@@ -11,7 +11,7 @@ import {
     Grid,
     TextField,
 } from "@mui/material";
-import "../media/css/Login.css";
+// import "../media/css/Login.css";
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import {useMutation} from "react-query";
@@ -107,7 +107,12 @@ export default function SignUpForm() {
     }, [register]);
 
     return (
-        <Grid item xs={2}>
+        <Grid container
+              direction="column"
+              justifyContent="center"
+              alignItems="center"
+              spacing={4}>
+
             <Dialog
                 open={dialogOpen}
                 onClose={handleDialogClose}

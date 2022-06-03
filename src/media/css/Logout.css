@@ -4,6 +4,7 @@ body {
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
     color: white;
+    /*padding: 0;*/
     /*padding: 0 20px 100px;*/
 }
 
@@ -69,10 +70,6 @@ section > label {
     border: 1px solid white;
 }
 
-.App {
-    max-width: 600px;
-    margin: 0 auto;
-}
 
 .container {
     display: grid;
@@ -94,19 +91,6 @@ section > label {
     box-shadow: 0 0 4px rgb(79, 98, 148);
 }
 
-#root > div > div > div.MuiGrid-root.MuiGrid-item.MuiGrid-grid-md-8.css-am41oj-MuiGrid-root > div{
-    border-radius: 4px;
-    padding: 0px;
-    margin-top: 0px;
-    box-shadow: 0 0 0px rgb(79, 98, 148);
-}
 
-#root > div > div > div.MuiGrid-root.MuiGrid-item.MuiGrid-grid-md-8.css-am41oj-MuiGrid-root > div > div{
-    border-radius: 4px;
-    padding: 0px;
-    margin-top: 0px;
-    box-shadow: 0 0 0px rgb(79, 98, 148);
-}
-    
 
 
