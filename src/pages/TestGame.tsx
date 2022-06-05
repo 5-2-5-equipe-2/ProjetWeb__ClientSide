@@ -1,10 +1,16 @@
-import UserInterface from "../api/User/UserInterface";
-import {Grid} from "@mui/material";
+import { getRandomGame } from "../api/Game/Game";
+import GameInterface from "../api/Game/GameInterface";
 import React from "react";
 import "../media/css/TestGame.css";
+import {useContext} from "react";
+import {loggedInUserContext} from "../App";
+import { createRoot, Root } from 'react-dom/client';
+import Game from '../api/Game/DinosaurGame';
 
+let currentGame : GameInterface;
+let gameContainer:HTMLElement | null = null;
+let gameRoot:Root| null = null;
 let squares = Array(9).fill(null);
-let xIsNext = true;
 let isWin = false;
   
 const Row = (props : any) => {
@@ -56,11 +62,12 @@ function iaPlay() {
 }
 
 function onClick(i :number){
-    if(squares[i] === null && !isWin) {
+    if(squares[i] === null && !isWin && gameRoot != null)  {     
         squares[i] = "X";
-        renderSquare(squares[i]);
+        gameRoot.render(renderGame(1));
         checkWin();
         iaPlay();
+        gameRoot.render(renderGame(1));
     } 
 }
 
@@ -70,24 +77,55 @@ function renderSquare(i : number) {
     );
 }
 
+function renderGame(idGame : number){
+    let games = Array(3).fill(null);
+    games[0]= <div>
+    <Row>
+        {renderSquare(0)}
+        {renderSquare(1)}
+        {renderSquare(2)}
+    </Row>
+    <Row>
+        {renderSquare(3)}
+        {renderSquare(4)}
+        {renderSquare(5)}
+    </Row>
+    <Row>
+        {renderSquare(6)}
+        {renderSquare(7)}
+        {renderSquare(8)}
+    </Row>
+</div>;
+games[1] = <div>Jeu 2</div>;
+games[2] = <div>Jeu 3</div>;
+    return (
+        games[idGame]
+    );
+}
+
+function getGame(i : number) {
+    getRandomGame(i).then((game) => {
+        currentGame = game.data;
+    if(gameContainer == null || gameRoot == null) {
+        gameContainer = document.getElementById('game');
+        gameRoot = createRoot(gameContainer!);
+        gameRoot.render(renderGame(currentGame.code));
+    }else{
+        gameRoot.render(renderGame(currentGame.code));
+    }
+}).catch((error) => {console.error(error);});
+}
 export default function TestGame() {
+    let loggedInUser = useContext(loggedInUserContext).loggedInUser;
     return (
         <div>
-            <Row>
-                {renderSquare(0)}
-                {renderSquare(1)}
-                {renderSquare(2)}
-            </Row>
-            <Row>
-                {renderSquare(3)}
-                {renderSquare(4)}
-                {renderSquare(5)}
-            </Row>
-            <Row>
-                {renderSquare(6)}
-                {renderSquare(7)}
-                {renderSquare(8)}
-            </Row>
+            <div id="game">
+              <Game />
+            </div>
+            <div>
+                <button onClick={() => (getGame(loggedInUser.id))}>Get Game</button>
+            </div>
       </div>
+      
     );
 }
