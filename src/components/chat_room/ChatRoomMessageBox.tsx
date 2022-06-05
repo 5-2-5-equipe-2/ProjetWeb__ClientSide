@@ -4,40 +4,73 @@ import {getChatRoomMessages} from "../../api/ChatRoom/ChatRoom";
 import MessageBubble from "../MessageBubble";
 import {CircularProgress, Grid, Paper} from "@mui/material";
 import {selectedChatRoomContext} from "../../pages/Chat";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import MessageInterface from "../../api/Message/MessageInterface";
+// import {VariableSizeList as List} from "react-window";
+// import AutoSizer from "react-virtualized-auto-sizer";
+import {List} from "@mui/material"
 
-export default function ChatRoomMessageBox() {
+export default function ChatRoomMessageBox({
+                                               isMessagesLoading,
+                                               messageData,
+                                           }: { isMessagesLoading: boolean, messageData: MessageInterface[] }) {
 
-    let chatRoomId = useContext(selectedChatRoomContext).selectedChatRoom;
-    let {
-        data: messagesQuery,
-        isLoading,
-    } = useQuery(["messages", chatRoomId], () => getChatRoomMessages(chatRoomId), {
-        refetchInterval: 1000,
-    });
+    let chatRoomId = useContext(selectedChatRoomContext).selectedChatRoom?.id;
+    const rowHeights = useRef([] as number[]);
 
-    const [messageData, setMessageData] = useState([] as MessageInterface[]);
-    let scrollDiv = React.useRef<HTMLDivElement>(null);
+    function getRowHeight(index: number) {
+        return rowHeights.current[index] + 8 || 150;
+    }
 
-    useEffect(() => {
-
-        if (scrollDiv.current) {
-            scrollDiv.current.scrollTop = scrollDiv.current.scrollHeight;
-        }
-
-    }, [chatRoomId]);
+    const listRef = useRef(null);
 
     useEffect(() => {
-        if (messagesQuery && messagesQuery.data.length > 0 && messagesQuery.data !== messageData) {
-            setMessageData(messagesQuery.data);
-            console.log('updated');
+        if (messageData.length > 0) {
+            scrollToBottom();
         }
-    }, [messageData, messagesQuery]);
+        // eslint-disable-next-line
+    }, [messageData, chatRoomId]);
+
+    function setRowHeight(index: number, size: number) {
+        // @ts-ignore
+        listRef.current.resetAfterIndex(0);
+        rowHeights.current = {...rowHeights.current, [index]: size};
+    }
+
+    function scrollToBottom() {
+        // @ts-ignore
+        // listRef.current.scrollToItem(messageData.length - 1, "end");
+    }
+
+    function Row({index, style}: { index: number, style: any }) {
+        const rowRef = useRef(null);
+
+        useEffect(() => {
+            if (rowRef.current) {
+                // @ts-ignore
+                setRowHeight(index, rowRef.current.clientHeight);
+            }
+            // eslint-disable-next-line
+        }, [rowRef]);
+
+        return (
+            <div style={style}>
+                <div ref={rowRef}><MessageBubble message={messageData[index]}/></div>
+            </div>
+        );
+    }
 
 
     return (
-        <Paper style={{overflow: 'auto', maxHeight: "65vh"}} ref={scrollDiv}>
+        <Box
+            height="100%"
+            width="100%"
+        ><Paper elevation={5}
+                style={{
+                    height: "100%",
+                    width: "100%",
+                }}
+        >
             <Box sx={{
                 width: "100%",
                 height: "100%",
@@ -46,7 +79,7 @@ export default function ChatRoomMessageBox() {
                 alignItems: "flex-start",
                 justifyContent: "center"
             }}>
-                {isLoading &&
+                {isMessagesLoading &&
                     <Box sx={{
                         width: "100%",
                         height: "100%",
@@ -58,22 +91,34 @@ export default function ChatRoomMessageBox() {
                         <CircularProgress/>
                     </Box>
                 }
-                {messageData.length > 0 &&
-                    <Box sx={{
-                        width: "100%",
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column-reverse",
-                        alignItems: "flex-start",
-                        justifyContent: "center"
-                    }}>
-                        {messageData.map((message) => (
-                            <MessageBubble message={message} key={message.id}/>
-                        ), [messageData])}
-                    </Box>}
+                <List sx={{maxHeight: '100%', overflow: 'auto', width: "70vw"}}>
+                    {messageData.length > 0 &&
+                        <>
+                            {messageData.map((message) => (
+                                <MessageBubble message={message} key={message.id}/>
+                            ), [messageData])}
+                        </>}
+                </List>
 
+                {/*<AutoSizer style={ {width:"100%", height:"100%"}}>*/}
+                {/*    {({ height, width }:{height:number, width:number}) => (*/}
+                {/*<List*/}
+                {/*    className="List"*/}
+                {/*    height={height - 8}*/}
+                {/*    itemCount={messageData.length}*/}
+                {/*    itemSize={getRowHeight}*/}
+                {/*    ref={listRef}*/}
+                {/*    width={width - 8}*/}
+                {/*>*/}
+                {/*    {Row}*/}
+                {/*</List>*/}
+                {/*    )}*/}
+                {/*</AutoSizer>*/}
+
+                {/*</List>*/}
             </Box>
         </Paper>
+        </Box>
     );
 
 }

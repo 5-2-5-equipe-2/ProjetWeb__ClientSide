@@ -8,12 +8,16 @@ import "./bubble.css";
 import Avatar from "@mui/material/Avatar";
 import {loggedInUserContext} from "../App";
 import MessageInterface from "../api/Message/MessageInterface";
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter';
 import {dark} from "react-syntax-highlighter/dist/esm/styles/prism";
-//
-// const BlogImage = (props: any) => {
-//     return <img {...props} style={{maxWidth: "30vh", maxHeight: "50vh"}} alt={""}/>
-// }
+import remarkGfm from "remark-gfm";
+import remarkParse from "remark-parse";
+import remarkImages from "remark-images";
+import remarkMath from "remark-math";
+
+const BlogImage = (props: any) => {
+    return <img {...props} style={{maxWidth: "10vw", maxHeight: "10vh"}} alt={""}/>
+}
 
 
 export default function MessageBubble({message}: { message: MessageInterface }) {
@@ -25,16 +29,8 @@ export default function MessageBubble({message}: { message: MessageInterface }) 
     } = useQuery(["user", message.user_id], () => getUserById(message.user_id), {
         refetchInterval: 5000,
     });
-    // const [isLeftSide, setIsLeftSide] = useState(false);
+    const isLeftSide = message.user_id === loggedInUser.id;
 
-    let isLeftSide = message.user_id === loggedInUser.id;
-    useEffect(() => {
-        if (userData) {
-            // setIsLeftSide(message.user_id === loggedInUser.id);
-            // console.log('updated');
-        }
-
-    }, [userData, message.user_id, loggedInUser.id]);
     return (
         <>
 
@@ -43,10 +39,10 @@ export default function MessageBubble({message}: { message: MessageInterface }) 
                   justifyContent="center"
                   alignItems={'flex-start'}
                   spacing={0}
-                  style={{
-                      width: "100%",
-                      height: "100%",
-                  }}
+                  // style={{
+                  //     width: "100%",
+                  //     height: "100%",
+                  // }}
 
             >
                 <Grid item xs={1} sx={!isLeftSide ? {marginLeft: "auto"} : {marginRight: "auto"}}>
@@ -66,44 +62,56 @@ export default function MessageBubble({message}: { message: MessageInterface }) 
 
                 <Grid item xs={11}>
 
-                    <>
-                        <div className="imessage"
-                             style={isLeftSide ? {width: "90%"} : {width: "90%", marginLeft: "auto"}}>
-                            <Typography className={isLeftSide ? "from-them" : "from-me"}>
-                                {/*{message.content}*/}
-                                <ReactMarkdown
-                                    disallowedElements={['img']}
-                                    // skipHtml={false}
-                                    children={message.content}
-                                    components={{
-                                        code({node, inline, className, children, ...props}) {
-                                            const match = /language-(\w+)/.exec(className || '')
-                                            // @ts-ignore
-                                            return !inline && match ? (
-                                                <SyntaxHighlighter
-                                                    children={String(children).replace(/\n$/, '')}
-                                                    // @ts-ignore
-                                                    style={dark}
-                                                    language={match[1]}
-                                                    PreTag="div"
-                                                    {...props}
-                                                />
-                                            ) : (
-                                                <code className={className} {...props}>
-                                                    {children}
-                                                </code>
-                                            )
-                                        },
-                                        // img({src, alt, ...props}) {
-                                        //     return <BlogImage src={src} alt={alt} {...props} />
-                                        // },
-                                        p: (props: any) => <div {...props} />,
-                                    }}
-                                />
-                            </Typography>
-                        </div>
-                    </>
+                    <Box className="imessage"
+                         style={isLeftSide ? {width: "90%"} : {width: "90%", marginLeft: "auto"}}>
+                        <Typography className={isLeftSide ? "from-them" : "from-me"}>
+                            {/*{message.content}*/}
+                            {/*<ReactMarkdown*/}
+                            {/*    rehypePlugins={[remarkGfm, remarkParse, remarkImages,*/}
+                            {/*        remarkMath]}*/}
+                            {/*    // disallowedElements={['img']}*/}
+                            {/*    skipHtml={false}*/}
+                            {/*    children={message.content}*/}
+                            {/*    remarkPlugins={[*/}
+                            {/*        [remarkImages, {*/}
+                            {/*            quality: 10,*/}
+                            {/*            withWebp: true,*/}
+                            {/*            loading: 'lazy',*/}
+                            {/*            backgroundColor: '#fafafa',*/}
+                            {/*        }],*/}
+                            {/*        [remarkGfm, {singleTilde: false}],*/}
+                            {/*        [remarkParse, {commonmark: true}],*/}
+                            {/*        [remarkMath],*/}
+                            {/*    ]}*/}
+                            {/*    components={{*/}
+                            {/*        code({node, inline, className, children, ...props}) {*/}
+                            {/*            const match = /language-(\w+)/.exec(className || '')*/}
+                            {/*            // @ts-ignore*/}
+                            {/*            return !inline && match ? (*/}
+                            {/*                <SyntaxHighlighter*/}
+                            {/*                    children={String(children).replace(/\n$/, '')}*/}
+                            {/*                    // @ts-ignore*/}
+                            {/*                    style={dark}*/}
+                            {/*                    language={match[1]}*/}
+                            {/*                    PreTag="div"*/}
+                            {/*                    {...props}*/}
+                            {/*                />*/}
+                            {/*            ) : (*/}
+                            {/*                <code className={className} {...props}>*/}
+                            {/*                    {children}*/}
+                            {/*                </code>*/}
+                            {/*            )*/}
+                            {/*        },*/}
+                            {/*        img({src, alt, ...props}) {*/}
+                            {/*            return <BlogImage src={src} alt={alt} {...props} />*/}
+                            {/*        },*/}
+                            {/*        p: (props: any) => <div {...props} />,*/}
+                            {/*    }}*/}
+                            {/*/>*/}
 
+                            {message.content}
+                        </Typography>
+                    </Box>
                 </Grid>
             </Grid>
 

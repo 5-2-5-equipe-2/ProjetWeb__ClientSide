@@ -15,6 +15,7 @@ import Chat from "./pages/Chat";
 import ChatRoomMessageBox from "./components/chat_room/ChatRoomMessageBox";
 import "./global.css";
 import TestGame from "./pages/TestGame";
+import ChatEdit from "./components/chat_room/ChatEdit";
 
 const theme = createTheme({
     palette: {
@@ -111,6 +112,7 @@ function App() {
                                             <Route path="/modifyuser" element={<ModifyUser/>}/>
                                             <Route path="*" element={<Login/>}/>
                                             <Route path="/testgame" element={<TestGame/>}/>
+                                            <Route path="/editChatRoom" element={<ChatEdit/>}/>
                                         </Routes>
                                     </Grid>
                                 </Grid>
