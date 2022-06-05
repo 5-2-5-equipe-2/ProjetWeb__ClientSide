@@ -55,6 +55,7 @@ export default function AccountMenu({
                 </FormGroup>
                 <Button sx={{minWidth: 100}} color={"secondary"} component={Link} to="/Login">Login</Button>
                 <Button sx={{minWidth: 100}} component={Link} to="/signup">Sign Up</Button>
+                <Button sx={{minWidth: 100}} component={Link} to="/chat">Home</Button>
 
                 {isLoggedIn &&
                     <Typography color="primary" style={{marginLeft: "auto"}}>

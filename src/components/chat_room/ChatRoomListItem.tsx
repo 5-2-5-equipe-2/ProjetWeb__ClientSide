@@ -1,84 +1,39 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import {
     Avatar,
-    Button,
     ButtonBase,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle, Grid,
-    TextField
+    Grid,
 } from "@mui/material";
 import ChatRoomInterface from "../../api/ChatRoom/ChatRoomInterface";
 import {loggedInUserContext} from "../../App";
 import {useContext, useState} from "react";
-import EditIcon from '@mui/icons-material/Edit';
+import {selectedChatRoomContext} from "../../pages/Chat";
 
-interface ChatRoomListItemProps {
-    chatRoom: ChatRoomInterface;
-    selectedChatRoom: number | undefined;
-    setSelectedChatRoom: (chatRoomId: number) => void;
-}
 
-export default function ChatRoomListItem({chatRoom, selectedChatRoom, setSelectedChatRoom}: ChatRoomListItemProps) {
+export default function ChatRoomListItem({chatRoom}: { chatRoom:ChatRoomInterface }) {
     const loggedInUser = useContext(loggedInUserContext).loggedInUser;
-    const [open, setOpen] = React.useState(false);
+    const selectedChatRoom = useContext(selectedChatRoomContext).selectedChatRoom;
+    const setSelectedChatRoom = useContext(selectedChatRoomContext).setSelectedChatRoom;
     const [styles, setStyles] = useState({
         width: "100%", opacity: 0.75, transition: "opacity 0.5s"
     });
-    const [isOwner, setIsOwner] = useState(false);
 
 
     React.useEffect(() => {
-        if (selectedChatRoom && selectedChatRoom === chatRoom.id) {
-           setStyles({
+        if (selectedChatRoom && selectedChatRoom.id === chatRoom.id) {
+            setStyles({
                 width: "100%", opacity: 1, transition: "opacity 0.5s"
-           })
+            })
         }
-        
-        setIsOwner(chatRoom.owner_id === loggedInUser.id);
+
     }, [chatRoom.id, chatRoom.owner_id, loggedInUser.id, selectedChatRoom]);
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
     const handleClick = () => {
-        setSelectedChatRoom(chatRoom.id);
+        setSelectedChatRoom(chatRoom);
     };
     return (
         <>
-            <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Edit Chatroom</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        To subscribe to this website, please enter your email address here. We
-                        will send updates occasionally.
-                    </DialogContentText>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="name"
-                        label="Email Address"
-                        type="email"
-                        fullWidth
-                        variant="standard"
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleClose}>Subscribe</Button>
-                </DialogActions>
-            </Dialog>
             <ButtonBase sx={styles} onClick={handleClick}>
 
                 <Grid container
@@ -126,20 +81,15 @@ export default function ChatRoomListItem({chatRoom, selectedChatRoom, setSelecte
                                     Last Message: ...
                                 </Typography>
                             </Grid>
-                            {/*<Grid item >*/}
-                            {/*    <Typography variant="body2" color="text.secondary" component="div">*/}
-                            {/*        {chatRoom.description}*/}
-                            {/*    </Typography>*/}
-                            {/*</Grid>*/}
+                            <Grid item >
+                                <Typography variant="body2" color="text.secondary" component="div">
+                                    {chatRoom.description}
+                                </Typography>
+                            </Grid>
 
                         </Grid>
 
                     </Grid>
-                    <Grid item xs={2}>{isOwner &&
-                        <Button onClick={handleClickOpen}>
-                            <EditIcon/>
-                        </Button>
-                    }</Grid>
 
                 </Grid>
             </ButtonBase>

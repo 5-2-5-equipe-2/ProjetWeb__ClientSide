@@ -14,18 +14,18 @@ const ChatRoomList = () => {
 
     let {data: chatRooms, isLoading,} = useQuery(["chatRoomList", loggedInUser.id], () => getChatRooms(loggedInUser.id),
         {
-            // refetchInterval: 1000,
+            refetchInterval: 1000,
         });
     // console.log(data);
-    const selectedChatRoomId = useContext(selectedChatRoomContext).selectedChatRoom;
-    const setSelectedChatRoomId = useContext(selectedChatRoomContext).setSelectedChatRoom;
+    const selectedChatRoom = useContext(selectedChatRoomContext).selectedChatRoom;
+    const setSelectedChatRoom = useContext(selectedChatRoomContext).setSelectedChatRoom;
     useEffect(() => {
         if (chatRooms && chatRooms.data.length > 0) {
-            if (selectedChatRoomId === -1) {
-                setSelectedChatRoomId(chatRooms.data[0].id);
+            if (!selectedChatRoom) {
+                setSelectedChatRoom(chatRooms.data[0]);
             }
         }
-    }, [chatRooms, selectedChatRoomId, setSelectedChatRoomId]);
+    }, [chatRooms, setSelectedChatRoom, selectedChatRoom]);
 
 
     return (
@@ -51,8 +51,6 @@ const ChatRoomList = () => {
                 {chatRooms?.data?.map(chatRoom => (
                     <ChatRoomListItem chatRoom={chatRoom}
                                       key={chatRoom.id}
-                                      selectedChatRoom={selectedChatRoomId}
-                                      setSelectedChatRoom={setSelectedChatRoomId}
                     />
                 ))}
             </List>

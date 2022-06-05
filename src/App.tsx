@@ -15,6 +15,7 @@ import Chat from "./pages/Chat";
 import ChatRoomMessageBox from "./components/chat_room/ChatRoomMessageBox";
 import "./global.css";
 import TestGame from "./pages/TestGame";
+import ChatEdit from "./components/chat_room/ChatEdit";
 import Game from "./api/Game/DinosaurGame";
 
 const theme = createTheme({
@@ -109,10 +110,11 @@ function App() {
                                             {/*<Route path="/messagetest" element={<MessageBubble messageId={2}/>}/>*/}
                                             <Route path="/chat" element={<Chat />} />
                                             {/*<Route path="/chatroomlist" element={<ChatRoomMessageBox/>}/>*/}
-                                            <Route path="/modifyuser" element={<ModifyUser />} />
-                                            <Route path="*" element={<Login />} />
-                                            <Route path="/testgame" element={<TestGame />} />
-                                            <Route path="/Game" element={<Game />} />
+                                            <Route path="/modifyuser" element={<ModifyUser/>}/>
+                                            <Route path="*" element={<Login/>}/>
+                                            <Route path="/testgame" element={<TestGame/>}/>
+                                            <Route path="/Game" element={<Game/>}/>
+                                            <Route path="/editChatRoom" element={<ChatEdit/>}/>
                                         </Routes>
                                     </Grid>
                                 </Grid>

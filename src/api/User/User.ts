@@ -23,6 +23,10 @@ export const getCurrentlyLoggedInUser = () => {
 
 }
 
+export const searchUsers = (search:string) => {
+    return api.get<UserInterface[]>(`/user/search?search=${search}`);
+};
+
 export interface LoginParams {
     username: string;
     password: string;

@@ -1,7 +1,7 @@
-import {Button, Grid, Paper, TextField, Typography} from "@mui/material";
+import {Box, Button, Grid, IconButton, Paper, TextField, Typography} from "@mui/material";
 import ChatRoomList from "../components/chat_room/ChatRoomList";
 import ChatRoomMessageBox from "../components/chat_room/ChatRoomMessageBox";
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import SendIcon from '@mui/icons-material/Send';
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
@@ -10,10 +10,16 @@ import {loggedInUserContext} from "../App";
 import {createMessage, CreateMessageInterface} from "../api/Message/Message";
 import {useMutation, useQuery} from "react-query";
 import {getChatRoomMessages} from "../api/ChatRoom/ChatRoom";
+import MessageInterface from "../api/Message/MessageInterface";
+import ChatInput from "../components/chat_room/ChatInput";
+import ChatRoomInterface from "../api/ChatRoom/ChatRoomInterface";
+import ChatRoomListItem from "../components/chat_room/ChatRoomListItem";
+import ChatBubble from "../components/chat_room/ChatBubble";
+import ChatEdit from "../components/chat_room/ChatEdit";
 
 export const selectedChatRoomContext = React.createContext({
-    selectedChatRoom: -1,
-    setSelectedChatRoom: (chatRoomId: number) => {
+    selectedChatRoom: null as ChatRoomInterface | null,
+    setSelectedChatRoom: (chatRoom: ChatRoomInterface) => {
         // console.log(chatRoomId);
     }
 
@@ -26,188 +32,165 @@ const validationSchema = Yup.object().shape({
 
 
 export default function Chat() {
-    const [selectedChatRoomId, setSelectedChatRoomId] = useState(-1);
-    let loggedInUser = useContext(loggedInUserContext).loggedInUser;
+    const [selectedChatRoom, setSelectedChatRoom] = useState(null as ChatRoomInterface | null);
 
-    const {
-        register,
-        handleSubmit,
-        setValue,
-    } = useForm({
-        resolver: yupResolver(validationSchema)
+    const [messageData, setMessageData] = useState([] as MessageInterface[]);
+    let {
+        data: messagesQuery,
+        isLoading: isMessagesLoading,
+        refetch: refetchMessages,
+    } = useQuery(["messages", selectedChatRoom], () => getChatRoomMessages(selectedChatRoom?.id), {
+        refetchInterval: 1000,
     });
 
 
-    const {mutate: sendMessage,} = useMutation(createMessage, {
-        onSuccess: (data, variables,) => {
-            // refectchMessages().then(r => {
-            //     console.log(r);
-            // });
-            // console.log(data);
-            // console.log(variables);
-            setValue('messageContent', '');
-
+    useEffect(() => {
+        if (messagesQuery && messagesQuery.data !== messageData) {
+            setMessageData(messagesQuery.data);
         }
-    });
-
-    React.useEffect(() => {
-            register("messageContent");
-        }
-    );
-    const onSubmit = (data: any) => {
-        let message: CreateMessageInterface = {
-            content: data.messageContent,
-            chatRoomId: selectedChatRoomId,
-            userId: loggedInUser.id,
-        }
-        sendMessage(message);
-
-    }
-
+    }, [messageData, messagesQuery]);
     return (
         <selectedChatRoomContext.Provider
-            value={{"selectedChatRoom": selectedChatRoomId, "setSelectedChatRoom": setSelectedChatRoomId}}>
+            value={{"selectedChatRoom": selectedChatRoom, "setSelectedChatRoom": setSelectedChatRoom}}>
             <Paper sx={
                 {padding: "1rem", margin: "1rem"}}>
-
                 <Grid container
-                     direction="row"
-                     justifyContent="center"
-                     alignItems="space-around"
-                     spacing={0}
-                     style={{
-                         width: "100%",
-                         height: "80vh",
-                         // height: "100%"
-                         // border: "4px solid"
-                     }}
-            >
-                <Grid item xs={3}
+                      direction="row"
+                      justifyContent="center"
+                      alignItems="space-around"
+                      spacing={0}
                       style={{
                           width: "100%",
-                          height: "100%",
+                          // height: "80vh",
+                          // height: "100%"
+                          // border: "4px solid"
                       }}
                 >
-                    <Grid container
-                          direction="row"
-                          justifyContent="center"
-                          alignItems="flex-start"
-                          style={{
-                              // border: "4px solid",
-                              // padding: "10px",
-                              height: "100%",
-                              width: "100%",
-
-                          }}
-                    >
-                        <Grid item
-                              style={{
-                                  height: "100%",
-                                  width: "100%",
-                              }}
-                        >
-                            <Paper style={
-                                {
-                                    height: "100%",
-                                }
-                            }>
-                                <Grid container
-                                      direction="row"
-                                      justifyContent="flex-start"
-                                      alignItems="flex-start"
-                                      style={{
-                                          height: "100%",
-                                          width: "100%",
-                                      }}
-                                >
-                                    <Grid item>
-                                        <Typography variant="h4" align={'center'}>
-                                            Chat Rooms
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item sx={{
-                                        width: "100%",
-                                        height: "100%",
-                                    }}>
-                                        <ChatRoomList/>
-                                    </Grid>
-                                </Grid>
-                            </Paper>
-                        </Grid>
-
-                    </Grid>
-                </Grid>
-
-                <Grid item xs={9}
-                      style={{
-                          height: "100%",
-                      }}
-                >
-                    <Grid container
-                          style={{
-                              height: "100%",
-                              width: "100%",
-                          }}
-
-                    >
-                        <Grid item xs={12}>
-                            <Typography variant="h4">
-                                Chat Room Messages
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12}
-                              style={{
-                                  height: "100%",
-                              }}
-                        >
-                            <Grid container
-                                  direction="row"
-                                  justifyContent="space-around"
-                                  alignItems="space-around"
-                                  spacing={0}
-                                  style={{
-                                      width: "100%",
-                                      height: "100%",
-                                  }}
-                            >
-                                <Grid item xs={12}>
+                    <Grid item xs={3}>
+                        <Grid container
+                              direction="row"
+                              justifyContent="center"
+                              alignItems="flex-start">
+                            <Grid item>
+                                <Paper>
                                     <Grid container
-                                          direction="row"
-                                          justifyContent="space-around"
-                                          alignItems="space-around"
-                                          spacing={2}
+                                          direction="column"
+                                          justifyContent="flex-start"
+                                          alignItems="flex-start"
+
                                     >
-                                        <Grid item xs={12}><ChatRoomMessageBox/></Grid>
-                                        <Grid item xs={11}>
-                                            <TextField
-                                                sx={{width: "100%"}}
-                                                id="filled-multiline-flexible"
-                                                label="Send Message"
-                                                multiline
-                                                maxRows={4}
-                                                {...register("messageContent")}
-                                                variant="filled"
-                                            />
-
-
+                                        <Grid item xs={1}>
+                                            <Typography variant="h4" align={'center'}>
+                                                Chat Rooms
+                                            </Typography>
                                         </Grid>
-                                        <Grid item xs={1} height={"100%"}>
-                                            <Button
-                                                sx={{height: "100%"}}
-                                                onClick={handleSubmit(onSubmit)}>
-                                                <SendIcon sx={{width: "70%", height: "70%", margin: "auto"}}/>
-                                            </Button>
-
+                                        <Grid item xs={12}>
+                                            <ChatRoomList/>
                                         </Grid>
                                     </Grid>
-
-                                </Grid>
+                                </Paper>
                             </Grid>
 
                         </Grid>
                     </Grid>
-                </Grid>
-            </Grid></Paper>
+
+                    <Grid item xs={9}>
+                        <Grid container
+                              direction="column"
+                              justifyContent="space-around"
+                              alignItems="flex-start"
+                            // sx={{
+                            //     height: "100%",
+                            // }}
+                        >
+                            <Grid item xs={1}
+                                  sx={{
+                                      width: "100%",
+                                  }}
+                            >
+                                {selectedChatRoom &&
+                                    <Paper
+                                    elevation={0}
+                                    ><Grid container
+                                                 direction="row"
+                                                 justifyContent="space-between"
+                                                 alignItems="flex-start"
+                                                 spacing={0}
+                                                 sx={{
+                                                     padding: "1rem",
+                                                 }}
+                                    >
+                                        <Grid item><ChatBubble chatRoom={selectedChatRoom} displayDescription/></Grid>
+                                        <Grid item><ChatEdit/></Grid>
+                                    </Grid></Paper>
+
+                                }
+                                {!selectedChatRoom &&
+                                    <Typography variant="h4" align={'center'}>
+                                        Select a chat room
+                                    </Typography>
+                                }
+
+                            </Grid>
+                            <Grid item xs={10}
+                                  sx={{
+                                      width: "100%",
+                                      height: "100%",
+                                  }}
+
+                            >
+                                <Grid container
+                                      direction="row"
+                                      justifyContent="space-around"
+                                      alignItems="space-around"
+                                      spacing={0}
+                                      style={{
+                                          width: "100%",
+                                          height: "55vh",
+                                      }}
+
+                                >
+                                    <Grid item xs={12}
+                                          sx={{
+                                              width: "100%",
+                                              height: "100%",
+                                          }}
+                                    >
+                                        <Grid container
+                                              direction="row"
+                                              justifyContent="space-around"
+                                              alignItems="space-around"
+                                              spacing={2}
+                                              sx={{
+                                                  width: "100%",
+                                                  height: "100%",
+                                              }}
+                                        >
+                                            <Grid item xs={12}
+                                                  sx={{
+                                                      height: "100%",
+                                                  }}
+                                            >
+                                                <ChatRoomMessageBox isMessagesLoading={isMessagesLoading}
+                                                                    messageData={messageData}/>
+                                            </Grid>
+
+                                        </Grid>
+
+                                    </Grid>
+                                </Grid>
+
+                            </Grid>
+                            <Grid item xs={1}
+                                  sx={{
+                                      width: "100%",
+                                  }}
+                            >
+                                <ChatInput refetchMessages={refetchMessages}/>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid></Paper>
         </selectedChatRoomContext.Provider>
     );
 }
