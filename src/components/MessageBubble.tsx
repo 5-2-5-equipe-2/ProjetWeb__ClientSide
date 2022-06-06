@@ -14,11 +14,26 @@ import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 import remarkImages from "remark-images";
 import remarkMath from "remark-math";
+import UserInterface from "../api/User/UserInterface";
 
 const BlogImage = (props: any) => {
     return <img {...props} style={{maxWidth: "10vw", maxHeight: "10vh"}} alt={""}/>
 }
 
+
+const getUserInitials = (user?: UserInterface) => {
+
+    if (user) {
+        if (user.first_name && user.surname) {
+            return user.first_name.charAt(0) + user.surname.charAt(0);
+        }
+        if (user.username) {
+            return user.username.charAt(0);
+        }
+
+    }
+    return "";
+}
 
 export default function MessageBubble({message}: { message: MessageInterface }) {
     const loggedInUser = useContext(loggedInUserContext)['loggedInUser'];
@@ -39,24 +54,25 @@ export default function MessageBubble({message}: { message: MessageInterface }) 
                   justifyContent="center"
                   alignItems={'flex-start'}
                   spacing={0}
-                  // style={{
-                  //     width: "100%",
-                  //     height: "100%",
-                  // }}
+                // style={{
+                //     width: "100%",
+                //     height: "100%",
+                // }}
 
             >
                 <Grid item xs={1} sx={!isLeftSide ? {marginLeft: "auto"} : {marginRight: "auto"}}>
-                    <Avatar src={userData?.data.profile_picture} sx={isLeftSide ? {
-                        marginLeft: "auto",
-                        minHeight: "100%",
-                        marginTop: "3%"
-                    } : {
-                        marginRight: "auto",
-                        minHeight: "100%",
-                        marginTop: "3%"
-                    }}
+                    <Avatar
+                        sx={isLeftSide ? {
+                            marginLeft: "auto",
+                            minHeight: "100%",
+                            marginTop: "3%"
+                        } : {
+                            marginRight: "auto",
+                            minHeight: "100%",
+                            marginTop: "3%"
+                        }}
+                    >{`${getUserInitials(userData?.data[0])}`}</Avatar>
 
-                    />
                 </Grid>
 
 

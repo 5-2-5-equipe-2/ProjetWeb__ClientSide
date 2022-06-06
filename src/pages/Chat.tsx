@@ -34,21 +34,21 @@ const validationSchema = Yup.object().shape({
 export default function Chat() {
     const [selectedChatRoom, setSelectedChatRoom] = useState(null as ChatRoomInterface | null);
 
-    const [messageData, setMessageData] = useState([] as MessageInterface[]);
+    // const [messageData, setMessageData] = useState([] as MessageInterface[]);
     let {
-        data: messagesQuery,
+        data: messageData,
         isLoading: isMessagesLoading,
         refetch: refetchMessages,
-    } = useQuery(["messages", selectedChatRoom], () => getChatRoomMessages(selectedChatRoom?.id || -1), {
+    } = useQuery(["messages", selectedChatRoom?.id||-1], () => getChatRoomMessages(selectedChatRoom?.id || -1), {
         refetchInterval: 1000,
     });
 
 
-    useEffect(() => {
-        if (messagesQuery && messagesQuery.data !== messageData) {
-            setMessageData(messagesQuery.data);
-        }
-    }, [messageData, messagesQuery]);
+    // useEffect(() => {
+    //     if (messagesQuery && messagesQuery.data !== messageData) {
+    //         setMessageData(messagesQuery.data);
+    //     }
+    // }, [messageData, messagesQuery]);
     return (
         <selectedChatRoomContext.Provider
             value={{"selectedChatRoom": selectedChatRoom, "setSelectedChatRoom": setSelectedChatRoom}}>
@@ -172,7 +172,7 @@ export default function Chat() {
                                                   }}
                                             >
                                                 <ChatRoomMessageBox isMessagesLoading={isMessagesLoading}
-                                                                    messageData={messageData}/>
+                                                                    messageData={messageData?.data||[]}/>
                                             </Grid>
 
                                         </Grid>

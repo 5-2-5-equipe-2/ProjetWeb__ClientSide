@@ -10,16 +10,16 @@ import Tooltip from '@mui/material/Tooltip';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
-import {Button, createTheme, FormControlLabel, FormGroup, Switch, Theme, Typography} from "@mui/material";
+import {Button, createTheme, FormControlLabel, FormGroup, Switch, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
 import {useContext} from "react";
-import {loggedInUserContext} from "../App";
+import {loggedInUserContext, themeContext} from "../App";
 // import "../media/css/navbar.css";
 
-export default function AccountMenu({
-                                        currentTheme,
-                                        setCurrentTheme
-                                    }: { currentTheme: Theme, setCurrentTheme: (theme: Theme) => void }) {
+export default function AccountMenu() {
+
+    const currentTheme = useContext(themeContext).currentTheme;
+    const setCurrentTheme = useContext(themeContext).setCurrentTheme;
     const isDarkTheme = currentTheme.palette.mode === 'dark';
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const userData = useContext(loggedInUserContext);

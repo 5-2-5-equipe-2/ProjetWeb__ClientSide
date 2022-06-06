@@ -90,7 +90,7 @@ function App() {
                                   }}
                             >
                                 <Grid item md={8} xs={9}>
-                                    <AccountMenu currentTheme={currentTheme} setCurrentTheme={setCurrentTheme}/>
+                                    <AccountMenu/>
                                 </Grid>
                                 <Grid item md={12}>
                                     <Grid

@@ -10,7 +10,7 @@ import {selectedChatRoomContext} from "../../pages/Chat";
 import {loggedInUserContext} from "../../App";
 
 const validationSchema = Yup.object().shape({
-    messageContent: Yup.string().required('Message is required'),
+    messageContent: Yup.string().required('Message is required').max(1000, 'Message is too long'),
 });
 
 const ChatInput = ({refetchMessages}: { refetchMessages: any }) => {
