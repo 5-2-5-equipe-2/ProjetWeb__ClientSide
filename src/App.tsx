@@ -57,7 +57,7 @@ let loggedInUserContext = React.createContext({
 function App() {
     const [loggedInUser, setLoggedInUser] = useState(nullUser);
     const [currentTheme, setCurrentTheme] = useState(theme);
-    let {data, isError} = useQuery("user", getCurrentlyLoggedInUser, {
+    let { data, isError } = useQuery("user", getCurrentlyLoggedInUser, {
         // refetchInterval: 1000,
         retry: false,
         enabled: true,
@@ -73,24 +73,24 @@ function App() {
 
     return (
         <Router>
-            <loggedInUserContext.Provider value={{loggedInUser, setLoggedInUser}}>
-                <themeContext.Provider value={{currentTheme, setCurrentTheme}}>
+            <loggedInUserContext.Provider value={{ loggedInUser, setLoggedInUser }}>
+                <themeContext.Provider value={{ currentTheme, setCurrentTheme }}>
                     <ThemeProvider theme={currentTheme}>
-                        <Paper style={{width: "100wh", height: "100vh"}} elevation={10}>
+                        <Paper style={{ width: "100wh", height: "100vh" }} elevation={10}>
                             <Grid container
-                                  spacing={0}
-                                  direction="row"
-                                  alignItems="center"
-                                  justifyContent="space-evenly"
-                                  style={{
-                                      width: "100%",
-                                      height: "100%",
-                                      // padding:"10px",
-                                      //   border: "4px solid"
-                                  }}
+                                spacing={0}
+                                direction="row"
+                                alignItems="center"
+                                justifyContent="space-evenly"
+                                style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    // padding:"10px",
+                                    //   border: "4px solid"
+                                }}
                             >
                                 <Grid item md={8} xs={9}>
-                                    <AccountMenu currentTheme={currentTheme} setCurrentTheme={setCurrentTheme}/>
+                                    <AccountMenu currentTheme={currentTheme} setCurrentTheme={setCurrentTheme} />
                                 </Grid>
                                 <Grid item md={12}>
                                     <Grid
@@ -99,18 +99,18 @@ function App() {
                                         direction="column"
                                         alignItems="space-between"
                                         justifyContent="space-evenly"
-                                        style={{width: "100%", height: "100%"}}
+                                        style={{ width: "100%", height: "100%" }}
                                     >
                                         <Routes>
-                                            <Route path="/about"/>
-                                            <Route path="/contact"/>
-                                            <Route path="/userList" element={<UserList/>}/>
-                                            <Route path="/login" element={<Login/>}/>
-                                            <Route path="/signup" element={<SignUp/>}/>
+                                            <Route path="/about" />
+                                            <Route path="/contact" />
+                                            <Route path="/userList" element={<UserList />} />
+                                            <Route path="/login" element={<Login />} />
+                                            <Route path="/signup" element={<SignUp />} />
                                             <Route path="/logout"
-                                                   element={<Logout/>}/>
+                                                element={<Logout />} />
                                             {/*<Route path="/messagetest" element={<MessageBubble messageId={2}/>}/>*/}
-                                            <Route path="/chat" element={<Chat/>}/>
+                                            <Route path="/chat" element={<Chat />} />
                                             {/*<Route path="/chatroomlist" element={<ChatRoomMessageBox/>}/>*/}
                                             <Route path="/modifyuser" element={<ModifyUser/>}/>
                                             <Route path="*" element={<Login/>}/>
@@ -134,5 +134,5 @@ function App() {
     );
 }
 
-export {App, themeContext, loggedInUserContext, nullUser};
+export { App, themeContext, loggedInUserContext, nullUser };
 export default App;
