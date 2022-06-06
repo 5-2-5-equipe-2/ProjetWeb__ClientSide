@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import {useQuery} from "react-query";
+import {useInfiniteQuery, useQuery} from "react-query";
 import {getChatRoomMessages} from "../../api/ChatRoom/ChatRoom";
 import MessageBubble from "../MessageBubble";
 import {CircularProgress, Grid, Paper} from "@mui/material";
@@ -9,6 +9,7 @@ import MessageInterface from "../../api/Message/MessageInterface";
 // import {VariableSizeList as List} from "react-window";
 // import AutoSizer from "react-virtualized-auto-sizer";
 import {List} from "@mui/material"
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export default function ChatRoomMessageBox({
                                                isMessagesLoading,
@@ -16,48 +17,46 @@ export default function ChatRoomMessageBox({
                                            }: { isMessagesLoading: boolean, messageData: MessageInterface[] }) {
 
     let chatRoomId = useContext(selectedChatRoomContext).selectedChatRoom?.id;
-    const rowHeights = useRef([] as number[]);
+    const [items, setItems] = useState([] as MessageInterface[]);
 
-    function getRowHeight(index: number) {
-        return rowHeights.current[index] + 8 || 150;
-    }
+    const [hasMore, setHasMore] = useState(true);
 
-    const listRef = useRef(null);
+    const [page, setPage] = useState(0);
 
     useEffect(() => {
-        if (messageData.length > 0) {
-            scrollToBottom();
-        }
-        // eslint-disable-next-line
-    }, [messageData, chatRoomId]);
-
-    function setRowHeight(index: number, size: number) {
-        // @ts-ignore
-        listRef.current.resetAfterIndex(0);
-        rowHeights.current = {...rowHeights.current, [index]: size};
-    }
-
-    function scrollToBottom() {
-        // @ts-ignore
-        // listRef.current.scrollToItem(messageData.length - 1, "end");
-    }
-
-    function Row({index, style}: { index: number, style: any }) {
-        const rowRef = useRef(null);
-
-        useEffect(() => {
-            if (rowRef.current) {
-                // @ts-ignore
-                setRowHeight(index, rowRef.current.clientHeight);
+        const getComments = async () => {
+            if (chatRoomId) {
+                getChatRoomMessages(chatRoomId, page)?.then(data => {
+                        console.log("fetching data");
+                        setItems(data.data);
+                        setPage(0)
+                    }
+                ).catch(err => {
+                        console.log(err);
+                    }
+                );
             }
-            // eslint-disable-next-line
-        }, [rowRef]);
+        };
 
-        return (
-            <div style={style}>
-                <div ref={rowRef}><MessageBubble message={messageData[index]}/></div>
-            </div>
-        );
+        getComments();
+    }, [chatRoomId]);
+    const fetchData = () => {
+        console.log("fetching data2");
+        if (chatRoomId) {
+            getChatRoomMessages(chatRoomId, page)?.then(data => {
+                    setItems(items.concat(data.data));
+                    setPage(page + 1);
+                    console.log("fetching data2");
+                    console.log(data);
+                    // setHasMore(data.data.length > 0);
+                }
+            ).catch(err => {
+                    console.log(err);
+
+                }
+            );
+        }
+
     }
 
 
@@ -91,31 +90,25 @@ export default function ChatRoomMessageBox({
                         <CircularProgress/>
                     </Box>
                 }
-                <List sx={{maxHeight: '100%', overflow: 'auto', width: "70vw"}}>
-                    {messageData.length > 0 &&
-                        <>
-                            {messageData.map((message) => (
-                                <MessageBubble message={message} key={message.id}/>
-                            ), [messageData])}
-                        </>}
+                <List sx={{maxHeight: '100%', overflow: 'auto', width: "70vw"}}
+                      id="scrollableDiv"
+                >
+
+                    <InfiniteScroll
+                        dataLength={items.length} //This is important field to render the next data
+                        next={fetchData}
+                        hasMore={true}
+                        scrollableTarget={'scrollableDiv'}
+                        loader={<h4>Loading...</h4>}
+                        endMessage={<p style={{textAlign: "center"}}>
+                            <b>Yay! You have seen it all</b>
+                        </p>}
+                    >
+                        {items.map((item,index) => {
+                            return <MessageBubble key={index} message={item}/>;
+                        })}
+                    </InfiniteScroll>
                 </List>
-
-                {/*<AutoSizer style={ {width:"100%", height:"100%"}}>*/}
-                {/*    {({ height, width }:{height:number, width:number}) => (*/}
-                {/*<List*/}
-                {/*    className="List"*/}
-                {/*    height={height - 8}*/}
-                {/*    itemCount={messageData.length}*/}
-                {/*    itemSize={getRowHeight}*/}
-                {/*    ref={listRef}*/}
-                {/*    width={width - 8}*/}
-                {/*>*/}
-                {/*    {Row}*/}
-                {/*</List>*/}
-                {/*    )}*/}
-                {/*</AutoSizer>*/}
-
-                {/*</List>*/}
             </Box>
         </Paper>
         </Box>

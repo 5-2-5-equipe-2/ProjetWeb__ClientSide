@@ -132,12 +132,15 @@ const ChatEdit = () => {
             {isOwner &&
 
                 <>
-                    <Dialog open={open} onClose={handleClose}>
+                    <Dialog open={open} onClose={handleClose}
+                        maxWidth={'md'}
+                        fullWidth={true}
+                    >
                         <DialogTitle>Edit Chatroom</DialogTitle>
                         <DialogContent>
                             <Grid container
                                   direction="column"
-                                  alignItems={'center'}
+                                  alignItems={'flex-start'}
                                   justifyContent={'center'}
                                   spacing={2}
                                   sx={{
@@ -147,7 +150,9 @@ const ChatEdit = () => {
                             >
 
 
-                                <Grid item xs={2}>
+                                <Grid item xs={2} sx={{
+                                    // width: '100%',
+                                }}>
                                     <TextField fullWidth
                                                {...register("ChatName", {
                                                    required: true,
@@ -159,7 +164,10 @@ const ChatEdit = () => {
                                                defaultValue={chatroom?.name}
                                     />
                                 </Grid>
-                                <Grid item xs={2}>
+                                <Grid item xs={2}
+                                      sx={{
+                                          // width: '100%',
+                                      }}>
                                     <TextField fullWidth
                                                {...register("Description", {
                                                    required: true,
@@ -201,6 +209,7 @@ const ChatEdit = () => {
                                             searchUsersMutation(newInputValue);
                                             setInputValue(newInputValue)
                                         }}
+
                                         renderInput={(params) => (
                                             <TextField
                                                 // sx={

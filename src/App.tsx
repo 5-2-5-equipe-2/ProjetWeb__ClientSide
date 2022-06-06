@@ -17,6 +17,8 @@ import "./global.css";
 import TestGame from "./pages/TestGame";
 import ChatEdit from "./components/chat_room/ChatEdit";
 import Game from "./api/Game/DinosaurGame";
+import ChatCreateTab from "./components/chat_room/chat_add_button/ChatCreateTab";
+import ChatRoomAddButton from "./components/chat_room/chat_add_button/ChatRoomAddButton";
 
 const theme = createTheme({
     palette: {
@@ -81,8 +83,8 @@ function App() {
                                   alignItems="center"
                                   justifyContent="space-evenly"
                                   style={{
-                                        width: "100%",
-                                        height: "100%",
+                                      width: "100%",
+                                      height: "100%",
                                       // padding:"10px",
                                       //   border: "4px solid"
                                   }}
@@ -115,6 +117,8 @@ function App() {
                                             <Route path="/testgame" element={<TestGame/>}/>
                                             <Route path="/Game" element={<Game/>}/>
                                             <Route path="/editChatRoom" element={<ChatEdit/>}/>
+                                            <Route path="/createChatRoomTest" element={<ChatCreateTab/>}/>
+                                            <Route path="/testChatRoomAdd" element={<ChatRoomAddButton/>}/>
                                         </Routes>
                                     </Grid>
                                 </Grid>

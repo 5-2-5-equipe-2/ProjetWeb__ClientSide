@@ -12,13 +12,19 @@ export const updateChatRoom = (chatRoom: ChatRoomInterface) => api.put<ChatRoomI
 // export const getChatRoomByName = (name: string) => api.get(`/chat_room/getByName/?name=${name}`);
 export const getChatRoomByUserId = (userId: number) => api.get<ChatRoomInterface[]>(`/chat_room/getByUserId/?userId=${userId}`);
 // export const getChatRoomByUserIdAndName = (userId: number, name: string) => api.get(`/chat_room/getByUserIdAndName/?userId=${userId}&name=${name}`);
-export const getChatRoomMessages = (chatRoomId: number|undefined) => {
-    if (chatRoomId === undefined) {
-        return null;
-    }
-    return api.get<MessageInterface[]>(`/chatroom/getMessages?&chatRoomId=${chatRoomId}&limit=100&offset=0`);
+export const getChatRoomMessages = (chatRoomId: number, page = 0) => {
+    return api.get<MessageInterface[]>(`/chatroom/getMessages?&chatRoomId=${chatRoomId}&limit=10&offset=${page * 10}`);
 };
 
 export const getChatRoomUsers = (chatRoomId: number) => {
     return api.get<UserInterface[]>(`/chatroom/getUsers?chatRoomId=${chatRoomId}`);
+}
+
+export interface ChatRoomUrlResponse {
+    failed: boolean,
+    error: string,
+}
+
+export const joinChatRoomByUrl = (chatRoomInviteUrl: string) => {
+    return api.get<ChatRoomUrlResponse>(`/chatroom/addUserByUrl/?&${chatRoomInviteUrl}`)
 }

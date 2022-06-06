@@ -39,7 +39,7 @@ export default function Chat() {
         data: messagesQuery,
         isLoading: isMessagesLoading,
         refetch: refetchMessages,
-    } = useQuery(["messages", selectedChatRoom], () => getChatRoomMessages(selectedChatRoom?.id), {
+    } = useQuery(["messages", selectedChatRoom], () => getChatRoomMessages(selectedChatRoom?.id || -1), {
         refetchInterval: 1000,
     });
 
@@ -110,15 +110,15 @@ export default function Chat() {
                             >
                                 {selectedChatRoom &&
                                     <Paper
-                                    elevation={0}
+                                        elevation={0}
                                     ><Grid container
-                                                 direction="row"
-                                                 justifyContent="space-between"
-                                                 alignItems="flex-start"
-                                                 spacing={0}
-                                                 sx={{
-                                                     padding: "1rem",
-                                                 }}
+                                           direction="row"
+                                           justifyContent="space-between"
+                                           alignItems="flex-start"
+                                           spacing={0}
+                                           sx={{
+                                               padding: "1rem",
+                                           }}
                                     >
                                         <Grid item><ChatBubble chatRoom={selectedChatRoom} displayDescription/></Grid>
                                         <Grid item><ChatEdit/></Grid>
