@@ -90,14 +90,14 @@ export default function ChatRoomMessageBox({
                         <CircularProgress/>
                     </Box>
                 }
-                <List sx={{maxHeight: '100%', overflow: 'auto', width: "70vw"}}
+                <List sx={{maxHeight: '100%', overflowY: 'auto', width:"70vw"}}
                       id="scrollableDiv"
                 >
 
                     <InfiniteScroll
                         dataLength={items.length} //This is important field to render the next data
                         next={fetchData}
-                        hasMore={true}
+                        hasMore={hasMore}
                         scrollableTarget={'scrollableDiv'}
                         loader={<h4>Loading...</h4>}
                         endMessage={<p style={{textAlign: "center"}}>

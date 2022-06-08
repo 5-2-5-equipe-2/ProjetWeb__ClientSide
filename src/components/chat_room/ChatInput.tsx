@@ -1,6 +1,6 @@
-import {Box, Grid, IconButton, TextField} from "@mui/material";
+import {Box, Fade, Grid, IconButton, TextField} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import React, {useContext} from "react";
+import React, {ChangeEvent, ChangeEventHandler, KeyboardEvent, useContext, useState} from "react";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useMutation} from "react-query";
@@ -8,6 +8,7 @@ import {createMessage, CreateMessageInterface} from "../../api/Message/Message";
 import * as Yup from "yup";
 import {selectedChatRoomContext} from "../../pages/Chat";
 import {loggedInUserContext} from "../../App";
+import {useSnackbar} from "notistack";
 
 const validationSchema = Yup.object().shape({
     messageContent: Yup.string().required('Message is required').max(1000, 'Message is too long'),
@@ -18,6 +19,7 @@ const ChatInput = ({refetchMessages}: { refetchMessages: any }) => {
     const loggedInUser = useContext(loggedInUserContext).loggedInUser;
     const buttonRef = React.createRef<HTMLButtonElement>();
     const textInputRef = React.createRef<HTMLInputElement>();
+    const {enqueueSnackbar, } = useSnackbar();
     const {
         register,
         handleSubmit,
@@ -28,36 +30,22 @@ const ChatInput = ({refetchMessages}: { refetchMessages: any }) => {
 
 
     const {mutate: sendMessage,} = useMutation(createMessage, {
-        onSuccess: (data, variables,) => {
+        onSuccess: async (data, variables,) => {
             setValue('messageContent', '');
+            await refetchMessages({throwOnError: true});
+            enqueueSnackbar('Message sent', {variant: 'success',autoHideDuration: 1300,
+                TransitionComponent:Fade
+            });
 
         }
     });
 
     React.useEffect(() => {
-            register("messageContent");
-            const listener = (event: KeyboardEvent) => {
-                // click button when cntrl+enter is pressed
-                if (event.key === "Enter") {
-                    if (event.ctrlKey) {
-                        if (textInputRef.current) {
-                            textInputRef.current.value += "\n";
-                            console.log(textInputRef.current);
-                        }
-                    } else {
-                        buttonRef.current?.click();
-                    }
-
-                }
-
-            };
-            document.addEventListener("keydown", listener);
-            return () => {
-                document.removeEventListener("keydown", listener);
-            };
+            register("messageContent",
+                {required: true, max: 1000, min: 1});
         }
     );
-    const onSubmit = async (data: any) => {
+    const onSubmit = (data: any) => {
         if (selectedChatRoomId) {
             let message: CreateMessageInterface = {
                 content: data.messageContent,
@@ -65,11 +53,27 @@ const ChatInput = ({refetchMessages}: { refetchMessages: any }) => {
                 userId: loggedInUser.id,
             }
             sendMessage(message);
-            await refetchMessages({throwOnError: true});
         }
 
     }
 
+
+    async function onKeyDown(event: KeyboardEvent) {
+        // if the user has pressed enter submit the message
+        if (event.key === "Enter") {
+            if (event.ctrlKey) {
+                if (textInputRef.current) {
+                    textInputRef.current.value += "\n";
+                    console.log(textInputRef.current);
+                }
+            } else {
+                if (textInputRef.current) {
+                    textInputRef.current.value = '';
+                }
+                buttonRef.current?.click();
+            }
+        }
+    }
 
     return (
         <Grid container
@@ -84,10 +88,11 @@ const ChatInput = ({refetchMessages}: { refetchMessages: any }) => {
                     id="textInputChat"
                     label="Send Message"
                     multiline
-                    maxRows={10}
+                    rows={2}
                     {...register("messageContent")}
                     variant="filled"
                     inputRef={textInputRef}
+                    onKeyDown={onKeyDown}
                 />
             </Grid>
             <Grid item xs={1}>

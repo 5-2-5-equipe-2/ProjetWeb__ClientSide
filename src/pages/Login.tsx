@@ -19,11 +19,11 @@ import {AxiosError} from "axios";
 import {useNavigate} from "react-router-dom";
 import {loggedInUserContext} from "../App";
 import {useContext} from "react";
+import {useSnackbar} from "notistack";
 
-    
 
 const validationSchema = Yup.object().shape({
-    
+
     username: Yup.string()
         .required('Username is required'),
 
@@ -42,39 +42,48 @@ export default function LoginForm() {
         resolver: yupResolver(validationSchema)
     });
     const setLoggedInUser = useContext(loggedInUserContext).setLoggedInUser;
+    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
     // Get redirect data from query params
     let params = new URLSearchParams(window.location.search)
     let navigate = useNavigate();
     const {mutate: getUser,} = useMutation(getUserByUsername, {
         onSuccess: (data) => {
-            console.log(data.data);
             setLoggedInUser(data.data);
+
         }
     });
     const [dialogOpen, setDialogOpen] = React.useState(false);
     const [dialogMessage, setDialogMessage] = React.useState("");
     const [dialogTitle, setDialogTitle] = React.useState("");
     const {mutate: loginUser,} = useMutation(login, {
-        onSuccess: (data, variables, ) => {
-            // console.log(variables);
-
-            setDialogTitle("Success");
-            setDialogMessage("User Logged in Successfully");
-            handleDialogClickOpen();
-            // setUser(userData);
+        onSuccess: (data, variables,) => {
+            console.log(data);
             getUser(variables.username);
             // redirect to from page or home page with react router
-            navigate(params.get('from') || '/');
+            navigate("/chat");
         },
         onError: (error: AxiosError) => {
+            console.log(error);
             if (error.response && error.response.data) {
-                setDialogTitle("Error");
-                handleDialogClickOpen();
                 // @ts-ignore
-                setDialogMessage(error.response.data.error);
+                enqueueSnackbar(error.response.data.error, {
+                    variant: 'error',
+                    autoHideDuration: 5000,
+                    anchorOrigin: {
+                        vertical: 'top',
+                        horizontal: 'center',
+                    },
+                })
             } else {
-                alert("An error occurred");
+                enqueueSnackbar(error.message, {
+                    variant: 'error',
+                    autoHideDuration: 5000,
+                    anchorOrigin: {
+                        vertical: 'top',
+                        horizontal: 'center',
+                    },
+                })
             }
 
         }
@@ -84,13 +93,13 @@ export default function LoginForm() {
         loginUser(data);
 
     }
-    const handleDialogClickOpen = () => {
-        setDialogOpen(true);
-    };
-
-    const handleDialogClose = () => {
-        setDialogOpen(false);
-    };
+    // const handleDialogClickOpen = () => {
+    //     setDialogOpen(true);
+    // };
+    //
+    // const handleDialogClose = () => {
+    //     setDialogOpen(false);
+    // };
 
 
     React.useEffect(() => {
@@ -121,25 +130,25 @@ export default function LoginForm() {
             alignItems: "center",
             justifyContent: "center",
 
-        }} >
-            <Dialog 
-                open={dialogOpen}
-                onClose={handleDialogClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle>{dialogTitle}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        {dialogMessage}
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleDialogClose} autoFocus>
-                        close
-                    </Button>
-                </DialogActions>
-            </Dialog>
+        }}>
+            {/*<Dialog */}
+            {/*    open={dialogOpen}*/}
+            {/*    onClose={handleDialogClose}*/}
+            {/*    aria-labelledby="alert-dialog-title"*/}
+            {/*    aria-describedby="alert-dialog-description"*/}
+            {/*>*/}
+            {/*    <DialogTitle>{dialogTitle}</DialogTitle>*/}
+            {/*    <DialogContent>*/}
+            {/*        <DialogContentText id="alert-dialog-description">*/}
+            {/*            {dialogMessage}*/}
+            {/*        </DialogContentText>*/}
+            {/*    </DialogContent>*/}
+            {/*    <DialogActions>*/}
+            {/*        <Button onClick={handleDialogClose} autoFocus>*/}
+            {/*            close*/}
+            {/*        </Button>*/}
+            {/*    </DialogActions>*/}
+            {/*</Dialog>*/}
             <h1>Login</h1>
             <form>
                 <FormGroup>

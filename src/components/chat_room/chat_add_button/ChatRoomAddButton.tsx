@@ -26,14 +26,16 @@ export default function ChatRoomAddButton() {
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     return (
         <><IconButton onClick={handleClickOpen}
-                    sx={{
-                        width: '5rem',
-                        height: '5rem',
-                    }}
+                      centerRipple
+                      sx={{
+                          width: '5rem',
+                          height: '5rem',
+                      }}
         >
-            <Add                      sx={{
+            <Add sx={{
                 width: '4rem',
                 height: '4rem',
+                boxShadow: '4rem',
             }}/>
         </IconButton>
             <Dialog

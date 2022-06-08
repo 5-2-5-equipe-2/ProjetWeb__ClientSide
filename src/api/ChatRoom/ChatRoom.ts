@@ -13,7 +13,7 @@ export const updateChatRoom = (chatRoom: ChatRoomInterface) => api.put<ChatRoomI
 export const getChatRoomByUserId = (userId: number) => api.get<ChatRoomInterface[]>(`/chat_room/getByUserId/?userId=${userId}`);
 // export const getChatRoomByUserIdAndName = (userId: number, name: string) => api.get(`/chat_room/getByUserIdAndName/?userId=${userId}&name=${name}`);
 export const getChatRoomMessages = (chatRoomId: number, page = 0) => {
-    return api.get<MessageInterface[]>(`/chatroom/getMessages?&chatRoomId=${chatRoomId}&limit=10&offset=${page * 10}`);
+    return api.get<MessageInterface[]>(`/chatroom/getMessages?&chatRoomId=${chatRoomId}&limit=50&offset=${page * 50}`);
 };
 
 export const getChatRoomUsers = (chatRoomId: number) => {

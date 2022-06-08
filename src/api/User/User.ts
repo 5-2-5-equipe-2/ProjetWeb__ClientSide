@@ -23,7 +23,7 @@ export const getCurrentlyLoggedInUser = () => {
 
 }
 
-export const searchUsers = (search:string) => {
+export const searchUsers = (search: string) => {
     return api.get<UserInterface[]>(`/user/search?search=${search}`);
 };
 
@@ -45,4 +45,9 @@ export const login = ({username, password}: LoginParams) => {
 
 export const logout = () => api.post(`/user/logout`);
 
-export const getChatRooms = (id: Number) => api.get<ChatRoomInterface[]>(`/user/getChatRooms?id=${id}`);
+export const getChatRooms = (id: number) => api.get<ChatRoomInterface[]>(`/user/getChatRooms?id=${id}`);
+
+export const searchUserChatRooms = (id: number, search: string) => {
+    // return api.get<ChatRoomInterface[]>(`/user/searchUserChatRooms?id=${id}&search=${search}`);
+    return getChatRooms(id);
+}
