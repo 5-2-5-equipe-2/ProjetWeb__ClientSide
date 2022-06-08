@@ -156,7 +156,7 @@ export default function ChatCreateTab() {
                          }}
 
                          onClick={handleSubmit(onSubmit)}
-                >Submit</Button></Grid>
+                >Create</Button></Grid>
 
             </Grid>
         </form>

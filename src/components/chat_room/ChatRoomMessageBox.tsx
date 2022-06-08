@@ -27,12 +27,12 @@ export default function ChatRoomMessageBox({
         const getComments = async () => {
             if (chatRoomId) {
                 getChatRoomMessages(chatRoomId, page)?.then(data => {
-                        console.log("fetching data");
+                        // console.log("fetching data");
                         setItems(data.data);
                         setPage(0)
                     }
                 ).catch(err => {
-                        console.log(err);
+                        // console.log(err);
                     }
                 );
             }
@@ -46,12 +46,12 @@ export default function ChatRoomMessageBox({
             getChatRoomMessages(chatRoomId, page)?.then(data => {
                     setItems(items.concat(data.data));
                     setPage(page + 1);
-                    console.log("fetching data2");
-                    console.log(data);
+                    // console.log("fetching data2");
+                    // console.log(data);
                     // setHasMore(data.data.length > 0);
                 }
             ).catch(err => {
-                    console.log(err);
+                    // console.log(err);
 
                 }
             );

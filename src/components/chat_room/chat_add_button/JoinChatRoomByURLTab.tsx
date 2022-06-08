@@ -77,7 +77,7 @@ export default function JoinChatRoomByURLTab() {
                         }}
 
                         onClick={handleSubmit(onSubmit)}
-                    >Submit</Button>
+                    >Join</Button>
 
                 </Grid>
             </Grid>

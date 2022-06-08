@@ -28,3 +28,15 @@ export interface ChatRoomUrlResponse {
 export const joinChatRoomByUrl = (chatRoomInviteUrl: string) => {
     return api.get<ChatRoomUrlResponse>(`/chatroom/addUserByUrl/?&${chatRoomInviteUrl}`)
 }
+
+export const joinPublicChatRoom = (chatRoomId: number) => {
+    return api.get<ChatRoomUrlResponse>(`/chatroom/addUserByPublicChatRoom/?&chatRoomId=${chatRoomId}`)
+}
+
+export const searchPublicChatRooms = (search: string) => {
+    return api.get<ChatRoomInterface[]>(`/chatroom/searchPublicChatRooms/?&search=${search}`)
+}
+
+export const leaveChatRoom = (chatRoomId: number) => {
+    return api.get<ChatRoomUrlResponse>(`/chatroom/removeUser/?&chatRoomId=${chatRoomId}`)
+}

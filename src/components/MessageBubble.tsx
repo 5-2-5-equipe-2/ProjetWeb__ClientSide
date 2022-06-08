@@ -82,50 +82,50 @@ export default function MessageBubble({message}: { message: MessageInterface }) 
                          style={isLeftSide ? {width: "90%"} : {width: "90%", marginLeft: "auto"}}>
                         <Typography className={isLeftSide ? "from-them" : "from-me"}>
                             {/*{message.content}*/}
-                            <ReactMarkdown
-                                rehypePlugins={[remarkGfm, remarkParse, remarkImages,
-                                    remarkMath]}
-                                // disallowedElements={['img']}
-                                skipHtml={false}
-                                children={message.content}
-                                remarkPlugins={[
-                                    [remarkImages, {
-                                        quality: 10,
-                                        withWebp: true,
-                                        loading: 'lazy',
-                                        backgroundColor: '#fafafa',
-                                    }],
-                                    [remarkGfm, {singleTilde: false}],
-                                    [remarkParse, {commonmark: true}],
-                                    [remarkMath],
-                                ]}
-                                components={{
-                                    code({node, inline, className, children, ...props}) {
-                                        const match = /language-(\w+)/.exec(className || '')
-                                        // @ts-ignore
-                                        return !inline && match ? (
-                                            <SyntaxHighlighter
-                                                children={String(children).replace(/\n$/, '')}
-                                                // @ts-ignore
-                                                style={dark}
-                                                language={match[1]}
-                                                PreTag="div"
-                                                {...props}
-                                            />
-                                        ) : (
-                                            <code className={className} {...props}>
-                                                {children}
-                                            </code>
-                                        )
-                                    },
-                                    img({src, alt, ...props}) {
-                                        return <BlogImage src={src} alt={alt} {...props} />
-                                    },
-                                    p: (props: any) => <div {...props} />,
-                                }}
-                            />
+                            {/*<ReactMarkdown*/}
+                            {/*    rehypePlugins={[remarkGfm, remarkParse, remarkImages,*/}
+                            {/*        remarkMath]}*/}
+                            {/*    // disallowedElements={['img']}*/}
+                            {/*    skipHtml={false}*/}
+                            {/*    children={message.content}*/}
+                            {/*    remarkPlugins={[*/}
+                            {/*        [remarkImages, {*/}
+                            {/*            quality: 10,*/}
+                            {/*            withWebp: true,*/}
+                            {/*            loading: 'lazy',*/}
+                            {/*            backgroundColor: '#fafafa',*/}
+                            {/*        }],*/}
+                            {/*        [remarkGfm, {singleTilde: false}],*/}
+                            {/*        [remarkParse, {commonmark: true}],*/}
+                            {/*        [remarkMath],*/}
+                            {/*    ]}*/}
+                            {/*    components={{*/}
+                            {/*        code({node, inline, className, children, ...props}) {*/}
+                            {/*            const match = /language-(\w+)/.exec(className || '')*/}
+                            {/*            // @ts-ignore*/}
+                            {/*            return !inline && match ? (*/}
+                            {/*                <SyntaxHighlighter*/}
+                            {/*                    children={String(children).replace(/\n$/, '')}*/}
+                            {/*                    // @ts-ignore*/}
+                            {/*                    style={dark}*/}
+                            {/*                    language={match[1]}*/}
+                            {/*                    PreTag="div"*/}
+                            {/*                    {...props}*/}
+                            {/*                />*/}
+                            {/*            ) : (*/}
+                            {/*                <code className={className} {...props}>*/}
+                            {/*                    {children}*/}
+                            {/*                </code>*/}
+                            {/*            )*/}
+                            {/*        },*/}
+                            {/*        img({src, alt, ...props}) {*/}
+                            {/*            return <BlogImage src={src} alt={alt} {...props} />*/}
+                            {/*        },*/}
+                            {/*        p: (props: any) => <div {...props} />,*/}
+                            {/*    }}*/}
+                            {/*/>*/}
 
-                            {/*{message.content}*/}
+                            {message.content}
                         </Typography>
                     </Box>
                 </Grid>

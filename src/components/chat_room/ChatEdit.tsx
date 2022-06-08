@@ -87,11 +87,6 @@ const ChatEdit = () => {
         getChatRoomUsers,
     )
 
-    useEffect(() => {
-        return () => {
-
-        };
-    }, [setValue, chatRoomUsers]);
 
 
     const handleClickOpen = async () => {
