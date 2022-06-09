@@ -1,63 +1,73 @@
 import Box from "@mui/material/Box";
-import {useInfiniteQuery, useQuery} from "react-query";
+import {useInfiniteQuery} from "react-query";
 import {getChatRoomMessages} from "../../api/ChatRoom/ChatRoom";
 import MessageBubble from "../MessageBubble";
-import {CircularProgress, Grid, Paper} from "@mui/material";
-import {selectedChatRoomContext} from "../../pages/Chat";
-import React, {useContext, useEffect, useRef, useState} from "react";
-import MessageInterface from "../../api/Message/MessageInterface";
+import {Button, CircularProgress, Paper} from "@mui/material";
+import {infiniteQueryContext, selectedChatRoomContext} from "../../pages/Chat";
+import React, {useContext, useEffect} from "react";
 // import {VariableSizeList as List} from "react-window";
 // import AutoSizer from "react-virtualized-auto-sizer";
 import {List} from "@mui/material"
-import InfiniteScroll from "react-infinite-scroll-component";
+import messageInterface from "../../api/Message/MessageInterface";
+import {useInView} from 'react-intersection-observer'
 
-export default function ChatRoomMessageBox({
-                                               isMessagesLoading,
-                                               messageData,
-                                           }: { isMessagesLoading: boolean, messageData: MessageInterface[] }) {
 
-    let chatRoomId = useContext(selectedChatRoomContext).selectedChatRoom?.id;
-    const [items, setItems] = useState([] as MessageInterface[]);
+export default function ChatRoomMessageBox() {
+    let selectedChatRoom = useContext(selectedChatRoomContext).selectedChatRoom;
 
-    const [hasMore, setHasMore] = useState(true);
+    const {ref, inView} = useInView()
+    const setReFetch = useContext(infiniteQueryContext).setRefetch;
+    const {
+        data,
+        isFetchingNextPage,
+        fetchNextPage,
+        refetch,
+        isLoading,
+        hasNextPage,
+    } = useInfiniteQuery(
+        ["messagesData", selectedChatRoom?.id || -1],
+        async ({pageParam = 0}) => {
+            const res = await getChatRoomMessages(selectedChatRoom?.id || -1, pageParam);
+            return {
+                data: res.data,
+                hasNextPage: res.data.length > 0,
+                hasPreviousPage: pageParam > 0,
+                nextPage: pageParam - 1,
+                currentPage: pageParam,
+                previousPage: pageParam + 1,
+            }
+        },
+        {
+            // refetchInterval: 10,
 
-    const [page, setPage] = useState(0);
+            getPreviousPageParam: (lastPage) => {
+                if (lastPage.hasPreviousPage) {
+                    return lastPage.nextPage;
+                }
+            },
+            getNextPageParam: (lastPage) => {
+                if (lastPage.hasNextPage) {
+                    return lastPage.previousPage;
+                }
+            },
+
+
+        }
+    )
+
+
+    React.useEffect(() => {
+        if (inView) {
+            const fetchNextPageAsync = async () => {
+                await fetchNextPage()
+            }
+            fetchNextPageAsync().catch(console.error)
+        }
+    }, [fetchNextPage, inView])
 
     useEffect(() => {
-        const getComments = async () => {
-            if (chatRoomId) {
-                getChatRoomMessages(chatRoomId, page)?.then(data => {
-                        // console.log("fetching data");
-                        setItems(data.data);
-                        setPage(0)
-                    }
-                ).catch(err => {
-                        // console.log(err);
-                    }
-                );
-            }
-        };
-
-        getComments();
-    }, [chatRoomId]);
-    const fetchData = () => {
-        console.log("fetching data2");
-        if (chatRoomId) {
-            getChatRoomMessages(chatRoomId, page)?.then(data => {
-                    setItems(items.concat(data.data));
-                    setPage(page + 1);
-                    // console.log("fetching data2");
-                    // console.log(data);
-                    // setHasMore(data.data.length > 0);
-                }
-            ).catch(err => {
-                    // console.log(err);
-
-                }
-            );
-        }
-
-    }
+        setReFetch({'func': refetch, 'param': selectedChatRoom?.id || -1});
+    }, [refetch, selectedChatRoom?.id, setReFetch])
 
 
     return (
@@ -78,7 +88,7 @@ export default function ChatRoomMessageBox({
                 alignItems: "flex-start",
                 justifyContent: "center"
             }}>
-                {isMessagesLoading &&
+                {isLoading &&
                     <Box sx={{
                         width: "100%",
                         height: "100%",
@@ -90,25 +100,31 @@ export default function ChatRoomMessageBox({
                         <CircularProgress/>
                     </Box>
                 }
-                <List sx={{maxHeight: '100%', overflowY: 'auto', width:"70vw"}}
+                <List sx={{maxHeight: '100%', overflowY: 'auto', width: "70vw"}}
                       id="scrollableDiv"
                 >
-
-                    <InfiniteScroll
-                        dataLength={items.length} //This is important field to render the next data
-                        next={fetchData}
-                        hasMore={hasMore}
-                        scrollableTarget={'scrollableDiv'}
-                        loader={<h4>Loading...</h4>}
-                        endMessage={<p style={{textAlign: "center"}}>
-                            <b>Yay! You have seen it all</b>
-                        </p>}
-                    >
-                        {items.map((item,index) => {
-                            return <MessageBubble key={index} message={item}/>;
-                        })}
-                    </InfiniteScroll>
+                    {data?.pages.map(page => (
+                        <React.Fragment key={page.currentPage}>
+                            {page.data.map((item: messageInterface) => (
+                                <MessageBubble key={item.id} message={item}/>
+                            ))}
+                        </React.Fragment>
+                    ))}
+                    <div>
+                        <Button
+                            ref={ref}
+                            onClick={async () => fetchNextPage()}
+                            disabled={!hasNextPage || isFetchingNextPage}
+                        >
+                            {isFetchingNextPage
+                                ? 'Loading more...'
+                                : hasNextPage
+                                    ? 'Load Newer'
+                                    : 'Nothing more to load'}
+                        </Button>
+                    </div>
                 </List>
+
             </Box>
         </Paper>
         </Box>

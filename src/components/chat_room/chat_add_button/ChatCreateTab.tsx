@@ -1,7 +1,7 @@
 // Yup form to edit the chatroom
 import * as Yup from "yup";
 import {mixed} from "yup";
-import {useContext, useEffect, useRef, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {selectedChatRoomContext} from "../../../pages/Chat";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {Box, Button, Grid, TextField} from "@mui/material";

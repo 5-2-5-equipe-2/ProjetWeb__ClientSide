@@ -1,5 +1,5 @@
 import ChatRoomInterface from "../../api/ChatRoom/ChatRoomInterface";
-import {Avatar, Box, Grid, Paper} from "@mui/material";
+import {Avatar, Grid} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 

@@ -6,7 +6,6 @@ import {
     DialogContent,
     DialogTitle,
     IconButton,
-    Paper,
     useMediaQuery, useTheme
 } from "@mui/material";
 import {Add} from "@mui/icons-material";

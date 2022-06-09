@@ -1,13 +1,12 @@
 // Yup form to create the chatroom
 import * as Yup from "yup";
-import {mixed} from "yup";
 import {useContext} from "react";
 import {loggedInUserContext} from "../../../App";
 import {selectedChatRoomContext} from "../../../pages/Chat";
-import {FieldValues, UnpackNestedValue, useForm} from "react-hook-form";
+import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 import {useMutation} from "react-query";
-import {ChatRoomUrlResponse, joinChatRoomByUrl} from "../../../api/ChatRoom/ChatRoom";
+import {joinChatRoomByUrl} from "../../../api/ChatRoom/ChatRoom";
 import {Button, Grid, TextField} from "@mui/material";
 
 const validationSchema = Yup.object().shape({

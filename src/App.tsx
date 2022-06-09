@@ -12,7 +12,6 @@ import {getCurrentlyLoggedInUser} from "./api/User/User";
 import Logout from "./pages/Logout";
 import ModifyUser from "./pages/ModifyUser";
 import Chat from "./pages/Chat";
-import ChatRoomMessageBox from "./components/chat_room/ChatRoomMessageBox";
 import "./global.css";
 import TestGame from "./pages/TestGame";
 import ChatEdit from "./components/chat_room/ChatEdit";

@@ -1,10 +1,9 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {useQuery} from "react-query";
 import {getChatRooms, searchUserChatRooms} from "../../api/User/User";
 import ChatRoomListItem from "./ChatRoomListItem";
-import {Box, CircularProgress, Grid, IconButton, InputAdornment, List, Paper, TextField} from "@mui/material";
+import {Box, CircularProgress, Grid, IconButton, InputAdornment, List, TextField} from "@mui/material";
 import {loggedInUserContext} from "../../App";
-import ChatRoomInterface from "../../api/ChatRoom/ChatRoomInterface";
 import {selectedChatRoomContext} from "../../pages/Chat";
 import SearchIcon from '@mui/icons-material/Search';
 import ChatRoomAddButton from "./chat_add_button/ChatRoomAddButton";

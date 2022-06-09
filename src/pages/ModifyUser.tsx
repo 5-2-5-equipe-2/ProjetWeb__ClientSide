@@ -56,7 +56,6 @@ export default function ModifyUser() {
         register,
         handleSubmit,
         formState: {errors},
-        getValues
     } = useForm({
         resolver: yupResolver(validationSchema)
     });
@@ -65,6 +64,7 @@ export default function ModifyUser() {
             alert("User Created Successfully!");
         },
         onError: (error: AxiosError) => {
+
             // alert(error.response.e.message);
         }
     });

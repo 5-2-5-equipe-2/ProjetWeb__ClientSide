@@ -3,18 +3,17 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
     DialogTitle,
     Grid,
-    TextField, Autocomplete, CircularProgress, FormLabel
+    TextField, Autocomplete, CircularProgress
 } from "@mui/material";
 import * as React from "react";
 import EditIcon from "@mui/icons-material/Edit";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useState} from "react";
 import {loggedInUserContext} from "../../App";
 import * as Yup from 'yup';
 import {selectedChatRoomContext} from "../../pages/Chat";
-import {useMutation, useQuery} from "react-query";
+import {useMutation} from "react-query";
 import {searchUsers} from "../../api/User/User";
 import UserInterface from "../../api/User/UserInterface";
 import {getChatRoomUsers, updateChatRoom} from "../../api/ChatRoom/ChatRoom";

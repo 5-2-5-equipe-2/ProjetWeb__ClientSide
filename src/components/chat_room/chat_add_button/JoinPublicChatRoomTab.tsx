@@ -1,20 +1,16 @@
 // Yup form to create the chatroom
 import * as Yup from "yup";
-import {mixed} from "yup";
-import {ReactNode, useContext, useState} from "react";
+import {useContext, useState} from "react";
 import {loggedInUserContext} from "../../../App";
 import {selectedChatRoomContext} from "../../../pages/Chat";
-import {FieldValues, UnpackNestedValue, useForm} from "react-hook-form";
+import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 import {useMutation} from "react-query";
 import {
-    ChatRoomUrlResponse,
-    joinChatRoomByUrl,
     joinPublicChatRoom,
     searchPublicChatRooms
 } from "../../../api/ChatRoom/ChatRoom";
-import {Autocomplete, AutocompleteRenderInputParams, Button, CircularProgress, Grid, TextField} from "@mui/material";
-import UserInterface from "../../../api/User/UserInterface";
+import {Autocomplete, Button, CircularProgress, Grid, TextField} from "@mui/material";
 import * as React from "react";
 import ChatRoomInterface from "../../../api/ChatRoom/ChatRoomInterface";
 import {useSnackbar} from "notistack";

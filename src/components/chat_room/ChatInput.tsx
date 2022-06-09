@@ -1,25 +1,26 @@
 import {Box, Fade, Grid, IconButton, TextField} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import React, {ChangeEvent, ChangeEventHandler, KeyboardEvent, useContext, useState} from "react";
+import React, {KeyboardEvent, useContext} from "react";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useMutation} from "react-query";
 import {createMessage, CreateMessageInterface} from "../../api/Message/Message";
 import * as Yup from "yup";
-import {selectedChatRoomContext} from "../../pages/Chat";
+import {infiniteQueryContext, selectedChatRoomContext} from "../../pages/Chat";
 import {loggedInUserContext} from "../../App";
 import {useSnackbar} from "notistack";
 
 const validationSchema = Yup.object().shape({
-    messageContent: Yup.string().required('Message is required').max(1000, 'Message is too long'),
+    messageContent: Yup.string().required('Message is required').max(1000, 'Message is too long').min(1, 'Message is too short')
 });
 
-const ChatInput = ({refetchMessages}: { refetchMessages: any }) => {
+const ChatInput = () => {
     const selectedChatRoomId = useContext(selectedChatRoomContext).selectedChatRoom?.id;
     const loggedInUser = useContext(loggedInUserContext).loggedInUser;
     const buttonRef = React.createRef<HTMLButtonElement>();
     const textInputRef = React.createRef<HTMLInputElement>();
-    const {enqueueSnackbar, } = useSnackbar();
+    const {enqueueSnackbar,} = useSnackbar();
+    const refetchMessages = useContext(infiniteQueryContext).refetch;
     const {
         register,
         handleSubmit,
@@ -30,11 +31,12 @@ const ChatInput = ({refetchMessages}: { refetchMessages: any }) => {
 
 
     const {mutate: sendMessage,} = useMutation(createMessage, {
-        onSuccess: async (data, variables,) => {
+        onSuccess: async () => {
             setValue('messageContent', '');
-            await refetchMessages({throwOnError: true});
-            enqueueSnackbar('Message sent', {variant: 'success',autoHideDuration: 1300,
-                TransitionComponent:Fade
+            await refetchMessages['func']();
+            enqueueSnackbar('Message sent', {
+                variant: 'success', autoHideDuration: 1300,
+                TransitionComponent: Fade
             });
 
         }
@@ -43,8 +45,11 @@ const ChatInput = ({refetchMessages}: { refetchMessages: any }) => {
     React.useEffect(() => {
             register("messageContent",
                 {required: true, max: 1000, min: 1});
+            console.log(refetchMessages)
         }
-    );
+        , [register, refetchMessages]);
+
+
     const onSubmit = (data: any) => {
         if (selectedChatRoomId) {
             let message: CreateMessageInterface = {

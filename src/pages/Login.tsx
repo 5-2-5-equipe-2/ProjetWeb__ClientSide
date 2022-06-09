@@ -1,11 +1,7 @@
 import * as React from "react";
 import {useForm} from "react-hook-form";
 import {
-    Button, Dialog, DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    FormGroup,
+    Button, FormGroup,
     FormLabel,
     Grid,
     TextField
@@ -42,10 +38,9 @@ export default function LoginForm() {
         resolver: yupResolver(validationSchema)
     });
     const setLoggedInUser = useContext(loggedInUserContext).setLoggedInUser;
-    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
 
     // Get redirect data from query params
-    let params = new URLSearchParams(window.location.search)
     let navigate = useNavigate();
     const {mutate: getUser,} = useMutation(getUserByUsername, {
         onSuccess: (data) => {
@@ -53,9 +48,6 @@ export default function LoginForm() {
 
         }
     });
-    const [dialogOpen, setDialogOpen] = React.useState(false);
-    const [dialogMessage, setDialogMessage] = React.useState("");
-    const [dialogTitle, setDialogTitle] = React.useState("");
     const {mutate: loginUser,} = useMutation(login, {
         onSuccess: (data, variables,) => {
             console.log(data);
@@ -131,24 +123,6 @@ export default function LoginForm() {
             justifyContent: "center",
 
         }}>
-            {/*<Dialog */}
-            {/*    open={dialogOpen}*/}
-            {/*    onClose={handleDialogClose}*/}
-            {/*    aria-labelledby="alert-dialog-title"*/}
-            {/*    aria-describedby="alert-dialog-description"*/}
-            {/*>*/}
-            {/*    <DialogTitle>{dialogTitle}</DialogTitle>*/}
-            {/*    <DialogContent>*/}
-            {/*        <DialogContentText id="alert-dialog-description">*/}
-            {/*            {dialogMessage}*/}
-            {/*        </DialogContentText>*/}
-            {/*    </DialogContent>*/}
-            {/*    <DialogActions>*/}
-            {/*        <Button onClick={handleDialogClose} autoFocus>*/}
-            {/*            close*/}
-            {/*        </Button>*/}
-            {/*    </DialogActions>*/}
-            {/*</Dialog>*/}
             <h1>Login</h1>
             <form>
                 <FormGroup>

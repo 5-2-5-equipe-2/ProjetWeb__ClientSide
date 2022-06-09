@@ -1,24 +1,17 @@
-import ReactMarkdown from 'react-markdown';
 import {Grid, Typography} from "@mui/material";
 import Box from "@mui/material/Box";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext} from "react";
 import {useQuery} from "react-query";
 import {getUserById} from "../api/User/User";
 import "./bubble.css";
 import Avatar from "@mui/material/Avatar";
 import {loggedInUserContext} from "../App";
 import MessageInterface from "../api/Message/MessageInterface";
-import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter';
-import {dark} from "react-syntax-highlighter/dist/esm/styles/prism";
-import remarkGfm from "remark-gfm";
-import remarkParse from "remark-parse";
-import remarkImages from "remark-images";
-import remarkMath from "remark-math";
 import UserInterface from "../api/User/UserInterface";
 
-const BlogImage = (props: any) => {
-    return <img {...props} style={{maxWidth: "10vw", maxHeight: "10vh"}} alt={""}/>
-}
+// const BlogImage = (props: any) => {
+//     return <img {...props} style={{maxWidth: "10vw", maxHeight: "10vh"}} alt={""}/>
+// }
 
 
 const getUserInitials = (user?: UserInterface) => {
