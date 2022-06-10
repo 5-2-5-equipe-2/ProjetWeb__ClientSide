@@ -1,16 +1,16 @@
-import api from "../base";
-import UserInterface from "./UserInterface";
+import api, {ErrorInterface} from "../base";
+import UserInterface, {UserUpdateInterface} from "./UserInterface";
 import {AxiosResponse} from "axios";
 import ChatRoomInterface from "../ChatRoom/ChatRoomInterface";
 
 
 export const getUsers = () => api.get("/user/list");
 export const getUserById = (id: number) => api.get<UserInterface[]>(`/user/get?id=${id}`);
-export const createUser = (user: UserInterface) => api.post("/user/createUser", user);
-export const updateUser = (user: UserInterface) => api.put(`/user/update/?id=${user.id}`, user);
-export const deleteUser = (id: number) => api.delete(`/user/delete/?id=${id}`);
+export const createUser = (user: UserInterface) => api.post<ErrorInterface>("/user/createUser", user);
+export const updateUser = (user: UserUpdateInterface) => api.put<ErrorInterface>(`/user/update/?id=${user.id}`, user);
+export const deleteUser = (id: number) => api.delete<ErrorInterface>(`/user/delete/?id=${id}`);
 export const getUserByEmail = (email: string) => api.get(`/user/getUserByEmail/?email=${email}`);
-export const getUserByUsername = (username: string) => api.get(`/user/getByUsername/?username=${username}`);
+export const getUserByUsername = (username: string) => api.get<UserInterface>(`/user/getByUsername/?username=${username}`);
 export const getCurrentlyLoggedInUser = () => {
     // Catch 422 error
     return api.get<UserInterface>("/user/getCurrentlyLoggedInUser").catch((error: AxiosResponse) => {

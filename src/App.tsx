@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import './media/css/App.css';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
-import AccountMenu from "./components/Navbar";
+import AccountMenu from "./components/navbar/Navbar";
 import {createTheme, Grid, Paper, Theme, ThemeProvider} from "@mui/material";
 import UserList from "./components/user/UserList";
 import SignUp from "./pages/SignUp";
@@ -14,10 +14,11 @@ import ModifyUser from "./pages/ModifyUser";
 import Chat from "./pages/Chat";
 import "./global.css";
 import TestGame from "./pages/TestGame";
-import ChatEdit from "./components/chat_room/ChatEdit";
+import ChatEdit from "./components/chat_room/chat_settings_button/ChatEdit";
 import Game from "./api/Game/DinosaurGame";
 import ChatCreateTab from "./components/chat_room/chat_add_button/ChatCreateTab";
 import ChatRoomAddButton from "./components/chat_room/chat_add_button/ChatRoomAddButton";
+import Pixels from "./pages/Pixels";
 
 const theme = createTheme({
     palette: {
@@ -118,6 +119,7 @@ function App() {
                                             <Route path="/editChatRoom" element={<ChatEdit/>}/>
                                             <Route path="/createChatRoomTest" element={<ChatCreateTab/>}/>
                                             <Route path="/testChatRoomAdd" element={<ChatRoomAddButton/>}/>
+                                            <Route path={"/pixels"} element={<Pixels/>}/>
                                         </Routes>
                                     </Grid>
                                 </Grid>

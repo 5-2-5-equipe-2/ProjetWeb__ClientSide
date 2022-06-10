@@ -5,7 +5,7 @@ import React, {useState} from "react";
 import ChatInput from "../components/chat_room/ChatInput";
 import ChatRoomInterface from "../api/ChatRoom/ChatRoomInterface";
 import ChatBubble from "../components/chat_room/ChatBubble";
-import ChatEdit from "../components/chat_room/ChatEdit";
+import ChatEdit from "../components/chat_room/chat_settings_button/ChatEdit";
 
 export const selectedChatRoomContext = React.createContext({
     selectedChatRoom: null as ChatRoomInterface | null,

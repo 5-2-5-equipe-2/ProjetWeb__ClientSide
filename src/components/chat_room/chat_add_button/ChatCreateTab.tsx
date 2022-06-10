@@ -109,42 +109,43 @@ export default function ChatCreateTab() {
                         })}
                     />
                 </Grid>
-                <Grid item xs={12}
-                >
+                <Grid item xs={12}>
                     <Grid container
                           justifyContent={'center'}
-                          alignItems={'center'}
-                    ><Grid item>
-                        <input
-                            {...register("image", {
-                                    required: true,
-                                }
+                          alignItems={'center'}>
+                        <Grid item>
+                            <input
+                                {...register("image", {
+                                        required: true,
+                                    }
+                                )}
+                                accept="image/*"
+                                type="file"
+                                id="select-image"
+                                style={{display: 'none'}}
+                                onChange={async e => {
+                                    if (e.target.files) {
+                                        setSelectedImage(e?.target?.files[0]);
+                                        await register("image").onChange(e);
+                                    }
+                                }}
+
+                            />
+                            <label htmlFor="select-image">
+                                <Button variant="contained" color="secondary" component="span"
+                                >
+                                    Upload Image
+                                </Button>
+
+                            </label>
+                            {imageUrl && selectedImage && (
+                                <Box mt={2} textAlign="center">
+                                    <div>Image Preview:</div>
+                                    <img src={imageUrl} alt={selectedImage.name} height="100px"/>
+                                </Box>
                             )}
-                            accept="image/*"
-                            type="file"
-                            id="select-image"
-                            style={{display: 'none'}}
-                            onChange={async e => {
-                                if (e.target.files) {
-                                    setSelectedImage(e?.target?.files[0]);
-                                    await register("image").onChange(e);
-                                }
-                            }}
-
-                        />
-                        <label htmlFor="select-image">
-                            <Button variant="contained" color="secondary" component="span"
-                            >
-                                Upload Image
-                            </Button>
-
-                        </label>
-                        {imageUrl && selectedImage && (
-                            <Box mt={2} textAlign="center">
-                                <div>Image Preview:</div>
-                                <img src={imageUrl} alt={selectedImage.name} height="100px"/>
-                            </Box>
-                        )}</Grid></Grid>
+                        </Grid>
+                    </Grid>
                 </Grid>
                 <Grid item
                       sx={{

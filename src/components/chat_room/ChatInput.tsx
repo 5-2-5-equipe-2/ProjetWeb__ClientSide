@@ -25,6 +25,7 @@ const ChatInput = () => {
         register,
         handleSubmit,
         setValue,
+        formState: {errors},
     } = useForm({
         resolver: yupResolver(validationSchema)
     });
@@ -49,6 +50,20 @@ const ChatInput = () => {
         }
         , [register, refetchMessages]);
 
+    React.useEffect(() => {
+        if (errors) {
+            for (let errorsKey in errors) {
+                if (errors[errorsKey]) {
+                    enqueueSnackbar(errors[errorsKey], {
+                        variant: 'error', autoHideDuration: 1300,
+                        TransitionComponent: Fade
+                    });
+                }
+            }
+
+        }
+    }, [errors, enqueueSnackbar]);
+
 
     const onSubmit = (data: any) => {
         if (selectedChatRoomId) {
@@ -58,6 +73,9 @@ const ChatInput = () => {
                 userId: loggedInUser.id,
             }
             sendMessage(message);
+            if (textInputRef.current) {
+                textInputRef.current.focus();
+            }
         }
 
     }
@@ -69,13 +87,7 @@ const ChatInput = () => {
             if (event.ctrlKey) {
                 if (textInputRef.current) {
                     textInputRef.current.value += "\n";
-                    console.log(textInputRef.current);
                 }
-            } else {
-                if (textInputRef.current) {
-                    textInputRef.current.value = '';
-                }
-                buttonRef.current?.click();
             }
         }
     }
@@ -98,6 +110,7 @@ const ChatInput = () => {
                     variant="filled"
                     inputRef={textInputRef}
                     onKeyDown={onKeyDown}
+
                 />
             </Grid>
             <Grid item xs={1}>

@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import {useInfiniteQuery} from "react-query";
 import {getChatRoomMessages} from "../../api/ChatRoom/ChatRoom";
-import MessageBubble from "../MessageBubble";
+import MessageBubble from "../messages/MessageBubble";
 import {Button, CircularProgress, Paper} from "@mui/material";
 import {infiniteQueryContext, selectedChatRoomContext} from "../../pages/Chat";
 import React, {useContext, useEffect} from "react";
@@ -38,8 +38,8 @@ export default function ChatRoomMessageBox() {
             }
         },
         {
-            // refetchInterval: 10,
-
+            refetchInterval: 1000,
+            refetchOnWindowFocus: false,
             getPreviousPageParam: (lastPage) => {
                 if (lastPage.hasPreviousPage) {
                     return lastPage.nextPage;
@@ -100,7 +100,11 @@ export default function ChatRoomMessageBox() {
                         <CircularProgress/>
                     </Box>
                 }
-                <List sx={{maxHeight: '100%', overflowY: 'auto', width: "70vw"}}
+                <List sx={{maxHeight: '100%', overflowY: 'auto', width: "70vw"
+                    ,display: "flex",
+                    flexDirection: "column-reverse",
+
+                }}
                       id="scrollableDiv"
                 >
                     {data?.pages.map(page => (

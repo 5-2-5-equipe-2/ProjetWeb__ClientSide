@@ -13,7 +13,7 @@ import Logout from '@mui/icons-material/Logout';
 import {Button, createTheme, FormControlLabel, FormGroup, Switch, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
 import {useContext} from "react";
-import {loggedInUserContext, themeContext} from "../App";
+import {loggedInUserContext, themeContext} from "../../App";
 // import "../media/css/navbar.css";
 
 export default function AccountMenu() {
@@ -110,19 +110,10 @@ export default function AccountMenu() {
                 transformOrigin={{horizontal: 'right', vertical: 'top'}}
                 anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
             >
-                <MenuItem>
-                    <Avatar/> Profile
-                </MenuItem>
-                <MenuItem>
-                    <Avatar/> My account
+                <MenuItem component={Link} to={'/modifyuser'}>
+                    <Avatar/> Edit Profile
                 </MenuItem>
                 <Divider/>
-                <MenuItem>
-                    <ListItemIcon>
-                        <PersonAdd fontSize="small"/>
-                    </ListItemIcon>
-                    Add another account
-                </MenuItem>
                 <MenuItem>
                     <ListItemIcon>
                         <Settings fontSize="small"/>

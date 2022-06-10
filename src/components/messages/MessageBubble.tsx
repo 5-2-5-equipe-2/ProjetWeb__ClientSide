@@ -2,12 +2,12 @@ import {Grid, Typography} from "@mui/material";
 import Box from "@mui/material/Box";
 import React, {useContext} from "react";
 import {useQuery} from "react-query";
-import {getUserById} from "../api/User/User";
+import {getUserById} from "../../api/User/User";
 import "./bubble.css";
 import Avatar from "@mui/material/Avatar";
-import {loggedInUserContext} from "../App";
-import MessageInterface from "../api/Message/MessageInterface";
-import UserInterface from "../api/User/UserInterface";
+import {loggedInUserContext} from "../../App";
+import MessageInterface from "../../api/Message/MessageInterface";
+import UserInterface from "../../api/User/UserInterface";
 
 // const BlogImage = (props: any) => {
 //     return <img {...props} style={{maxWidth: "10vw", maxHeight: "10vh"}} alt={""}/>

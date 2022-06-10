@@ -10,13 +10,13 @@ import {
 import * as React from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import {useContext, useState} from "react";
-import {loggedInUserContext} from "../../App";
+import {loggedInUserContext} from "../../../App";
 import * as Yup from 'yup';
-import {selectedChatRoomContext} from "../../pages/Chat";
+import {selectedChatRoomContext} from "../../../pages/Chat";
 import {useMutation} from "react-query";
-import {searchUsers} from "../../api/User/User";
-import UserInterface from "../../api/User/UserInterface";
-import {getChatRoomUsers, updateChatRoom} from "../../api/ChatRoom/ChatRoom";
+import {searchUsers} from "../../../api/User/User";
+import UserInterface from "../../../api/User/UserInterface";
+import {getChatRoomUsers, updateChatRoom} from "../../../api/ChatRoom/ChatRoom";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 import {mixed} from "yup";

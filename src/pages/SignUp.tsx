@@ -2,10 +2,6 @@ import * as React from "react";
 import {useForm} from "react-hook-form";
 import {
     Button,
-    Dialog, DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
     FormGroup,
     FormLabel,
     Grid,
@@ -17,6 +13,7 @@ import * as Yup from 'yup';
 import {useMutation} from "react-query";
 import {createUser,} from "../api/User/User";
 import {AxiosError} from "axios";
+import {useSnackbar} from "notistack";
 
 
 const validationSchema = Yup.object().shape({
@@ -48,25 +45,40 @@ export default function SignUpForm() {
     } = useForm({
         resolver: yupResolver(validationSchema)
     });
-    const [dialogOpen, setDialogOpen] = React.useState(false);
-    const [dialogMessage, setDialogMessage] = React.useState("");
-    const [dialogTitle, setDialogTitle] = React.useState("");
+    const {enqueueSnackbar} = useSnackbar();
     const {mutate,} = useMutation(createUser, {
         onSuccess: () => {
-            setDialogTitle("Success");
-            setDialogMessage("User Created Successfully");
-            handleDialogClickOpen();
-            console.log("User Created Successfully");
+            enqueueSnackbar("User Created Successfully!", {
+                variant: "success",
+                anchorOrigin: {
+                    vertical: "top",
+                    horizontal: "right",
+                },
+                autoHideDuration: 3000,
+
+            });
         },
         onError: (error: AxiosError) => {
 
             if (error.response && error.response.data) {
-                setDialogTitle("Error");
-                handleDialogClickOpen();
                 // @ts-ignore
-                setDialogMessage(error.response.data.error);
+                enqueueSnackbar(error.response.data.error, {
+                    variant: "error",
+                    anchorOrigin: {
+                        vertical: "top",
+                        horizontal: "center",
+                    },
+                    autoHideDuration: 3000,
+                });
             } else {
-                alert("An error occurred");
+                enqueueSnackbar(error.message, {
+                    variant: "error",
+                    anchorOrigin: {
+                        vertical: "top",
+                        horizontal: "right",
+                    },
+                    autoHideDuration: 3000,
+                });
             }
 
         }
@@ -77,14 +89,6 @@ export default function SignUpForm() {
 
     }
 
-
-    const handleDialogClickOpen = () => {
-        setDialogOpen(true);
-    };
-
-    const handleDialogClose = () => {
-        setDialogOpen(false);
-    };
 
     React.useEffect(() => {
         register("username", {required: true});
@@ -113,24 +117,6 @@ export default function SignUpForm() {
               alignItems="center"
               spacing={4}>
 
-            <Dialog
-                open={dialogOpen}
-                onClose={handleDialogClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle>{dialogTitle}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        {dialogMessage}
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleDialogClose} autoFocus>
-                        close
-                    </Button>
-                </DialogActions>
-            </Dialog>
             <h1>Sign Up</h1>
             <form encType="multipart/form-data">
 
