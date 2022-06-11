@@ -6,10 +6,11 @@ import ChatInput from "../components/chat_room/ChatInput";
 import ChatRoomInterface from "../api/ChatRoom/ChatRoomInterface";
 import ChatBubble from "../components/chat_room/ChatBubble";
 import ChatEdit from "../components/chat_room/chat_settings_button/ChatEdit";
+import ChatEditButton from "../components/chat_room/chat_settings_button/ChatEditButton";
 
 export const selectedChatRoomContext = React.createContext({
     selectedChatRoom: null as ChatRoomInterface | null,
-    setSelectedChatRoom: (chatRoom: ChatRoomInterface) => {
+    setSelectedChatRoom: (chatRoom: ChatRoomInterface|null) => {
         console.log(chatRoom);
     }
 
@@ -23,7 +24,6 @@ export const infiniteQueryContext = React.createContext({
 export default function Chat() {
     const [selectedChatRoom, setSelectedChatRoom] = useState(null as ChatRoomInterface | null);
     const [refetch, setRefetch] = useState(null as any);
-
     return (
         <selectedChatRoomContext.Provider
             value={{"selectedChatRoom": selectedChatRoom, "setSelectedChatRoom": setSelectedChatRoom}}>
@@ -116,7 +116,7 @@ export default function Chat() {
                                         >
                                             <Grid item><ChatBubble chatRoom={selectedChatRoom}
                                                                    displayDescription/></Grid>
-                                            <Grid item><ChatEdit/></Grid>
+                                            <Grid item><ChatEditButton/></Grid>
                                         </Grid></Paper>
 
                                     }

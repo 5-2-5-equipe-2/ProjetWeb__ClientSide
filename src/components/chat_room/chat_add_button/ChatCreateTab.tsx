@@ -4,11 +4,13 @@ import {mixed} from "yup";
 import {useContext, useEffect, useState} from "react";
 import {selectedChatRoomContext} from "../../../pages/Chat";
 import {yupResolver} from "@hookform/resolvers/yup";
-import {Box, Button, Grid, TextField} from "@mui/material";
+import {Box, Button, FormControlLabel, Grid, Switch, TextField} from "@mui/material";
 import {useForm} from "react-hook-form";
 import {convertToBase64} from "../../utils";
-import ChatRoomInterface from "../../../api/ChatRoom/ChatRoomInterface";
+import ChatRoomInterface, {ChatRoomCreateInterface} from "../../../api/ChatRoom/ChatRoomInterface";
 import {loggedInUserContext} from "../../../App";
+import {createChatRoom} from "../../../api/ChatRoom/ChatRoom";
+import {useMutation} from "react-query";
 
 
 // Yup form to create the chatroom
@@ -32,6 +34,7 @@ const validationSchema = Yup.object().shape({
 export default function ChatCreateTab() {
     const chatRoom = useContext(selectedChatRoomContext).selectedChatRoom;
     const loggedInUser = useContext(loggedInUserContext).loggedInUser;
+    const [isPrivateSwitch, setIsPrivateSwitch] = useState(false);
 
     const {
         register,
@@ -46,26 +49,39 @@ export default function ChatCreateTab() {
             register("name", {required: true});
             register('description');
             register('image');
+            register('isPrivate', {required: true});
+
 
         };
     }, [register]);
 
+    const {mutateAsync: createChatRoomMutation} = useMutation(createChatRoom, {
+        onSuccess: (data) => {
+            console.log("Chat Room Created Successfully!");
+
+        }
+    });
+
+
+
+
 
     const onSubmit = async (data: any) => {
-        let newChatRoom: ChatRoomInterface = {
-            id: -1,
+        let newChatRoom: ChatRoomCreateInterface = {
             name: data.name,
             description: data.description,
-            owner_id: loggedInUser.id,
-            image: "",
-            is_private: data.is_private,
+            ownerId: loggedInUser.id,
+            profile_picture: "",
+            isPrivate: Number(data.is_private)
         }
         if (selectedImage) {
             convertToBase64(selectedImage).then(base64 => {
-                newChatRoom.image = base64?.toString();
+                newChatRoom.profile_picture = base64?.toString();
             });
             // newChatRoom.image = base64;
         }
+        await createChatRoomMutation(newChatRoom);
+        console.log(newChatRoom);
 
 
     }
@@ -83,7 +99,7 @@ export default function ChatCreateTab() {
                   alignItems={'center'}
                   justifyContent={'center'}
             >
-                <Grid item xs={12}>
+                <Grid item xs={6}>
                     <TextField
                         label="Name"
                         variant="outlined"
@@ -94,6 +110,25 @@ export default function ChatCreateTab() {
                             required: true,
                         })}
                     />
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                {...register("is_private", {
+                                    required: true,
+                                })}
+                                checked={isPrivateSwitch}
+                                onChange={async (event) => {
+                                    setIsPrivateSwitch(!isPrivateSwitch);
+                                    await register("is_private", ).onChange(event);
+                                }}
+                                name="is_private"
+                                color="primary"
+                            />
+
+                        }
+                        label="Private"/>
                 </Grid>
                 <Grid item xs={12}>
                     <TextField

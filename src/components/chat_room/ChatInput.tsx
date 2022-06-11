@@ -46,7 +46,7 @@ const ChatInput = () => {
     React.useEffect(() => {
             register("messageContent",
                 {required: true, max: 1000, min: 1});
-            console.log(refetchMessages)
+            // console.log(refetchMessages)
         }
         , [register, refetchMessages]);
 

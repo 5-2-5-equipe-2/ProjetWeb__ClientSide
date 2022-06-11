@@ -30,4 +30,11 @@ export interface UserCreateInterface {
 }
 
 
+export interface UserPasswordUpdateInterface {
+    userId: number;
+    oldPassword: string;
+    password: string;
+}
+
+
 export default UserInterface;

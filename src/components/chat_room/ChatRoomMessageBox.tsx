@@ -39,7 +39,6 @@ export default function ChatRoomMessageBox() {
         },
         {
             refetchInterval: 1000,
-            refetchOnWindowFocus: false,
             getPreviousPageParam: (lastPage) => {
                 if (lastPage.hasPreviousPage) {
                     return lastPage.nextPage;
@@ -68,7 +67,7 @@ export default function ChatRoomMessageBox() {
     useEffect(() => {
         setReFetch({'func': refetch, 'param': selectedChatRoom?.id || -1});
     }, [refetch, selectedChatRoom?.id, setReFetch])
-
+    // console.log('refetch')
 
     return (
         <Box
@@ -88,6 +87,20 @@ export default function ChatRoomMessageBox() {
                 alignItems: "flex-start",
                 justifyContent: "center"
             }}>
+                {/*{selectedChatRoom?.id===-1 &&*/}
+
+                {/*<Box sx={{*/}
+                {/*    width: "100%",*/}
+                {/*    height: "100%",*/}
+                {/*    display: "flex",*/}
+                {/*    flexDirection: "column",*/}
+                {/*    alignItems: "flex-start",*/}
+                {/*    justifyContent: "center"*/}
+                {/*}}>*/}
+                {/*    <h1>Select a ChatRoom</h1>*/}
+                {/*</Box>}*/}
+
+
                 {isLoading &&
                     <Box sx={{
                         width: "100%",

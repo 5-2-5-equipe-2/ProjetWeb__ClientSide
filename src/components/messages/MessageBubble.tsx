@@ -15,7 +15,6 @@ import UserInterface from "../../api/User/UserInterface";
 
 
 const getUserInitials = (user?: UserInterface) => {
-
     if (user) {
         if (user.first_name && user.surname) {
             return user.first_name.charAt(0) + user.surname.charAt(0);
@@ -23,7 +22,6 @@ const getUserInitials = (user?: UserInterface) => {
         if (user.username) {
             return user.username.charAt(0);
         }
-
     }
     return "";
 }
@@ -34,8 +32,12 @@ export default function MessageBubble({message}: { message: MessageInterface }) 
     const {
         data: userData,
         // isLoading: isLoadingUser
-    } = useQuery(["user", message.user_id], () => getUserById(message.user_id), {
-        refetchInterval: 5000,
+    } = useQuery(["user", message.user_id], async () => {
+        let data = await getUserById(message.user_id);
+        return data?.data[0];
+    }, {
+        refetchInterval: 10000,
+
     });
     const isLeftSide = message.user_id === loggedInUser.id;
 
@@ -64,7 +66,7 @@ export default function MessageBubble({message}: { message: MessageInterface }) 
                             minHeight: "100%",
                             marginTop: "3%"
                         }}
-                    >{`${getUserInitials(userData?.data[0])}`}</Avatar>
+                    >{`${getUserInitials(userData)}`}</Avatar>
 
                 </Grid>
 

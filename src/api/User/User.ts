@@ -1,5 +1,5 @@
 import api, {ErrorInterface} from "../base";
-import UserInterface, {UserUpdateInterface} from "./UserInterface";
+import UserInterface, {UserPasswordUpdateInterface, UserUpdateInterface} from "./UserInterface";
 import {AxiosResponse} from "axios";
 import ChatRoomInterface from "../ChatRoom/ChatRoomInterface";
 
@@ -50,4 +50,8 @@ export const getChatRooms = (id: number) => api.get<ChatRoomInterface[]>(`/user/
 export const searchUserChatRooms = (id: number, search: string) => {
     // return api.get<ChatRoomInterface[]>(`/user/searchUserChatRooms?id=${id}&search=${search}`);
     return getChatRooms(id);
+}
+
+export const changePassword = ({newPassword}: { newPassword:UserPasswordUpdateInterface }) => {
+    return api.put<ErrorInterface>(`/user/updatePass/`, newPassword);
 }

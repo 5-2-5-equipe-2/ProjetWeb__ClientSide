@@ -5,7 +5,7 @@ import {
     DialogContent,
     DialogTitle,
     Grid,
-    TextField, Autocomplete, CircularProgress
+    TextField, Autocomplete, CircularProgress, MenuItem
 } from "@mui/material";
 import * as React from "react";
 import EditIcon from "@mui/icons-material/Edit";
@@ -21,7 +21,7 @@ import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 import {mixed} from "yup";
 
-
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 // Yup form to edit the chatroom
 const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -236,9 +236,9 @@ const ChatEdit = () => {
                             <Button onClick={handleSaveChatRoom}>Save</Button>
                         </DialogActions>
                     </Dialog>
-                    <Button onClick={handleClickOpen}>
-                        <EditIcon/>
-                    </Button>
+                    <MenuItem onClick={handleClickOpen}>
+                        Edit Chatroom
+                    </MenuItem>
                 </>}
         </>)
 }

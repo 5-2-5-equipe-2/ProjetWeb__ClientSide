@@ -1,7 +1,7 @@
-import api from "../base";
+import api, {ErrorInterface} from "../base";
 import MessageInterface from "../Message/MessageInterface";
 import UserInterface from "../User/UserInterface";
-import ChatRoomInterface from "./ChatRoomInterface";
+import ChatRoomInterface, {ChatRoomCreateInterface} from "./ChatRoomInterface";
 
 
 export const getChatRooms = () => api.get<ChatRoomInterface[]>("/chatroom/list");
@@ -37,6 +37,10 @@ export const searchPublicChatRooms = (search: string) => {
     return api.get<ChatRoomInterface[]>(`/chatroom/searchPublicChatRooms/?&search=${search}`)
 }
 
-export const leaveChatRoom = (chatRoomId: number) => {
-    return api.get<ChatRoomUrlResponse>(`/chatroom/removeUser/?&chatRoomId=${chatRoomId}`)
+export const leaveChatRoom = ({chatRoomId,userId}:{chatRoomId:number,userId:number}) => {
+    return api.put<ChatRoomUrlResponse>(`/chatroom/deleteUserFromChatRoom`, {chatRoomId,userId})
+}
+
+export const createChatRoom = (chatRoom: ChatRoomCreateInterface) => {
+    return api.post<ErrorInterface>(`/chatroom/createChatRoom`, chatRoom)
 }
