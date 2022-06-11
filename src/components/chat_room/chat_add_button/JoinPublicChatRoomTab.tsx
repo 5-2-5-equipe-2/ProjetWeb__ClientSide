@@ -7,7 +7,7 @@ import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 import {useMutation} from "react-query";
 import {
-    joinPublicChatRoom,
+    addUserToChatRoom,
     searchPublicChatRooms
 } from "../../../api/ChatRoom/ChatRoom";
 import {Autocomplete, Button, CircularProgress, Grid, TextField} from "@mui/material";
@@ -42,7 +42,7 @@ export default function JoinPublicChatRoomTab() {
     const [inputValue, setInputValue] = useState('');
 
     const {mutate: mutateJoinPublicChatRoom, data: queryResponseData} = useMutation(
-        joinPublicChatRoom,
+        addUserToChatRoom,
         {
             onSuccess: data => {
                 enqueueSnackbar('Chat room joined', {
@@ -95,7 +95,10 @@ export default function JoinPublicChatRoomTab() {
 
     const onSubmit = async () => {
         if (value) {
-            await mutateJoinPublicChatRoom(value.id)
+            await mutateJoinPublicChatRoom({
+                userId: loggedInUser.id,
+                chatRoomId: value.id,
+            })
         } else {
             enqueueSnackbar('Please select a chat room', {
                 variant: 'error',

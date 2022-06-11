@@ -8,6 +8,7 @@ import Avatar from "@mui/material/Avatar";
 import {loggedInUserContext} from "../../App";
 import MessageInterface from "../../api/Message/MessageInterface";
 import UserInterface from "../../api/User/UserInterface";
+import showdown from "showdown";
 
 // const BlogImage = (props: any) => {
 //     return <img {...props} style={{maxWidth: "10vw", maxHeight: "10vh"}} alt={""}/>
@@ -40,92 +41,91 @@ export default function MessageBubble({message}: { message: MessageInterface }) 
 
     });
     const isLeftSide = message.user_id === loggedInUser.id;
-
+    // const showdownConverter = new showdown.Converter();
     return (
-        <>
 
-            <Grid container
-                  direction={isLeftSide ? 'row' : 'row-reverse'}
-                  justifyContent="center"
-                  alignItems={'flex-start'}
-                  spacing={0}
-                // style={{
-                //     width: "100%",
-                //     height: "100%",
-                // }}
+        <Grid container
+              direction={isLeftSide ? 'row' : 'row-reverse'}
+              justifyContent="center"
+              alignItems={'center'}
+              spacing={0}
+              style={{
+                  width: "80%",
+                  height: "100%",
+              }}
 
-            >
-                <Grid item xs={1} sx={!isLeftSide ? {marginLeft: "auto"} : {marginRight: "auto"}}>
-                    <Avatar
-                        sx={isLeftSide ? {
-                            marginLeft: "auto",
-                            minHeight: "100%",
-                            marginTop: "3%"
-                        } : {
-                            marginRight: "auto",
-                            minHeight: "100%",
-                            marginTop: "3%"
-                        }}
-                    >{`${getUserInitials(userData)}`}</Avatar>
+        >
+            <Grid item xs={1} sx={!isLeftSide ? {marginLeft: "auto"} : {marginRight: "auto"}}>
+                <Avatar
+                    sx={isLeftSide ? {
+                        marginLeft: "auto",
+                        minHeight: "100%",
+                        marginTop: "3%"
+                    } : {
+                        marginRight: "auto",
+                        minHeight: "100%",
+                        marginTop: "3%"
+                    }}
+                >{`${getUserInitials(userData)}`}</Avatar>
 
-                </Grid>
-
-
-                <Grid item xs={11}>
-
-                    <Box className="imessage"
-                         style={isLeftSide ? {width: "90%"} : {width: "90%", marginLeft: "auto"}}>
-                        <Typography className={isLeftSide ? "from-them" : "from-me"}>
-                            {/*{message.content}*/}
-                            {/*<ReactMarkdown*/}
-                            {/*    rehypePlugins={[remarkGfm, remarkParse, remarkImages,*/}
-                            {/*        remarkMath]}*/}
-                            {/*    // disallowedElements={['img']}*/}
-                            {/*    skipHtml={false}*/}
-                            {/*    children={message.content}*/}
-                            {/*    remarkPlugins={[*/}
-                            {/*        [remarkImages, {*/}
-                            {/*            quality: 10,*/}
-                            {/*            withWebp: true,*/}
-                            {/*            loading: 'lazy',*/}
-                            {/*            backgroundColor: '#fafafa',*/}
-                            {/*        }],*/}
-                            {/*        [remarkGfm, {singleTilde: false}],*/}
-                            {/*        [remarkParse, {commonmark: true}],*/}
-                            {/*        [remarkMath],*/}
-                            {/*    ]}*/}
-                            {/*    components={{*/}
-                            {/*        code({node, inline, className, children, ...props}) {*/}
-                            {/*            const match = /language-(\w+)/.exec(className || '')*/}
-                            {/*            // @ts-ignore*/}
-                            {/*            return !inline && match ? (*/}
-                            {/*                <SyntaxHighlighter*/}
-                            {/*                    children={String(children).replace(/\n$/, '')}*/}
-                            {/*                    // @ts-ignore*/}
-                            {/*                    style={dark}*/}
-                            {/*                    language={match[1]}*/}
-                            {/*                    PreTag="div"*/}
-                            {/*                    {...props}*/}
-                            {/*                />*/}
-                            {/*            ) : (*/}
-                            {/*                <code className={className} {...props}>*/}
-                            {/*                    {children}*/}
-                            {/*                </code>*/}
-                            {/*            )*/}
-                            {/*        },*/}
-                            {/*        img({src, alt, ...props}) {*/}
-                            {/*            return <BlogImage src={src} alt={alt} {...props} />*/}
-                            {/*        },*/}
-                            {/*        p: (props: any) => <div {...props} />,*/}
-                            {/*    }}*/}
-                            {/*/>*/}
-
-                            {message.content}
-                        </Typography>
-                    </Box>
-                </Grid>
             </Grid>
 
-        </>
+
+            <Grid item xs={11}>
+
+                <Box className="imessage"
+                     style={isLeftSide ? {} : {marginLeft: "auto"}}>
+                    <Typography className={isLeftSide ? "from-them" : "from-me"}>
+                        {/*{message.content}*/}
+                        {/*<ReactMarkdown*/}
+                        {/*    rehypePlugins={[remarkGfm, remarkParse, remarkImages,*/}
+                        {/*        remarkMath]}*/}
+                        {/*    // disallowedElements={['img']}*/}
+                        {/*    skipHtml={false}*/}
+                        {/*    children={message.content}*/}
+                        {/*    remarkPlugins={[*/}
+                        {/*        [remarkImages, {*/}
+                        {/*            quality: 10,*/}
+                        {/*            withWebp: true,*/}
+                        {/*            loading: 'lazy',*/}
+                        {/*            backgroundColor: '#fafafa',*/}
+                        {/*        }],*/}
+                        {/*        [remarkGfm, {singleTilde: false}],*/}
+                        {/*        [remarkParse, {commonmark: true}],*/}
+                        {/*        [remarkMath],*/}
+                        {/*    ]}*/}
+                        {/*    components={{*/}
+                        {/*        code({node, inline, className, children, ...props}) {*/}
+                        {/*            const match = /language-(\w+)/.exec(className || '')*/}
+                        {/*            // @ts-ignore*/}
+                        {/*            return !inline && match ? (*/}
+                        {/*                <SyntaxHighlighter*/}
+                        {/*                    children={String(children).replace(/\n$/, '')}*/}
+                        {/*                    // @ts-ignore*/}
+                        {/*                    style={dark}*/}
+                        {/*                    language={match[1]}*/}
+                        {/*                    PreTag="div"*/}
+                        {/*                    {...props}*/}
+                        {/*                />*/}
+                        {/*            ) : (*/}
+                        {/*                <code className={className} {...props}>*/}
+                        {/*                    {children}*/}
+                        {/*                </code>*/}
+                        {/*            )*/}
+                        {/*        },*/}
+                        {/*        img({src, alt, ...props}) {*/}
+                        {/*            return <BlogImage src={src} alt={alt} {...props} />*/}
+                        {/*        },*/}
+                        {/*        p: (props: any) => <div {...props} />,*/}
+                        {/*    }}*/}
+                        {/*/>*/}
+
+                        {message.content}
+                        {/*{showdownConverter.makeHtml(message.content)}*/}
+                    </Typography>
+                </Box>
+            </Grid>
+        </Grid>
+
     );
 }

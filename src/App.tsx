@@ -19,6 +19,7 @@ import Game from "./api/Game/DinosaurGame";
 import ChatCreateTab from "./components/chat_room/chat_add_button/ChatCreateTab";
 import ChatRoomAddButton from "./components/chat_room/chat_add_button/ChatRoomAddButton";
 import Pixels from "./pages/Pixels";
+import ModifyUserPassword from "./pages/ModifyUserPassword";
 
 const theme = createTheme({
     palette: {
@@ -120,6 +121,7 @@ function App() {
                                             <Route path="/createChatRoomTest" element={<ChatCreateTab/>}/>
                                             <Route path="/testChatRoomAdd" element={<ChatRoomAddButton/>}/>
                                             <Route path={"/pixels"} element={<Pixels/>}/>
+                                            <Route path={"/modifyUserPassword"} element={<ModifyUserPassword/>}/>
                                         </Routes>
                                     </Grid>
                                 </Grid>

@@ -31,9 +31,8 @@ export interface UserCreateInterface {
 
 
 export interface UserPasswordUpdateInterface {
-    userId: number;
-    oldPassword: string;
-    password: string;
+    old_password: string;
+    new_password: string;
 }
 
 

@@ -5,12 +5,11 @@ import React, {useState} from "react";
 import ChatInput from "../components/chat_room/ChatInput";
 import ChatRoomInterface from "../api/ChatRoom/ChatRoomInterface";
 import ChatBubble from "../components/chat_room/ChatBubble";
-import ChatEdit from "../components/chat_room/chat_settings_button/ChatEdit";
 import ChatEditButton from "../components/chat_room/chat_settings_button/ChatEditButton";
 
 export const selectedChatRoomContext = React.createContext({
     selectedChatRoom: null as ChatRoomInterface | null,
-    setSelectedChatRoom: (chatRoom: ChatRoomInterface|null) => {
+    setSelectedChatRoom: (chatRoom: ChatRoomInterface | null) => {
         console.log(chatRoom);
     }
 
@@ -35,11 +34,12 @@ export default function Chat() {
                         {padding: "1rem", margin: "1rem"}}>
                     <Grid container
                           direction="row"
-                          justifyContent="center"
-                          alignItems="space-around"
-                          spacing={0}
+                          justifyContent="flex-start"
+                          alignItems="flex-start"
+                          spacing={3}
                           style={{
                               width: "100%",
+                              height: "85vh",
                           }}
                     >
                         <Grid item xs={3}
@@ -59,11 +59,18 @@ export default function Chat() {
                                       width={"100%"}
                                       height={"100%"}
                                 >
-                                    <Paper>
+                                    <Paper
+                                        elevation={5}
+                                        sx={{
+                                            width: "100%",
+                                            height: "100%",
+                                            padding: "0.2rem",
+                                        }}
+                                    >
                                         <Grid container
                                               direction="column"
                                               justifyContent="flex-start"
-                                              alignItems="flex-start"
+                                              alignItems="center"
                                               spacing={2}
                                               sx={{
                                                   width: "100%",

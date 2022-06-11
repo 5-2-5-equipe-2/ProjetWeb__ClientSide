@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {useQuery} from "react-query";
+import {useMutation, useQuery} from "react-query";
 import {getChatRooms, searchUserChatRooms} from "../../api/User/User";
 import ChatRoomListItem from "./ChatRoomListItem";
 import {Box, CircularProgress, Grid, IconButton, InputAdornment, List, TextField} from "@mui/material";
@@ -15,101 +15,130 @@ const ChatRoomList = () => {
 
     const [search, setSearch] = useState('');
 
-    let {data: chatRooms, isLoading, refetch,isFetching} = useQuery(["chatRoomList", loggedInUser.id], async () => {
-            if (search) {
-                return (await searchUserChatRooms(loggedInUser.id, search)).data;
-            }
+    let {data: chatRooms, isLoading, isFetching} = useQuery(["chatRoomList", loggedInUser.id], async () => {
             return (await getChatRooms(loggedInUser.id)).data;
         },
         {
             refetchInterval: 1000,
+            refetchOnWindowFocus: false,
         });
     const selectedChatRoom = useContext(selectedChatRoomContext).selectedChatRoom;
     const setSelectedChatRoom = useContext(selectedChatRoomContext).setSelectedChatRoom;
+
+
+    const {mutate: searchChatRoomMutate, data: searchData} = useMutation(searchUserChatRooms)
+
+
     useEffect(() => {
         if (chatRooms && chatRooms.length > 0) {
             if (!selectedChatRoom) {
                 setSelectedChatRoom(chatRooms[0]);
             }
         }
-    }, [chatRooms]);
+        console.log(chatRooms)
+    }, [chatRooms, selectedChatRoom, setSelectedChatRoom]);
 
 
     return (
 
         <Grid container direction="column" justifyContent="center" alignItems="center"
               spacing={2}
-              sx={{
-                  width: "100%",
-                  height: "100%",
-              }}
+
+              sx={
+                  {
+                      width: "100%",
+                      height: "100%"
+                  }
+              }
         >
-            {/*search bar*/}
             <Grid item xs={2}>
-                <Box sx={{}}>
-                    <TextField
-                        label="Search"
-                        fullWidth
-                        onChange={async (e) => {
-                            setSearch(e.target.value);
-                            if (e.target.value.length > 2) {
-                                await refetch();
-                            }
+                <TextField
+                    label="Search"
+                    fullWidth
+                    onChange={async (e) => {
+                        setSearch(e.target.value);
+                        if (e.target.value.length > 2) {
+                            await searchChatRoomMutate({id: loggedInUser.id, search: e.target.value});
                         }
-                        }
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment
-                                    position="end">
-                                    <IconButton>
-                                        <SearchIcon/>
-                                    </IconButton>
-                                    {(isFetching && search) && <CircularProgress size={20}/>}
-                                </InputAdornment>
-                            )
-                        }}
-                    />
-                </Box>
-            </Grid>
-
-            <Grid item xs={10}>
-
-
-                    {isLoading &&
-                        <CircularProgress/>
                     }
+                    }
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment
+                                position="end">
+                                <IconButton>
+                                    <SearchIcon/>
+                                </IconButton>
+                                {(isFetching && search) && <CircularProgress size={20}/>}
+                            </InputAdornment>
+                        )
+                    }}
+                />
+            </Grid>
+            <Grid item xs={7}
+                  sx={{
+                      width: "100%"
+                  }}
+            >
 
+
+                {isLoading &&
+                    <CircularProgress/>
+                }
+                {(((chatRooms && !search) || (searchData && search)) &&
                     <List
-                        component="nav"
+                        component="div"
                         aria-label="User List"
                         style={{
                             display: 'flex',
                             flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
+                            // alignItems: 'center',
+                            // justifyContent: 'center',
                             overflowY: 'auto',
-                            // width: '100%',
-                            // height: '100%',
+                            width: '100%',
+                            // height: '60vh',
+                            maxHeight: "50vh",
                         }}
 
                     >
-                        {chatRooms?.map(chatRoom => (
+                        {(chatRooms && !search) && chatRooms?.map(chatRoom => (
                             <ChatRoomListItem chatRoom={chatRoom}
                                               key={chatRoom.id}
                             />
                         ))}
-                    </List>
+                        {(search) && searchData?.data?.map(chatRoom => (
+                            <ChatRoomListItem chatRoom={chatRoom}
+                                              key={chatRoom.id}
+                            />
+                        ))}
+                    </List>) || <Box sx={{
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center"
+                }}>
+                    <h1>No ChatRooms</h1>
+                    <ChatRoomAddButton/>
+                </Box>}
+
+
+                <Grid item xs={3}
+                >
                     <Box
                         sx={{
                             display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'flex-end',
-                            justifyContent: 'flex-end',
-                            position: 'relative',
-                            height: '100%',
-                            zIndex: 123,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            // width: '100%',
+                            // height: '100%',
+                            // padding: '1rem',
+
                         }}
                     ><ChatRoomAddButton/></Box>
+                </Grid>
             </Grid>
         </Grid>
 

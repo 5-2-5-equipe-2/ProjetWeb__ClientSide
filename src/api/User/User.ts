@@ -47,9 +47,8 @@ export const logout = () => api.post(`/user/logout`);
 
 export const getChatRooms = (id: number) => api.get<ChatRoomInterface[]>(`/user/getChatRooms?id=${id}`);
 
-export const searchUserChatRooms = (id: number, search: string) => {
-    // return api.get<ChatRoomInterface[]>(`/user/searchUserChatRooms?id=${id}&search=${search}`);
-    return getChatRooms(id);
+export const searchUserChatRooms = ({id,search}:{id:number, search:string}) => {
+    return api.get<ChatRoomInterface[]>(`/user/searchChatRooms?userId=${id}&search=${search}&limit=100`);
 }
 
 export const changePassword = ({newPassword}: { newPassword:UserPasswordUpdateInterface }) => {

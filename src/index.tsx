@@ -15,8 +15,13 @@ LogRocket.identify('THE_USER_ID_IN_YOUR_APP', {
 
 });
 
-const queryClient = new QueryClient();
-
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            notifyOnChangeProps: ['data'],
+        },
+    },
+})
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement

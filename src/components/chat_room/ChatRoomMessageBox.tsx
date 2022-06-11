@@ -53,6 +53,7 @@ export default function ChatRoomMessageBox() {
 
         }
     )
+    console.log('refetching')
 
 
     React.useEffect(() => {
@@ -116,6 +117,8 @@ export default function ChatRoomMessageBox() {
                 <List sx={{maxHeight: '100%', overflowY: 'auto', width: "70vw"
                     ,display: "flex",
                     flexDirection: "column-reverse",
+                    alignItems: "center",
+                    justifyContent: "center"
 
                 }}
                       id="scrollableDiv"

@@ -1,7 +1,7 @@
 import api, {ErrorInterface} from "../base";
 import MessageInterface from "../Message/MessageInterface";
 import UserInterface from "../User/UserInterface";
-import ChatRoomInterface, {ChatRoomCreateInterface} from "./ChatRoomInterface";
+import ChatRoomInterface, {ChatRoomCreateInterface, ChatRoomUserUpdateInterface} from "./ChatRoomInterface";
 
 
 export const getChatRooms = () => api.get<ChatRoomInterface[]>("/chatroom/list");
@@ -29,18 +29,22 @@ export const joinChatRoomByUrl = (chatRoomInviteUrl: string) => {
     return api.get<ChatRoomUrlResponse>(`/chatroom/addUserByUrl/?&${chatRoomInviteUrl}`)
 }
 
-export const joinPublicChatRoom = (chatRoomId: number) => {
-    return api.get<ChatRoomUrlResponse>(`/chatroom/addUserByPublicChatRoom/?&chatRoomId=${chatRoomId}`)
+export const addUserToChatRoom = ({chatRoomId, userId}:{chatRoomId: number, userId: number}) => {
+    return api.put<ChatRoomUrlResponse>(`/chatroom/addUserToChatRoom/`, {chatRoomId, userId})
 }
 
 export const searchPublicChatRooms = (search: string) => {
-    return api.get<ChatRoomInterface[]>(`/chatroom/searchPublicChatRooms/?&search=${search}`)
+    return api.get<ChatRoomInterface[]>(`/chatroom/searchPublicChatRoom/?&query=${search}`)
 }
 
-export const leaveChatRoom = ({chatRoomId,userId}:{chatRoomId:number,userId:number}) => {
-    return api.put<ChatRoomUrlResponse>(`/chatroom/deleteUserFromChatRoom`, {chatRoomId,userId})
+export const leaveChatRoom = ({chatRoomId, userId}: { chatRoomId: number, userId: number }) => {
+    return api.put<ChatRoomUrlResponse>(`/chatroom/deleteUserFromChatRoom`, {chatRoomId, userId})
 }
 
 export const createChatRoom = (chatRoom: ChatRoomCreateInterface) => {
     return api.post<ErrorInterface>(`/chatroom/createChatRoom`, chatRoom)
+}
+
+export const updateChatRoomUsers = ({data}: { data: ChatRoomUserUpdateInterface }) => {
+    return api.put<ErrorInterface>(`/chatroom/updateUsers`, data)
 }

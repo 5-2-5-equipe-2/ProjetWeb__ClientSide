@@ -2,7 +2,7 @@ interface ChatRoomInterface {
     id: number;
     name: string;
     description: string;
-    is_private: boolean;
+    is_private: number;
     created_at?: Date;
     owner_id: Number;
     image?: string;
@@ -12,7 +12,7 @@ export interface ChatRoomUpdateInterface {
     id: number;
     name: string;
     description: string;
-    is_private: boolean;
+    is_private: number;
     image?: string;
     owner_id: Number;
 }
