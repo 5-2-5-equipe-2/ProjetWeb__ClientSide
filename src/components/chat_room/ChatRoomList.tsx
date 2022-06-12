@@ -36,7 +36,6 @@ const ChatRoomList = () => {
                 setSelectedChatRoom(chatRooms[0]);
             }
         }
-        console.log(chatRooms)
     }, [chatRooms, selectedChatRoom, setSelectedChatRoom]);
 
 

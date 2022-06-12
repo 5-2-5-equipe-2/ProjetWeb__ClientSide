@@ -7,3 +7,11 @@ export default interface PixelInterface {
     last_updated: string;
     number_of_times_placed: number;
 }
+
+
+export interface PixelUpdateInterface {
+    x: number;
+    y: number;
+    color_id: number;
+    user_id: number;
+}

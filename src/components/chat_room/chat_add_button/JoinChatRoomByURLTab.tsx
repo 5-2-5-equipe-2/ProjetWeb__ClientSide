@@ -1,8 +1,8 @@
 // Yup form to create the chatroom
 import * as Yup from "yup";
-import {useContext} from "react";
-import {loggedInUserContext} from "../../../App";
-import {selectedChatRoomContext} from "../../../pages/Chat";
+// import {useContext} from "react";
+// import {loggedInUserContext} from "../../../App";
+// import {selectedChatRoomContext} from "../../../pages/Chat";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 import {useMutation} from "react-query";
@@ -19,17 +19,17 @@ const validationSchema = Yup.object().shape({
 
 
 export default function JoinChatRoomByURLTab() {
-    const loggedInUser = useContext(loggedInUserContext).loggedInUser;
-    const chatroom = useContext(selectedChatRoomContext).selectedChatRoom;
+    // const loggedInUser = useContext(loggedInUserContext).loggedInUser;
+    // const chatroom = useContext(selectedChatRoomContext).selectedChatRoom;
     const {
         register,
         handleSubmit,
-        formState: {errors}
+        // formState: {errors}
     } = useForm({
         resolver: yupResolver(validationSchema)
     });
 
-    const {mutateAsync: mutateUrl, data: queryResponseData} = useMutation(
+    const {mutateAsync: mutateUrl} = useMutation(
         joinChatRoomByUrl,
         {
             onSuccess: data => {

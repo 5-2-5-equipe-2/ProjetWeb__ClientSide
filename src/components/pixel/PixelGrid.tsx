@@ -1,11 +1,11 @@
-import React, {CSSProperties, useContext, useEffect, useRef, useState} from "react";
+import React, {CSSProperties, useContext, useRef, useState} from "react";
 import {selectedPixelContext} from "../../pages/Pixels";
 import {getPixelInARectangleAsArray} from "../../api/Pixel/Pixel";
 import {useQuery} from "react-query";
 import {FixedSizeGrid as Grid} from 'react-window';
-import {getColors} from "../../api/Color/Color";
-import {ColorInterface} from "../../api/Color/ColorInterface";
-import {Box, CircularProgress, Slider} from "@mui/material";
+// import {getColors} from "../../api/Color/Color";
+// import {ColorInterface} from "../../api/Color/ColorInterface";
+import {Box, CircularProgress, Slider, Grid as MatGrid} from "@mui/material";
 import PixelInterface from "../../api/Pixel/PixelInterface";
 
 const marks = [
@@ -34,7 +34,7 @@ function valuetext(value: number) {
 function PixelGrid() {
     const setSelectedPixel = useContext(selectedPixelContext).setSelectedPixel;
     const selectedPixel = useContext(selectedPixelContext).selectedPixel;
-    const [colors, setColors] = useState({} as ColorInterface[]);
+    const colors = useContext(selectedPixelContext).colors;
     const [dimensions, setDimensions] = useState({
         width: 0,
         height: 0,
@@ -50,7 +50,7 @@ function PixelGrid() {
             let output: PixelInterface[][] = [] as PixelInterface[][];
             let lines = [] as PixelInterface[][][];
             for (let i = 0; i < 10; i++) {
-                let line = (await getPixelInARectangleAsArray(i * 10, 0, 10 + i * 10 -1, 999))?.data;
+                let line = (await getPixelInARectangleAsArray(i * 10, 0, 10 + i * 10 - 1, 999))?.data;
                 if (line) {
                     lines.push(line);
                 }
@@ -59,7 +59,7 @@ function PixelGrid() {
             return output;
         },
         {
-            refetchInterval: 1000,
+            refetchInterval: 100,
             onSuccess: (data) => {
                 setDimensions({
                     width: data[0].length * 35,
@@ -69,26 +69,6 @@ function PixelGrid() {
                 })
             },
             notifyOnChangeProps: undefined,
-        }
-    );
-    const {data: colorsData, isLoading: isColorsLoading} = useQuery(["colors"], async () => {
-            // console.log(data)
-            return (await getColors())?.data;
-        },
-        {
-            refetchInterval: 1000,
-            notifyOnChangeProps: undefined,
-            onSuccess: (data) => {
-                if (colorsData) {
-                    let data = colorsData.reduce(function (result, item, index, array) {
-                        result[item.id] = item;
-                        return result;
-                    }, {} as ColorInterface[]);
-                    if (data) {
-                        setColors(data);
-                    }
-                }
-            }
         }
     );
 
@@ -101,7 +81,7 @@ function PixelGrid() {
             let pixel: PixelInterface | undefined;
             if (pixelData) {
                 pixel = pixelData[columnIndex][rowIndex];
-                if (pixel && colorsData) {
+                if (pixel && colors) {
                     // console.log("pixel", colors);
                     color = colors[pixel.color_id]?.hex_code;
                     // console.log("color", color);
@@ -151,29 +131,43 @@ function PixelGrid() {
     ;
 
     return (
-        <>
+        <MatGrid container
+                 direction="column"
+                 justifyContent="center"
+                 alignItems="center"
 
-            <selectedPixelContext.Provider
-                value={{"selectedPixel": selectedPixel, "setSelectedPixel": setSelectedPixel}}>
+        >
+            {isLoading &&
+                <div
+                >
+                    <CircularProgress></CircularProgress>
+                </div>
+            }
+            <MatGrid item xs={5}
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "50%",
+                height: "100%",
 
-                {isLoading &&
-                    <div
-                    >
-                        <CircularProgress></CircularProgress>
-                    </div>
-                }
+            }}>
                 <Slider aria-label="Grid size" value={gridSize}
-                        getAriaValueText={valuetext}
-                        step={10}
-                        min={10}
-                        valueLabelDisplay="auto"
-                        marks={marks}
-                        onChange={(event, value) => {
-                            setGridSize(value as number);
-                        }}/>
+                                  getAriaValueText={valuetext}
+                                  step={10}
+                                  min={10}
+                                  valueLabelDisplay="auto"
+                                  marks={marks}
+                                  onChange={(event, value) => {
+                                      setGridSize(value as number);
+                                  }}
+                    title={'Grid size'}
+                /></MatGrid>
+            <MatGrid item>
                 <Box sx={{
                     width: "100vw",
-                    height: "80vh",
+                    height: "50vh",
                 }} ref={containerDiv}>
                     <Grid
                         className="Grid"
@@ -188,9 +182,9 @@ function PixelGrid() {
                         {PixelRenderer}
                     </Grid>
                 </Box>
-            </selectedPixelContext.Provider>
+            </MatGrid>
 
-        </>)
+        </MatGrid>)
 }
 
 export default PixelGrid;

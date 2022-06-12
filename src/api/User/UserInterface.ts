@@ -20,14 +20,14 @@ export interface UserUpdateInterface {
     email?: string;
     profilePicture?: string;
 }
-
-export interface UserCreateInterface {
-    username: string;
-    first_name: string;
-    surname: string;
-    email: string;
-    password: string;
-}
+//
+// export interface UserCreateInterface {
+//     username: string;
+//     first_name: string;
+//     surname: string;
+//     email: string;
+//     password: string;
+// }
 
 
 export interface UserPasswordUpdateInterface {

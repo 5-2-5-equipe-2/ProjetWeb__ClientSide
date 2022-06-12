@@ -21,8 +21,10 @@ import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 import {mixed} from "yup";
 
 import {useSnackbar} from "notistack";
-import {ChatRoomUpdateInterface} from "../../../api/ChatRoom/ChatRoomInterface";
-import {Axios, AxiosError} from "axios";
+import {ChatRoomUpdateInterface, ChatRoomUserUpdateInterface} from "../../../api/ChatRoom/ChatRoomInterface";
+import { AxiosError} from "axios";
+// import {convertToBase64} from "../../utils";
+import {uploadImage} from "../../../storage_server/File";
 // Yup form to edit the chatroom
 const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -69,11 +71,9 @@ const ChatEdit = () => {
 
     const {
         mutate: updateChatRoomMutation,
-        isLoading: isUpdateChatRoomLoading,
-        isError: isUpdateChatRoomError,
-        error: updateChatRoomError
     } = useMutation(updateChatRoom, {
         onSuccess: () => {
+            enqueueSnackbar("Chatroom updated", {variant: "success"});
             setOpen(false);
         },
         onError: (error: AxiosError) => {
@@ -89,11 +89,11 @@ const ChatEdit = () => {
     console.log(errors)
     const {mutate: updateChatRoomUsersMutation} = useMutation(updateChatRoomUsers, {
         onSuccess: () => {
-            enqueueSnackbar("Chat Room Updated Successfully!", {variant: "success"});
+            enqueueSnackbar("Chat Room users Updated Successfully!", {variant: "success"});
 
         },
         onError: () => {
-            enqueueSnackbar("Error Updating Chat Room", {variant: "error"});
+            enqueueSnackbar("Error updating users Chat Room", {variant: "error"});
         }
     })
 
@@ -128,19 +128,33 @@ const ChatEdit = () => {
         return searchUsersData?.data || [];
     }
 
+    const {
+        mutateAsync: uploadImageMutation,
+    } = useMutation(uploadImage);
 
     async function onSubmit(data: any) {
         console.log("saving chat room")
         if (chatroom) {
             let newChatRoom: ChatRoomUpdateInterface = {
-                is_private: isPrivateSwitch,
-                owner_id: chatroom.owner_id,
-                id: chatroom.id,
+                isPrivate: isPrivateSwitch || chatroom.is_private || 0,
+                ownerId: chatroom.owner_id,
+                chatRoomId: chatroom.id,
                 name: data.name,
                 description: data.description,
-                image: data.image
+                profile_picture: chatroom.profile_picture,
             }
-            console.log(newChatRoom);
+            if (selectedImage) {
+                let data = await uploadImageMutation(selectedImage);
+                newChatRoom.profile_picture = "https://" + data.data.url;
+            }
+
+            let userIds = value.map(user => user.id);
+            console.log(userIds)
+            let newChatRoomUsers: ChatRoomUserUpdateInterface = {
+                chatRoomId: chatroom.id,
+                usersId: userIds
+            }
+            await updateChatRoomUsersMutation({data: newChatRoomUsers});
             await updateChatRoomMutation(newChatRoom);
 
         }
@@ -254,7 +268,7 @@ const ChatEdit = () => {
                                                         await register("image").onChange(e);
                                                     }
                                                 }}
-                                                defaultValue={chatroom?.image}
+                                                defaultValue={chatroom?.profile_picture}
 
                                             />
                                             <label htmlFor="select-image">

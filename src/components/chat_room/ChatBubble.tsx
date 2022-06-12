@@ -22,6 +22,7 @@ export default function ChatBubble({
             <ListItemText
                 primary={chatRoom.name}
                 secondary={displayDescription ? chatRoom.description : null}
+                id={displayLastMessage ? chatRoom.name : undefined}
 
             />
         </>

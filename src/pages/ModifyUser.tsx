@@ -1,17 +1,17 @@
 import * as React from "react";
 import {useForm} from "react-hook-form";
-import {Avatar, Box, Button, Fade, FormGroup, FormLabel, Grid, TextField, Typography,} from "@mui/material";
+import { Box, Button, Fade,  Grid, TextField} from "@mui/material";
 // import "../media/css/Login.css";
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import {useMutation} from "react-query";
-import {createUser, updateUser,} from "../api/User/User";
+import { updateUser,} from "../api/User/User";
 import {AxiosError} from "axios";
 import {useContext, useEffect, useState} from "react";
 import {loggedInUserContext} from "../App";
 import {useSnackbar} from "notistack";
-import UserInterface from "../api/User/UserInterface";
-import {convertToBase64} from "../components/utils";
+// import UserInterface from "../api/User/UserInterface";
+// import {convertToBase64} from "../components/utils";
 import {UserUpdateInterface} from "../api/User/UserInterface";
 import {uploadImage} from "../storage_server/File";
 
@@ -55,7 +55,7 @@ export default function ModifyUser() {
     const {enqueueSnackbar} = useSnackbar();
     const {mutateAsync: updateUserMutation,} = useMutation(updateUser, {
 
-            onSuccess: (data, variables, context) => {
+            onSuccess: () => {
                 enqueueSnackbar('User modified', {
                     variant: 'success', autoHideDuration: 1300,
                     TransitionComponent: Fade,
@@ -89,33 +89,7 @@ export default function ModifyUser() {
 
     const {
         mutateAsync: uploadImageMutation,
-        isLoading: isUploadImageLoading,
-        isError: isUploadImageError,
-        error: uploadImageError,
-        data: uploadImageData,
-    } = useMutation(uploadImage, {
-            onSuccess: (data, variables, context) => {
-                console.log(data, variables, context);
-                // // @ts-ignore
-                // setUser({...user, profilePicture: data.uploadImage.url});
-            }
-            ,
-            onError: (error: AxiosError) => {
-                console.log(error);
-                // @ts-ignore
-                // enqueueSnackbar(error.response.data.error.replace('Arguments missing or invalid', ''), {
-                //     variant: 'error', autoHideDuration: 1700,
-                //     TransitionComponent: Fade,
-                //     anchorOrigin: {
-                //         vertical: 'top',
-                //         horizontal: 'center',
-                //
-                //     }
-                // });
-
-            }
-        }
-    );
+    } = useMutation(uploadImage);
     const onSubmit = async (data: any) => {
         let newUser: UserUpdateInterface = {
             id: loggedInUser.id,
@@ -129,7 +103,6 @@ export default function ModifyUser() {
             let data = await uploadImageMutation(selectedImage);
             newUser.profilePicture = "https://" + data.data.url;
         }
-        console.log(newUser);
         await updateUserMutation(newUser);
     };
     React.useEffect(() => {
@@ -271,7 +244,7 @@ export default function ModifyUser() {
                                     {imageUrl && selectedImage && (
                                         <Box mt={2} textAlign="center">
                                             <div>Image Preview:</div>
-                                            <img src={imageUrl}  height="100px"/>
+                                            <img src={imageUrl} alt={'preview'} height="100px"/>
                                         </Box>
                                     )}
                                 </Grid>

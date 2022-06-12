@@ -1,10 +1,10 @@
 // Yup form to create the chatroom
-import * as Yup from "yup";
+// import * as Yup from "yup";
 import {useContext, useState} from "react";
 import {loggedInUserContext} from "../../../App";
-import {selectedChatRoomContext} from "../../../pages/Chat";
-import {useForm} from "react-hook-form";
-import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
+// import {selectedChatRoomContext} from "../../../pages/Chat";
+// import {useForm} from "react-hook-form";
+// import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 import {useMutation} from "react-query";
 import {
     addUserToChatRoom,
@@ -16,35 +16,35 @@ import ChatRoomInterface from "../../../api/ChatRoom/ChatRoomInterface";
 import {useSnackbar} from "notistack";
 import {AxiosError} from "axios";
 
-const validationSchema = Yup.object().shape({
-    id: Yup.string()
-        .required('Url is required')
-        .min(3, 'Name must be at least 3 characters'),
-
-
-});
+// const validationSchema = Yup.object().shape({
+//     id: Yup.string()
+//         .required('Url is required')
+//         .min(3, 'Name must be at least 3 characters'),
+//
+//
+// });
 
 
 export default function JoinPublicChatRoomTab() {
     const loggedInUser = useContext(loggedInUserContext).loggedInUser;
-    const chatroom = useContext(selectedChatRoomContext).selectedChatRoom;
-    const {
-        register,
-        handleSubmit,
-        formState: {errors}
-    } = useForm({
-        resolver: yupResolver(validationSchema)
-    });
+    // const chatroom = useContext(selectedChatRoomContext).selectedChatRoom;
+    // const {
+        // register,
+        // handleSubmit,
+        // formState: {errors}
+    // } = useForm({
+    //     resolver: yupResolver(validationSchema)
+    // });
 
     const {enqueueSnackbar} = useSnackbar();
 
     const [value, setValue] = useState(null as null | ChatRoomInterface);
     const [inputValue, setInputValue] = useState('');
 
-    const {mutate: mutateJoinPublicChatRoom, data: queryResponseData} = useMutation(
+    const {mutate: mutateJoinPublicChatRoom} = useMutation(
         addUserToChatRoom,
         {
-            onSuccess: data => {
+            onSuccess: () => {
                 enqueueSnackbar('Chat room joined', {
                     variant: 'success',
                     autoHideDuration: 3000,

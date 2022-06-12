@@ -2,15 +2,16 @@
 import * as Yup from "yup";
 import {mixed} from "yup";
 import {useContext, useEffect, useState} from "react";
-import {selectedChatRoomContext} from "../../../pages/Chat";
+// import {selectedChatRoomContext} from "../../../pages/Chat";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {Box, Button, FormControlLabel, Grid, Switch, TextField} from "@mui/material";
 import {useForm} from "react-hook-form";
 import {convertToBase64} from "../../utils";
-import ChatRoomInterface, {ChatRoomCreateInterface} from "../../../api/ChatRoom/ChatRoomInterface";
+import {ChatRoomCreateInterface} from "../../../api/ChatRoom/ChatRoomInterface";
 import {loggedInUserContext} from "../../../App";
 import {createChatRoom} from "../../../api/ChatRoom/ChatRoom";
 import {useMutation} from "react-query";
+import {useSnackbar} from "notistack";
 
 
 // Yup form to create the chatroom
@@ -32,9 +33,10 @@ const validationSchema = Yup.object().shape({
 
 
 export default function ChatCreateTab() {
-    const chatRoom = useContext(selectedChatRoomContext).selectedChatRoom;
+    // const chatRoom = useContext(selectedChatRoomContext).selectedChatRoom;
     const loggedInUser = useContext(loggedInUserContext).loggedInUser;
     const [isPrivateSwitch, setIsPrivateSwitch] = useState(false);
+    const {enqueueSnackbar} = useSnackbar()
 
     const {
         register,
@@ -56,14 +58,14 @@ export default function ChatCreateTab() {
     }, [register]);
 
     const {mutateAsync: createChatRoomMutation} = useMutation(createChatRoom, {
-        onSuccess: (data) => {
-            console.log("Chat Room Created Successfully!");
+        onSuccess: () => {
+            enqueueSnackbar("Chat room created successfully", {
+                variant: "success"
+            })
 
         }
+
     });
-
-
-
 
 
     const onSubmit = async (data: any) => {
@@ -121,7 +123,7 @@ export default function ChatCreateTab() {
                                 checked={isPrivateSwitch}
                                 onChange={async (event) => {
                                     setIsPrivateSwitch(!isPrivateSwitch);
-                                    await register("is_private", ).onChange(event);
+                                    await register("is_private",).onChange(event);
                                 }}
                                 name="is_private"
                                 color="primary"

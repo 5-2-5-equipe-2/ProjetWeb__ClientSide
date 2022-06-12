@@ -5,16 +5,16 @@ interface ChatRoomInterface {
     is_private: number;
     created_at?: Date;
     owner_id: Number;
-    image?: string;
+    profile_picture?: string;
 }
 
 export interface ChatRoomUpdateInterface {
-    id: number;
+    chatRoomId: number;
     name: string;
     description: string;
-    is_private: number;
-    image?: string;
-    owner_id: Number;
+    isPrivate: number;
+    profile_picture?: string;
+    ownerId: Number;
 }
 
 export interface ChatRoomCreateInterface {
@@ -28,7 +28,7 @@ export interface ChatRoomCreateInterface {
 
 export interface ChatRoomUserUpdateInterface {
     chatRoomId: number;
-    userId: number[];
+    usersId: number[];
 }
 
 export default ChatRoomInterface;

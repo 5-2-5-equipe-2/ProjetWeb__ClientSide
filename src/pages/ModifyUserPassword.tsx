@@ -1,8 +1,8 @@
 import * as Yup from "yup";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
-import {useContext} from "react";
-import {loggedInUserContext} from "../App";
+// import {useContext} from "react";
+// import {loggedInUserContext} from "../App";
 import {useSnackbar} from "notistack";
 import {useMutation} from "react-query";
 import {changePassword} from "../api/User/User";
@@ -49,7 +49,7 @@ export default function ModifyUserPassword() {
 
 
     const {mutate: updatePasswordMutation} = useMutation(changePassword, {
-        onSuccess: (data) => {
+        onSuccess: () => {
             enqueueSnackbar("Password changed successfully", {
                 variant: "success",
                 autoHideDuration: 3000,

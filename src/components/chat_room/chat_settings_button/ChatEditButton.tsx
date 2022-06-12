@@ -3,7 +3,7 @@ import * as React from "react";
 import ChatEdit from "./ChatEdit";
 import ChatRoomLeaveMenuItem from "./ChatRoomLeaveMenuItem";
 import IconButton from "@mui/material/IconButton";
-import Avatar from "@mui/material/Avatar";
+// import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 

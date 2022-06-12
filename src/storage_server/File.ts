@@ -11,7 +11,7 @@ export const uploadImage = async (image: File) => {
     const base64 = await convertToBase64(image);
     const obj: FileInterface = {
             file_name: image.name,
-            file_content: base64
+            file_content: base64.split(",")[1]
         }
     return api.post("/upload_image.php",obj);
 }

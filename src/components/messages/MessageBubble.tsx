@@ -1,6 +1,6 @@
 import {Grid, Typography} from "@mui/material";
 import Box from "@mui/material/Box";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext} from "react";
 import {useQuery} from "react-query";
 import {getUserById} from "../../api/User/User";
 import "./bubble.css";
@@ -8,7 +8,7 @@ import Avatar from "@mui/material/Avatar";
 import {loggedInUserContext} from "../../App";
 import MessageInterface from "../../api/Message/MessageInterface";
 import UserInterface from "../../api/User/UserInterface";
-import showdown from "showdown";
+// import showdown from "showdown";
 import ReactMarkdown from "react-markdown";
 import remarkImages from "remark-images";
 import remarkMath from "remark-math";
@@ -38,7 +38,6 @@ const getUserInitials = (user?: UserInterface) => {
 
 export default function MessageBubble({message}: { message: MessageInterface }) {
     const loggedInUser = useContext(loggedInUserContext)['loggedInUser'];
-    const [messageContentHtml, setMessageContentHtml] = useState("");
     const {
         data: userData,
         // isLoading: isLoadingUser
@@ -83,7 +82,7 @@ export default function MessageBubble({message}: { message: MessageInterface }) 
                         minHeight: "100%",
                         marginTop: "3%"
                     }}
-                ></Avatar>
+                >{`${getUserInitials(userData)}`}</Avatar>
 
             </Grid>
 

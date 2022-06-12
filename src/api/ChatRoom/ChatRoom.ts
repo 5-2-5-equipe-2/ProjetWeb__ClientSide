@@ -1,13 +1,17 @@
 import api, {ErrorInterface} from "../base";
 import MessageInterface from "../Message/MessageInterface";
 import UserInterface from "../User/UserInterface";
-import ChatRoomInterface, {ChatRoomCreateInterface, ChatRoomUserUpdateInterface} from "./ChatRoomInterface";
+import ChatRoomInterface, {
+    ChatRoomCreateInterface,
+    ChatRoomUpdateInterface,
+    ChatRoomUserUpdateInterface
+} from "./ChatRoomInterface";
 
 
-export const getChatRooms = () => api.get<ChatRoomInterface[]>("/chatroom/list");
-export const getChatRoomById = (id: number) => api.get<ChatRoomInterface>(`/chatroom/get?id=${id}`);
+// export const getChatRooms = () => api.get<ChatRoomInterface[]>("/chatroom/list");
+// export const getChatRoomById = (id: number) => api.get<ChatRoomInterface>(`/chatroom/get?id=${id}`);
 // export const createChatRoom = (chatRoom: ChatRoomInterface) => api.post("/chat_room/create", chatRoom);
-export const updateChatRoom = (chatRoom: ChatRoomInterface) => api.put<ChatRoomInterface>(`/chatroom/update/?id=${chatRoom.id}`, chatRoom);
+export const updateChatRoom = (chatRoom: ChatRoomUpdateInterface) => api.put<ChatRoomInterface>(`/chatroom/updateChatRoom/`, chatRoom);
 // export const deleteChatRoom = (id: number) => api.delete(`/chat_room/delete/?id=${id}`);
 // export const getChatRoomByName = (name: string) => api.get(`/chat_room/getByName/?name=${name}`);
 export const getChatRoomByUserId = (userId: number) => api.get<ChatRoomInterface[]>(`/chatroom/getByUserId/?userId=${userId}`);
