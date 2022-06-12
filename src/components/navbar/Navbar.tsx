@@ -6,14 +6,25 @@ import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
-import PersonAdd from '@mui/icons-material/PersonAdd';
+// import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
+import {Button, createTheme, FormControlLabel, FormGroup, Switch, Typography} from "@mui/material";
+import {Link} from "react-router-dom";
+import {useContext} from "react";
+import {loggedInUserContext, themeContext} from "../../App";
+import {Password} from "@mui/icons-material";
+// import "../media/css/navbar.css";
 
 export default function AccountMenu() {
+
+    const currentTheme = useContext(themeContext).currentTheme;
+    const setCurrentTheme = useContext(themeContext).setCurrentTheme;
+    const isDarkTheme = currentTheme.palette.mode === 'dark';
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const userData = useContext(loggedInUserContext);
+    const isLoggedIn = userData.loggedInUser.id !== -1;
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -24,9 +35,35 @@ export default function AccountMenu() {
     return (
         <React.Fragment>
             <Box sx={{display: 'flex', alignItems: 'center', textAlign: 'center'}}>
-                <Typography sx={{minWidth: 100}}>Contact</Typography>
-                <Typography sx={{minWidth: 100}}>Profile</Typography>
-                <Tooltip title="Account settings">
+                <FormGroup>
+                    <FormControlLabel control={<Switch onChange={
+                        (event: React.ChangeEvent<HTMLInputElement>) => {
+                            if (event.target.checked) {
+                                setCurrentTheme(createTheme({
+                                    palette: {
+                                        mode: 'dark',
+                                    },
+                                }));
+                            } else {
+                                setCurrentTheme(createTheme({
+                                    palette: {
+                                        mode: 'light',
+                                    }
+                                }));
+                            }
+                        }
+                    } defaultChecked={isDarkTheme ?? true}/>} label="Dark mode"/>
+                </FormGroup>
+                <Button sx={{minWidth: 100}} color={"secondary"} component={Link} to="/Login">Login</Button>
+                <Button sx={{minWidth: 100}} component={Link} to="/signup">Sign Up</Button>
+                <Button sx={{minWidth: 100}} component={Link} to="/chat">Home</Button>
+
+                {isLoggedIn &&
+                    <Typography color="primary" style={{marginLeft: "auto"}}>
+                        Logged in as, {userData.loggedInUser.username}
+                    </Typography>}
+
+                <Tooltip title="Account Menu" style={{marginLeft: "auto"}}>
                     <IconButton
                         onClick={handleClick}
                         size="small"
@@ -35,7 +72,10 @@ export default function AccountMenu() {
                         aria-haspopup="true"
                         aria-expanded={open ? 'true' : undefined}
                     >
-                        <Avatar sx={{width: 32, height: 32}}>M</Avatar>
+                        <Avatar
+                            src={userData.loggedInUser.profile_picture}
+
+                            sx={{width: 32, height: 32}}/>
                     </IconButton>
                 </Tooltip>
             </Box>
@@ -74,26 +114,20 @@ export default function AccountMenu() {
                 transformOrigin={{horizontal: 'right', vertical: 'top'}}
                 anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
             >
-                <MenuItem>
-                    <Avatar/> Profile
-                </MenuItem>
-                <MenuItem>
-                    <Avatar/> My account
-                </MenuItem>
-                <Divider/>
-                <MenuItem>
-                    <ListItemIcon>
-                        <PersonAdd fontSize="small"/>
-                    </ListItemIcon>
-                    Add another account
-                </MenuItem>
-                <MenuItem>
+                <MenuItem component={Link} to={'/modifyuser'}>
                     <ListItemIcon>
                         <Settings fontSize="small"/>
                     </ListItemIcon>
-                    Settings
+                    Edit Profile
                 </MenuItem>
-                <MenuItem>
+                <Divider/>
+                <MenuItem component={Link} to={'/ModifyUserPassword'}>
+                    <ListItemIcon>
+                        <Password fontSize="small"/>
+                    </ListItemIcon>
+                    Change Password
+                </MenuItem>
+                <MenuItem  component={Link} to={'/logout'}>
                     <ListItemIcon>
                         <Logout fontSize="small"/>
                     </ListItemIcon>

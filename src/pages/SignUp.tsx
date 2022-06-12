@@ -1,22 +1,29 @@
 import * as React from "react";
 import {useForm} from "react-hook-form";
-import {Button, Grid, TextField,} from "@mui/material";
-import "../media/css/Login.css";
+import {
+    Button,
+    FormGroup,
+    FormLabel,
+    Grid,
+    TextField,
+} from "@mui/material";
+// import "../media/css/Login.css";
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import {useMutation} from "react-query";
-import {createUser,} from "../api/user/user";
+import {createUser,} from "../api/User/User";
 import {AxiosError} from "axios";
+import {useSnackbar} from "notistack";
 
 
 const validationSchema = Yup.object().shape({
     username: Yup.string()
         .required("Username is Required.")
         .min(1, "Username is Too Short."),
-    firstName: Yup.string()
-        .min(1, "First Name is Too Short."),
-    lastName: Yup.string()
-        .min(1, "Last Name is Too Short."),
+    // firstName: Yup.string()
+    //     .min(1, "First Name is Too Short."),
+    // lastName: Yup.string()
+    //     .min(1, "Last Name is Too Short."),
 
     email: Yup.string().email().required("Email is Required."),
     password: Yup.string()
@@ -27,12 +34,6 @@ const validationSchema = Yup.object().shape({
         .oneOf([Yup.ref('password'), null], 'Passwords must match.')
         .required("Confirm Password is Required.")
         .min(8, "Confirm Password is Too Short."),
-    phoneNumber: Yup.string()
-        .min(10, "Phone Number is Too Short."),
-    address: Yup.string()
-        .min(1, "Address is Too Short."),
-
-
 });
 
 
@@ -44,18 +45,40 @@ export default function SignUpForm() {
     } = useForm({
         resolver: yupResolver(validationSchema)
     });
+    const {enqueueSnackbar} = useSnackbar();
     const {mutate,} = useMutation(createUser, {
         onSuccess: () => {
-            // data = data.data;
-            alert("SignUp Successful");
+            enqueueSnackbar("User Created Successfully!", {
+                variant: "success",
+                anchorOrigin: {
+                    vertical: "top",
+                    horizontal: "right",
+                },
+                autoHideDuration: 3000,
+
+            });
         },
         onError: (error: AxiosError) => {
 
-            if (error.response) {
-                const {data} = error.response;
+            if (error.response && error.response.data) {
                 // @ts-ignore
-                const {error: error1} = data;
-                alert(error1);
+                enqueueSnackbar(error.response.data.error, {
+                    variant: "error",
+                    anchorOrigin: {
+                        vertical: "top",
+                        horizontal: "center",
+                    },
+                    autoHideDuration: 3000,
+                });
+            } else {
+                enqueueSnackbar(error.message, {
+                    variant: "error",
+                    anchorOrigin: {
+                        vertical: "top",
+                        horizontal: "right",
+                    },
+                    autoHideDuration: 3000,
+                });
             }
 
         }
@@ -66,14 +89,12 @@ export default function SignUpForm() {
 
     }
 
+
     React.useEffect(() => {
         register("username", {required: true});
         register("password", {required: true});
         register("confirmPassword", {required: true});
         register("email", {required: true});
-        register("firstName", {required: true});
-        register("lastName", {required: true});
-        register("phoneNumber", {required: true});
         const listener = (event: { code: string; preventDefault: () => void; }) => {
             if (event.code === "Enter" || event.code === "NumpadEnter") {
                 event.preventDefault();
@@ -90,64 +111,76 @@ export default function SignUpForm() {
     }, [register]);
 
     return (
+        <Grid container
+              direction="column"
+              justifyContent="center"
+              alignItems="center"
+              spacing={4}>
 
-        <Grid item xs={2}>
             <h1>Sign Up</h1>
-            <form className="form">
-                <section>
-                    <label>Username</label>
+            <form encType="multipart/form-data">
 
-                    <TextField fullWidth
-                               {...register("username", {
-                                   required: true,
-                               })}
-                               error={!!errors.username}
-                               helperText={errors.username && errors.username.message}
-                    />
+                <FormGroup className="form">
+                    <section>
+                        <FormLabel>Username</FormLabel>
 
-
-                </section>
-
-                <section>
-                    <label>Password</label>
-                    <TextField fullWidth
-                               {...register("password", {
-                                   required: true,
-                               })}
-                               type="password"
-                               error={!!errors.password}
-                               helperText={errors?.password?.message}
-                    />
-
-                </section>
-                <section>
-                    <label>Confirm Password</label>
-                    <TextField fullWidth
-                               {...register("confirmPassword", {
+                        <TextField fullWidth
+                                   {...register("username", {
                                        required: true,
-                                   }
-                               )}
-                               type="password"
-                               error={!!errors.confirmPassword}
-                               helperText={errors?.confirmPassword?.message}
-                    />
-                </section>
-                <section>
-                    <label>Email</label>
-                    <TextField fullWidth
-                               {...register("email", {
+                                   })}
+                                   error={!!errors.username}
+                                   autoComplete="username"
+                                   helperText={errors.username && errors.username.message}
+                        />
+
+
+                    </section>
+
+                    <section>
+                        <FormLabel>Password</FormLabel>
+                        <TextField fullWidth
+                                   {...register("password", {
                                        required: true,
-                                   }
-                               )}
-                               type={'email'}
-                               error={!!errors.email}
-                               helperText={errors?.email?.message}
-                    />
-                </section>
-                <Button id="button" variant="contained" color="primary" onClick={handleSubmit(onSubmit)}>Submit</Button>
+                                   })}
+                                   type="password"
+                                   autoComplete="password"
+                                   error={!!errors.password}
+                                   helperText={errors?.password?.message}
+                        />
+
+                    </section>
+                    <section>
+                        <FormLabel>Confirm Password</FormLabel>
+                        <TextField fullWidth
+                                   {...register("confirmPassword", {
+                                           required: true,
+                                       }
+                                   )}
+                                   type="password"
+                                   autoComplete="confirmPassword"
+                                   error={!!errors.confirmPassword}
+                                   helperText={errors?.confirmPassword?.message}
+                        />
+                    </section>
+                    <section>
+                        <FormLabel>Email</FormLabel>
+                        <TextField fullWidth
+                                   {...register("email", {
+                                           required: true,
+                                       }
+                                   )}
+                                   type={'email'}
+                                   error={!!errors.email}
+                                   autoComplete={'email'}
+                                   helperText={errors?.email?.message}
+                        />
+                    </section>
+                    <Button id="button" variant="contained" color="primary"
+                            onClick={handleSubmit(onSubmit)}>Submit</Button>
+                </FormGroup>
             </form>
-        </Grid>
 
+        </Grid>
 
     );
 }

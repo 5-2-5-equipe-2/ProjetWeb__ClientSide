@@ -5,8 +5,23 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {QueryClientProvider, QueryClient} from "react-query";
 import {ReactQueryDevtools} from "react-query/devtools";
-const queryClient = new QueryClient();
+// import LogRocket from 'logrocket';
+import {SnackbarProvider} from 'notistack';
 
+// LogRocket.init('cle0qm/react-test');
+// LogRocket.identify('THE_USER_ID_IN_YOUR_APP', {
+//     name: 'James Morrison',
+//     email: 'jamesmorrison@example.com',
+//
+// });
+
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            notifyOnChangeProps: ['data'],
+        },
+    },
+})
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -14,7 +29,9 @@ const root = ReactDOM.createRoot(
 root.render(
     <React.StrictMode>
         <QueryClientProvider client={queryClient}>
-            <App/>
+            <SnackbarProvider maxSnack={3}>
+                <App/>
+            </SnackbarProvider>
             <ReactQueryDevtools/>
         </QueryClientProvider>
     </React.StrictMode>

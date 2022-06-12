@@ -1,15 +1,25 @@
 import * as React from "react";
 import {useForm} from "react-hook-form";
-import {Button, Grid, TextField} from "@mui/material";
+import {
+    Button, FormGroup,
+    FormLabel,
+    Grid,
+    TextField
+} from "@mui/material";
 import "../media/css/Login.css";
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import {useMutation} from "react-query";
-import {login} from "../api/user/user";
+import {getUserByUsername, login} from "../api/User/User";
 import {AxiosError} from "axios";
+import {useNavigate} from "react-router-dom";
+import {loggedInUserContext} from "../App";
+import {useContext} from "react";
+import {useSnackbar} from "notistack";
 
 
 const validationSchema = Yup.object().shape({
+
     username: Yup.string()
         .required('Username is required'),
 
@@ -27,27 +37,62 @@ export default function LoginForm() {
     } = useForm({
         resolver: yupResolver(validationSchema)
     });
-    const {mutate,} = useMutation(login, {
-        onSuccess: () => {
-            // data = data.data;
-            alert("Login Successful");
+    const setLoggedInUser = useContext(loggedInUserContext).setLoggedInUser;
+    const {enqueueSnackbar} = useSnackbar();
+
+    // Get redirect data from query params
+    let navigate = useNavigate();
+    const {mutate: getUser,} = useMutation(getUserByUsername, {
+        onSuccess: (data) => {
+            setLoggedInUser(data.data);
+
+        }
+    });
+    const {mutate: loginUser,} = useMutation(login, {
+        onSuccess: (data, variables,) => {
+            console.log(data);
+            getUser(variables.username);
+            // redirect to from page or home page with react router
+            navigate("/chat");
         },
         onError: (error: AxiosError) => {
-
-            if (error.response) {
-                const {data} = error.response;
+            console.log(error);
+            if (error.response && error.response.data) {
                 // @ts-ignore
-                const {error: error1} = data;
-                alert(error1);
+                enqueueSnackbar(error.response.data.error, {
+                    variant: 'error',
+                    autoHideDuration: 5000,
+                    anchorOrigin: {
+                        vertical: 'top',
+                        horizontal: 'center',
+                    },
+                })
+            } else {
+                enqueueSnackbar(error.message, {
+                    variant: 'error',
+                    autoHideDuration: 5000,
+                    anchorOrigin: {
+                        vertical: 'top',
+                        horizontal: 'center',
+                    },
+                })
             }
 
         }
     });
 
     const onSubmit = (data: any) => {
-        mutate(data);
+        loginUser(data);
 
     }
+    // const handleDialogClickOpen = () => {
+    //     setDialogOpen(true);
+    // };
+    //
+    // const handleDialogClose = () => {
+    //     setDialogOpen(false);
+    // };
+
 
     React.useEffect(() => {
         register("username", {required: true});
@@ -69,37 +114,51 @@ export default function LoginForm() {
 
     return (
 
-        <Grid item xs={2}>
+        <Grid item sx={{
+            width: "100%",
+            height: "70vh",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+
+        }}>
             <h1>Login</h1>
-            <form className="form">
-                <section>
-                    <label>Username</label>
+            <form>
+                <FormGroup>
+                    <Grid container
+                          direction="column"
+                          justifyContent="center"
+                          alignItems="center"
+                          spacing={4}>
+                        <Grid item>
+                            <FormLabel>Username</FormLabel>
+                            <TextField fullWidth
+                                       {...register("username", {
+                                           required: true,
+                                       })}
+                                       error={!!errors.username}
+                                       autoComplete="username"
+                                       helperText={errors.username && errors.username.message}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <FormLabel>Password</FormLabel>
+                            <TextField fullWidth
+                                       {...register("password", {
+                                           required: true,
+                                       })}
+                                       type="password"
+                                       autoComplete="password"
+                                       error={!!errors.password}
+                                       helperText={errors?.password?.message}
+                            />
 
-                    <TextField fullWidth
-                               {...register("username", {
-                                   required: true,
-                               })}
-                               error={!!errors.username}
-                               helperText={errors.username && errors.username.message}
-                    />
-
-
-                </section>
-
-                <section>
-                    <label>Password</label>
-                    <TextField fullWidth
-                               {...register("password", {
-                                   required: true,
-                               })}
-                               type="password"
-                               error={!!errors.password}
-                               helperText={errors?.password?.message}
-                    />
-
-                </section>
-
-                <Button id="button" variant="contained" color="primary" onClick={handleSubmit(onSubmit)}>Submit</Button>
+                        </Grid>
+                    </Grid>
+                    <Button id="button" variant="contained" color="primary"
+                            onClick={handleSubmit(onSubmit)}>Submit</Button>
+                </FormGroup>
             </form>
         </Grid>
 

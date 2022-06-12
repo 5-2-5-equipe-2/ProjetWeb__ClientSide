@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {useQuery} from "react-query";
-import {getUsers} from "../../api/user/user";
-import UserInterface from '../../api/user/userInterface';
-import UserListItem from "./userListItem";
+import {getUsers} from "../../api/User/User";
+import UserInterface from '../../api/User/UserInterface';
+import UserListItem from "./UserListItem";
 import {Box, CircularProgress, List} from "@mui/material";
 
 
@@ -16,6 +16,7 @@ const UserList = () => {
     return (
         <Box sx={{width: "100%"}}>
             {isLoading &&
+
                 <CircularProgress/>
             }
             <List
