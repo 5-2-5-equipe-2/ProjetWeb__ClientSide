@@ -5,15 +5,15 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {QueryClientProvider, QueryClient} from "react-query";
 import {ReactQueryDevtools} from "react-query/devtools";
-import LogRocket from 'logrocket';
+// import LogRocket from 'logrocket';
 import {SnackbarProvider} from 'notistack';
 
-LogRocket.init('cle0qm/react-test');
-LogRocket.identify('THE_USER_ID_IN_YOUR_APP', {
-    name: 'James Morrison',
-    email: 'jamesmorrison@example.com',
-
-});
+// LogRocket.init('cle0qm/react-test');
+// LogRocket.identify('THE_USER_ID_IN_YOUR_APP', {
+//     name: 'James Morrison',
+//     email: 'jamesmorrison@example.com',
+//
+// });
 
 const queryClient = new QueryClient({
     defaultOptions: {

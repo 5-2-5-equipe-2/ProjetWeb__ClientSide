@@ -22,6 +22,7 @@ import {mixed} from "yup";
 
 import {useSnackbar} from "notistack";
 import {ChatRoomUpdateInterface} from "../../../api/ChatRoom/ChatRoomInterface";
+import {Axios, AxiosError} from "axios";
 // Yup form to edit the chatroom
 const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -32,10 +33,8 @@ const validationSchema = Yup.object().shape({
     description: Yup.string()
         .max(200, 'Description must be less than 200 characters'),
 
-    image: mixed().test("fileSize", "The file is too large", (value: any) => {
-        if (!value.length) return true // attachment is optional
-        return value[0].size <= 2000000
-    })
+    isPrivate: Yup.boolean(),
+    image: mixed().nullable(),
 });
 const ChatEdit = () => {
     const loggedInUser = useContext(loggedInUserContext).loggedInUser;
@@ -76,9 +75,18 @@ const ChatEdit = () => {
     } = useMutation(updateChatRoom, {
         onSuccess: () => {
             setOpen(false);
+        },
+        onError: (error: AxiosError) => {
+            // @ts-ignore
+            if (error.response?.data.error) {
+                // @ts-ignore
+                enqueueSnackbar(error.response.data.error, {variant: "error"});
+            } else {
+                enqueueSnackbar(error.message, {variant: 'error'});
+            }
         }
     })
-
+    console.log(errors)
     const {mutate: updateChatRoomUsersMutation} = useMutation(updateChatRoomUsers, {
         onSuccess: () => {
             enqueueSnackbar("Chat Room Updated Successfully!", {variant: "success"});
@@ -120,24 +128,24 @@ const ChatEdit = () => {
         return searchUsersData?.data || [];
     }
 
-    function handleSaveChatRoom() {
-        handleSubmit(async (data) => {
-            if (chatroom) {
-                let newChatRoom: ChatRoomUpdateInterface = {
-                    is_private: isPrivateSwitch,
-                    owner_id: chatroom.owner_id,
-                    id: chatroom.id,
-                    name: data.name,
-                    description: data.description,
-                    image: data.image
-                }
-                await updateChatRoomMutation(newChatRoom);
 
+    async function onSubmit(data: any) {
+        console.log("saving chat room")
+        if (chatroom) {
+            let newChatRoom: ChatRoomUpdateInterface = {
+                is_private: isPrivateSwitch,
+                owner_id: chatroom.owner_id,
+                id: chatroom.id,
+                name: data.name,
+                description: data.description,
+                image: data.image
             }
-            setOpen(false);
+            console.log(newChatRoom);
+            await updateChatRoomMutation(newChatRoom);
 
-        })
+        }
     }
+
 
     const isOwner = chatroom?.owner_id === loggedInUser?.id;
 
@@ -148,6 +156,16 @@ const ChatEdit = () => {
             }
         };
     }, [chatroom]);
+
+
+    useEffect(() => {
+        return () => {
+            register('name')
+            register('description')
+            register('image')
+            register('isPrivate')
+        };
+    }, [register]);
 
 
     return (
@@ -191,13 +209,13 @@ const ChatEdit = () => {
                                     <FormControlLabel
                                         control={
                                             <Switch
-                                                {...register("is_private", {
+                                                {...register("isPrivate", {
                                                     required: true,
                                                 })}
                                                 checked={!!isPrivateSwitch}
                                                 onChange={async (event) => {
                                                     setIsPrivateSwitch(Number(!isPrivateSwitch));
-                                                    await register("is_private",).onChange(event);
+                                                    await register("isPrivate",).onChange(event);
                                                 }}
                                                 name="is_private"
                                                 color="primary"
@@ -215,9 +233,7 @@ const ChatEdit = () => {
                                         rows={4}
                                         error={errors.description !== undefined}
                                         helperText={errors.description?.message}
-                                        {...register("description", {
-                                            required: true,
-                                        })}
+                                        {...register("description")}
                                         defaultValue={chatroom?.description}
                                     />
                                 </Grid>
@@ -227,10 +243,7 @@ const ChatEdit = () => {
                                           alignItems={'center'}>
                                         <Grid item>
                                             <input
-                                                {...register("image", {
-                                                        required: true,
-                                                    }
-                                                )}
+                                                {...register("image",)}
                                                 accept="image/*"
                                                 type="file"
                                                 id="select-image"
@@ -321,7 +334,7 @@ const ChatEdit = () => {
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={handleClose}>Cancel</Button>
-                            <Button onClick={handleSaveChatRoom}>Save</Button>
+                            <Button onClick={handleSubmit(onSubmit)}>Save</Button>
                         </DialogActions>
                     </Dialog>
                     <MenuItem onClick={handleClickOpen}>

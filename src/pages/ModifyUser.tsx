@@ -123,12 +123,13 @@ export default function ModifyUser() {
             firstname: data.firstName ? data.firstName : null,
             surname: data.surname ? data.surname : null,
             email: data.email ? data.email : null,
-            profile_picture: '' || loggedInUser.profile_picture,
+            profilePicture: '' || loggedInUser.profile_picture,
         };
         if (selectedImage) {
-            await uploadImageMutation(selectedImage);
-            newUser.profile_picture = uploadImageData?.data?.url;
+            let data = await uploadImageMutation(selectedImage);
+            newUser.profilePicture = "https://" + data.data.url;
         }
+        console.log(newUser);
         await updateUserMutation(newUser);
     };
     React.useEffect(() => {
@@ -154,13 +155,23 @@ export default function ModifyUser() {
     }, [register]);
 
     const [selectedImage, setSelectedImage] = useState(null as File | null);
-    const [imageUrl, setImageUrl] = useState(null as string | null);
+    const [imageUrl, setImageUrl] = useState(loggedInUser.profile_picture);
 
     useEffect(() => {
         if (selectedImage) {
             setImageUrl(URL.createObjectURL(selectedImage));
         }
     }, [selectedImage]);
+
+
+    useEffect(() => {
+        return () => {
+            setImageUrl(loggedInUser.profile_picture);
+        };
+    }, [loggedInUser.profile_picture]);
+
+
+
     return (<Grid container
                   direction="column"
                   justifyContent="center"
@@ -244,7 +255,7 @@ export default function ModifyUser() {
                                                 await register("image").onChange(e);
                                             }
                                         }}
-                                        defaultValue={loggedInUser.profile_picture}
+                                        // defaultValue={loggedInUser.profile_picture}
 
                                     />
                                     <label htmlFor="select-image">
@@ -260,7 +271,7 @@ export default function ModifyUser() {
                                     {imageUrl && selectedImage && (
                                         <Box mt={2} textAlign="center">
                                             <div>Image Preview:</div>
-                                            <img src={imageUrl} alt={selectedImage.name} height="100px"/>
+                                            <img src={imageUrl}  height="100px"/>
                                         </Box>
                                     )}
                                 </Grid>

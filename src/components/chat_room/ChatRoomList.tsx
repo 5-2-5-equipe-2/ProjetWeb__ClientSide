@@ -2,11 +2,12 @@ import React, {useContext, useEffect, useState} from 'react';
 import {useMutation, useQuery} from "react-query";
 import {getChatRooms, searchUserChatRooms} from "../../api/User/User";
 import ChatRoomListItem from "./ChatRoomListItem";
-import {Box, CircularProgress, Grid, IconButton, InputAdornment, List, TextField} from "@mui/material";
+import {Box, CircularProgress, Collapse, Grid, IconButton, InputAdornment, List, TextField} from "@mui/material";
 import {loggedInUserContext} from "../../App";
 import {selectedChatRoomContext} from "../../pages/Chat";
 import SearchIcon from '@mui/icons-material/Search';
 import ChatRoomAddButton from "./chat_add_button/ChatRoomAddButton";
+import {TransitionGroup} from 'react-transition-group';
 
 const ChatRoomList = () => {
 
@@ -101,16 +102,23 @@ const ChatRoomList = () => {
                         }}
 
                     >
-                        {(chatRooms && !search) && chatRooms?.map(chatRoom => (
-                            <ChatRoomListItem chatRoom={chatRoom}
-                                              key={chatRoom.id}
-                            />
-                        ))}
-                        {(search) && searchData?.data?.map(chatRoom => (
-                            <ChatRoomListItem chatRoom={chatRoom}
-                                              key={chatRoom.id}
-                            />
-                        ))}
+                        <TransitionGroup>
+
+                            {(chatRooms && !search) && chatRooms?.map(chatRoom => (
+                                <Collapse key={chatRoom.id}>
+                                    <ChatRoomListItem chatRoom={chatRoom}
+
+                                    />
+                                </Collapse>
+                            ))}
+                            {(search) && searchData?.data?.map(chatRoom => (
+                                <Collapse key={chatRoom.id}>
+                                    <ChatRoomListItem chatRoom={chatRoom}
+                                                      key={chatRoom.id}
+                                    />
+                                </Collapse>
+                            ))}
+                        </TransitionGroup>
                     </List>) || <Box sx={{
                     width: "100%",
                     height: "100%",

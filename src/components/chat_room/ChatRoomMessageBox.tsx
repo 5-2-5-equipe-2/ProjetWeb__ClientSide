@@ -38,7 +38,7 @@ export default function ChatRoomMessageBox() {
             }
         },
         {
-            refetchInterval: 1000,
+            refetchInterval: 500,
             getPreviousPageParam: (lastPage) => {
                 if (lastPage.hasPreviousPage) {
                     return lastPage.nextPage;
@@ -53,7 +53,6 @@ export default function ChatRoomMessageBox() {
 
         }
     )
-    console.log('refetching')
 
 
     React.useEffect(() => {
@@ -118,10 +117,10 @@ export default function ChatRoomMessageBox() {
                     ,display: "flex",
                     flexDirection: "column-reverse",
                     alignItems: "center",
-                    justifyContent: "center"
+                    // justifyContent: "center"
 
                 }}
-                      id="scrollableDiv"
+                      // id="scrollableDiv"
                 >
                     {data?.pages.map(page => (
                         <React.Fragment key={page.currentPage}>
@@ -130,7 +129,7 @@ export default function ChatRoomMessageBox() {
                             ))}
                         </React.Fragment>
                     ))}
-                    <div>
+                    <Box>
                         <Button
                             ref={ref}
                             onClick={async () => fetchNextPage()}
@@ -142,7 +141,7 @@ export default function ChatRoomMessageBox() {
                                     ? 'Load Newer'
                                     : 'Nothing more to load'}
                         </Button>
-                    </div>
+                    </Box>
                 </List>
 
             </Box>

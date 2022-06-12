@@ -50,9 +50,10 @@ export default function ModifyUserPassword() {
 
     const {mutate: updatePasswordMutation} = useMutation(changePassword, {
         onSuccess: (data) => {
-            enqueueSnackbar("Password changed successfully", {variant: "success",
+            enqueueSnackbar("Password changed successfully", {
+                variant: "success",
                 autoHideDuration: 3000,
-                anchorOrigin:{
+                anchorOrigin: {
                     vertical: 'top',
                     horizontal: 'center',
                 }
@@ -63,9 +64,26 @@ export default function ModifyUserPassword() {
             // @ts-ignore
             if (error.response?.data.error) {
                 // @ts-ignore
-                enqueueSnackbar(error.response.data.error, {variant: "error"});
+                enqueueSnackbar(error.response.data.error, {
+                    variant: "error",
+                    autoHideDuration: 3000,
+
+                    anchorOrigin: {
+                        vertical: 'top',
+                        horizontal: 'center',
+                    }
+
+                });
             } else {
-                enqueueSnackbar(error.message, {variant: "error"});
+                enqueueSnackbar(error.message, {
+                    variant: "error",
+                    autoHideDuration: 3000,
+                    anchorOrigin: {
+                        vertical: 'top',
+                        horizontal: 'center',
+                    }
+
+                });
             }
         }
     });
@@ -99,7 +117,7 @@ export default function ModifyUserPassword() {
                                        {...register("oldPassword", {
                                            required: true,
                                        })}
-                                type={'password'}
+                                       type={'password'}
                                        error={!!errors.oldPassword}
                                        autoComplete="oldPassword"
                                        helperText={errors.oldPassword && errors.oldPassword.message}
@@ -119,7 +137,7 @@ export default function ModifyUserPassword() {
                         </Grid>
                         <Grid item xs={12}>
                             <TextField fullWidth
-                                       {...register("confirmPassword", {required:true}
+                                       {...register("confirmPassword", {required: true}
                                        )}
                                        type={'password'}
                                        error={!!errors.confirmPassword}

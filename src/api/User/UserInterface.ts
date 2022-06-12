@@ -18,7 +18,7 @@ export interface UserUpdateInterface {
     firstname?: string;
     surname?: string;
     email?: string;
-    profile_picture?: string;
+    profilePicture?: string;
 }
 
 export interface UserCreateInterface {

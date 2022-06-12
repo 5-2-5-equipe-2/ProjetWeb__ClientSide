@@ -11,7 +11,7 @@ import {loggedInUserContext} from "../../App";
 import {useSnackbar} from "notistack";
 
 const validationSchema = Yup.object().shape({
-    messageContent: Yup.string().required('Message is required').max(1000, 'Message is too long').min(1, 'Message is too short')
+    messageContent: Yup.string().required('Message is required').max(1000, 'Message is too long').min(2, 'Message is too short')
 });
 
 const ChatInput = () => {
@@ -54,9 +54,14 @@ const ChatInput = () => {
         if (errors) {
             for (let errorsKey in errors) {
                 if (errors[errorsKey]) {
-                    enqueueSnackbar(errors[errorsKey], {
+                    enqueueSnackbar(errors[errorsKey].message, {
                         variant: 'error', autoHideDuration: 1300,
-                        TransitionComponent: Fade
+                        TransitionComponent: Fade,
+                        anchorOrigin: {
+                            vertical: 'top',
+                            horizontal: 'center',
+                        }
+
                     });
                 }
             }
@@ -87,6 +92,11 @@ const ChatInput = () => {
             if (event.ctrlKey) {
                 if (textInputRef.current) {
                     textInputRef.current.value += "\n";
+                }
+            }else{
+                event.preventDefault();
+                if (buttonRef.current) {
+                    buttonRef.current.click();
                 }
             }
         }

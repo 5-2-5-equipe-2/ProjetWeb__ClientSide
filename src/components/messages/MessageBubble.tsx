@@ -1,6 +1,6 @@
 import {Grid, Typography} from "@mui/material";
 import Box from "@mui/material/Box";
-import React, {useContext} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {useQuery} from "react-query";
 import {getUserById} from "../../api/User/User";
 import "./bubble.css";
@@ -9,10 +9,19 @@ import {loggedInUserContext} from "../../App";
 import MessageInterface from "../../api/Message/MessageInterface";
 import UserInterface from "../../api/User/UserInterface";
 import showdown from "showdown";
+import ReactMarkdown from "react-markdown";
+import remarkImages from "remark-images";
+import remarkMath from "remark-math";
+import remarkGfm from "remark-gfm";
+import remarkParse from "remark-parse";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import remarkUnwrapImages from "remark-unwrap-images";
+import rehypeKatex from "rehype-katex";
+import {dark} from "react-syntax-highlighter/dist/esm/styles/hljs";
 
-// const BlogImage = (props: any) => {
-//     return <img {...props} style={{maxWidth: "10vw", maxHeight: "10vh"}} alt={""}/>
-// }
+const BlogImage = (props: any) => {
+    return <img {...props} style={{maxWidth: "10vw", maxHeight: "10vh"}} alt={""}/>
+}
 
 
 const getUserInitials = (user?: UserInterface) => {
@@ -29,7 +38,7 @@ const getUserInitials = (user?: UserInterface) => {
 
 export default function MessageBubble({message}: { message: MessageInterface }) {
     const loggedInUser = useContext(loggedInUserContext)['loggedInUser'];
-
+    const [messageContentHtml, setMessageContentHtml] = useState("");
     const {
         data: userData,
         // isLoading: isLoadingUser
@@ -41,7 +50,14 @@ export default function MessageBubble({message}: { message: MessageInterface }) 
 
     });
     const isLeftSide = message.user_id === loggedInUser.id;
-    // const showdownConverter = new showdown.Converter();
+
+    // useEffect(() => {
+    //     return () => {
+    //         const htmlInput = '<div><h1>Title</h1><p>A paragraph</p></div>';
+    //     };
+    // }, [message.content]);
+    // console.log(userData);
+
     return (
 
         <Grid container
@@ -57,6 +73,7 @@ export default function MessageBubble({message}: { message: MessageInterface }) 
         >
             <Grid item xs={1} sx={!isLeftSide ? {marginLeft: "auto"} : {marginRight: "auto"}}>
                 <Avatar
+                    src={userData?.profile_picture}
                     sx={isLeftSide ? {
                         marginLeft: "auto",
                         minHeight: "100%",
@@ -66,7 +83,7 @@ export default function MessageBubble({message}: { message: MessageInterface }) 
                         minHeight: "100%",
                         marginTop: "3%"
                     }}
-                >{`${getUserInitials(userData)}`}</Avatar>
+                ></Avatar>
 
             </Grid>
 
@@ -77,51 +94,52 @@ export default function MessageBubble({message}: { message: MessageInterface }) 
                      style={isLeftSide ? {} : {marginLeft: "auto"}}>
                     <Typography className={isLeftSide ? "from-them" : "from-me"}>
                         {/*{message.content}*/}
-                        {/*<ReactMarkdown*/}
-                        {/*    rehypePlugins={[remarkGfm, remarkParse, remarkImages,*/}
-                        {/*        remarkMath]}*/}
-                        {/*    // disallowedElements={['img']}*/}
-                        {/*    skipHtml={false}*/}
-                        {/*    children={message.content}*/}
-                        {/*    remarkPlugins={[*/}
-                        {/*        [remarkImages, {*/}
-                        {/*            quality: 10,*/}
-                        {/*            withWebp: true,*/}
-                        {/*            loading: 'lazy',*/}
-                        {/*            backgroundColor: '#fafafa',*/}
-                        {/*        }],*/}
-                        {/*        [remarkGfm, {singleTilde: false}],*/}
-                        {/*        [remarkParse, {commonmark: true}],*/}
-                        {/*        [remarkMath],*/}
-                        {/*    ]}*/}
-                        {/*    components={{*/}
-                        {/*        code({node, inline, className, children, ...props}) {*/}
-                        {/*            const match = /language-(\w+)/.exec(className || '')*/}
-                        {/*            // @ts-ignore*/}
-                        {/*            return !inline && match ? (*/}
-                        {/*                <SyntaxHighlighter*/}
-                        {/*                    children={String(children).replace(/\n$/, '')}*/}
-                        {/*                    // @ts-ignore*/}
-                        {/*                    style={dark}*/}
-                        {/*                    language={match[1]}*/}
-                        {/*                    PreTag="div"*/}
-                        {/*                    {...props}*/}
-                        {/*                />*/}
-                        {/*            ) : (*/}
-                        {/*                <code className={className} {...props}>*/}
-                        {/*                    {children}*/}
-                        {/*                </code>*/}
-                        {/*            )*/}
-                        {/*        },*/}
-                        {/*        img({src, alt, ...props}) {*/}
-                        {/*            return <BlogImage src={src} alt={alt} {...props} />*/}
-                        {/*        },*/}
-                        {/*        p: (props: any) => <div {...props} />,*/}
-                        {/*    }}*/}
-                        {/*/>*/}
+                        <ReactMarkdown
+                            rehypePlugins={[rehypeKatex, remarkGfm, remarkParse, remarkImages,
+                                remarkMath, remarkUnwrapImages, rehypeKatex]}
+                            // disallowedElements={['img']}
+                            children={message.content}
+                            remarkPlugins={[
+                                [remarkMath],
+                                [remarkImages, {
+                                    quality: 10,
+                                    withWebp: true,
+                                    loading: 'lazy',
+                                    backgroundColor: '#fafafa',
 
-                        {message.content}
-                        {/*{showdownConverter.makeHtml(message.content)}*/}
+                                }],
+                                [remarkGfm, {singleTilde: false}],
+                                [remarkParse, {commonmark: true}],
+                                // [remarkEmbedImages],
+                                [remarkUnwrapImages],
+                            ]}
+                            components={{
+                                code({node, inline, className, children, ...props}) {
+                                    const match = /language-(\w+)/.exec(className || '')
+                                    return !inline && match ? (
+                                        <SyntaxHighlighter
+                                            children={String(children).replace(/\n$/, '')}
+                                            // @ts-ignore
+                                            style={dark}
+                                            language={match[1]}
+                                            PreTag="div"
+                                            {...props}
+                                        />
+                                    ) : (
+                                        <code className={className} {...props}>
+                                            {children}
+                                        </code>
+                                    )
+                                },
+                                img({src, alt, ...props}) {
+                                    return <BlogImage src={src} alt={alt} {...props} />
+                                },
+                                p: (props: any) => <div {...props} />,
+                            }}
+                        />
+
+                        {/*{message.content}*/}
+
                     </Typography>
                 </Box>
             </Grid>

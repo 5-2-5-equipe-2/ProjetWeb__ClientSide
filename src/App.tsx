@@ -58,16 +58,18 @@ let loggedInUserContext = React.createContext({
 function App() {
     const [loggedInUser, setLoggedInUser] = useState(nullUser);
     const [currentTheme, setCurrentTheme] = useState(theme);
-    let {data, isError} = useQuery("user", getCurrentlyLoggedInUser, {
-        // refetchInterval: 1000,
-        retry: false,
-        enabled: true,
+    let {data, isError} = useQuery("user", async ()=>{
+        return (await getCurrentlyLoggedInUser())?.data;
+    }, {
+        refetchInterval: 1000,
+        refetchOnWindowFocus: false,
+
     });
 
     // update loggedInUser if data changes
     React.useEffect(() => {
         if (!isError && data) {
-            setLoggedInUser(data.data);
+            setLoggedInUser(data);
         }
     }, [isError, data]);
 

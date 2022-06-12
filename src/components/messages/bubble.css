@@ -20,7 +20,7 @@
     word-wrap: break-word;
 }
 
-.imessage p::before,
+/*.imessage p::before,*/
 /*.imessage p::after {*/
 /*    bottom: -0.1rem;*/
 /*    content: "";*/

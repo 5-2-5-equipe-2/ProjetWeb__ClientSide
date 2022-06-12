@@ -14,6 +14,7 @@ import {Button, createTheme, FormControlLabel, FormGroup, Switch, Typography} fr
 import {Link} from "react-router-dom";
 import {useContext} from "react";
 import {loggedInUserContext, themeContext} from "../../App";
+import {Password} from "@mui/icons-material";
 // import "../media/css/navbar.css";
 
 export default function AccountMenu() {
@@ -111,14 +112,17 @@ export default function AccountMenu() {
                 anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
             >
                 <MenuItem component={Link} to={'/modifyuser'}>
-                    <Avatar/> Edit Profile
-                </MenuItem>
-                <Divider/>
-                <MenuItem>
                     <ListItemIcon>
                         <Settings fontSize="small"/>
                     </ListItemIcon>
-                    Settings
+                    Edit Profile
+                </MenuItem>
+                <Divider/>
+                <MenuItem component={Link} to={'/ModifyUserPassword'}>
+                    <ListItemIcon>
+                        <Password fontSize="small"/>
+                    </ListItemIcon>
+                    Change Password
                 </MenuItem>
                 <MenuItem  component={Link} to={'/logout'}>
                     <ListItemIcon>
